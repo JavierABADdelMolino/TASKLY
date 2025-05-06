@@ -1,0 +1,22 @@
+# Archivos de entorno
+.env
+**/.env
+
+# Logs
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Dependencias de Node.js
+node_modules/
+**/node_modules/
+
+# Carpetas de compilación o producción
+frontend/build/
+backend/dist/
+
+# Configs de editores
+.vscode/
+.idea/
