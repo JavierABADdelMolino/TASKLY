@@ -106,7 +106,7 @@ git push origin dev
 
 | Tipo     | Emoji | Ejemplo                             |
 | -------- | ----- | ----------------------------------- |
-| Nueva    | ✨     | `✨ Añadir vista de tareas`          |
+| Nueva    | ✨    | `✨ Añadir vista de tareas`         |
 | Fix      | 🐛    | `🐛 Corregir validación de correo`  |
 | Docs     | 📝    | `📝 Completar INSTALL.md`           |
 | Estilo   | 💄    | `💄 Ajustar diseño del navbar`      |
