@@ -1,6 +1,6 @@
 # 📌 TFG - Taskly
 
-**Taskly** es un proyecto desarrollado como Trabajo de Fin de Grado del ciclo **DAM**. Está construido con el stack MERN (**MongoDB, Express.js, React, Node.js**), utilizando herramientas nativas en macOS 12.7 para garantizar compatibilidad, transparencia y control total del entorno de desarrollo.
+**Taskly** es un proyecto desarrollado como Trabajo de Fin de Grado del ciclo **DAM**. Está construido con el stack MERN (**MongoDB, Express.js, React, Node.js**), utilizando herramientas nativas en macOS 12.7 para garantizar compatibilidad y transparencia.
 
 ---
 
@@ -32,6 +32,7 @@ TFG-DAM-JavierABAD/
 │   │   ├── App.js
 │   │   └── index.js
 │   ├── .env
+│   ├── .gitignore
 │   ├── package.json
 │   └── README.md
 ├── DIARIO.md
@@ -47,7 +48,6 @@ TFG-DAM-JavierABAD/
 * 🧠 Desarrollar una aplicación web de gestión de tareas al estilo Trello, simple y funcional.
 * 🚀 Aprender a montar un entorno MERN completo de forma nativa.
 * 🛠️ Documentar paso a paso el proceso para asegurar reproducibilidad.
-* 💡 Mantener la estructura y herramientas más cercanas posible a la documentación oficial de cada tecnología del stack.
 
 ---
 
@@ -73,7 +73,45 @@ TFG-DAM-JavierABAD/
 
 ## 🔐 Seguridad
 
-MongoDB ha sido instalado con autenticación activada desde el principio para evitar malas prácticas. La conexión se hace con usuario `admin` y autenticación en la base de datos `admin`. El archivo `.env` gestiona las credenciales y URI de conexión de forma segura.
+MongoDB ha sido instalado con autenticación activada desde el principio para evitar malas prácticas. La conexión se hace con usuario `admin` y autenticación en la base de datos `admin`.
+
+---
+
+## 🚀 Flujo de trabajo con Git
+
+Este proyecto sigue una convención de ramas y commits basada en buenas prácticas dentro del stack MERN.
+
+### 🔀 Estructura de ramas
+
+* `main`: rama principal (estable y lista para presentación).
+* `dev`: rama de integración para nuevas funcionalidades.
+* `feature/nombre`: ramas individuales para nuevas funcionalidades.
+* `bugfix/nombre`: ramas para solucionar errores.
+* `doc/nombre`: ramas para actualizar documentación.
+
+### 📌 Flujo general
+
+```bash
+git checkout -b dev              # Crear rama de desarrollo
+git checkout -b feature/login    # Crear rama para nueva funcionalidad
+# ... realizar cambios ...
+git add .
+git commit -m "✨ Añadir login básico"
+git checkout dev
+git merge feature/login
+git push origin dev
+```
+
+### ✅ Convención de commits
+
+| Tipo     | Emoji | Ejemplo                             |
+| -------- | ----- | ----------------------------------- |
+| Nueva    | ✨     | `✨ Añadir vista de tareas`          |
+| Fix      | 🐛    | `🐛 Corregir validación de correo`  |
+| Docs     | 📝    | `📝 Completar INSTALL.md`           |
+| Estilo   | 💄    | `💄 Ajustar diseño del navbar`      |
+| Refactor | ♻️    | `♻️ Reorganizar lógica del backend` |
+| Infra    | 🔧    | `🔧 Configurar puerto desde .env`   |
 
 ---
 
@@ -85,4 +123,4 @@ Este proyecto forma parte del TFG del ciclo formativo de **Desarrollo de Aplicac
 
 ---
 
-> Todos los archivos `.md` están integrados en el repositorio y versionados con Git para su trazabilidad y evolución.
+> Todos los archivos `.md` están integrados en el repositorio y versionados con Git.
