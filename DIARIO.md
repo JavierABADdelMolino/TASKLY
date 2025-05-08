@@ -64,4 +64,28 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 3 - Martes 8 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Modificación del archivo de conexión de MongoDB (mongoose.connect) para eliminar las advertencias useNewUrlParser y useUnifiedTopology según documentación oficial.
+
+* Modificación del README.md general del proyecto para incluir la estructura de ramas Git que se seguirá durante el desarrollo.
+
+* Creación de la rama dev desde main para desarrollo activo.
+
+* Creación de la rama docs desde main para gestión de documentación.
+
+* Se plantea como valor añadido la integración futura de una funcionalidad de IA utilizando la API de OpenAI para sugerencias inteligentes.
+
+### 📝 Observaciones
+
+* El entorno de desarrollo ha quedado completamente funcional y documentado.
+
+* Se considera cerrada la fase de preparación y configuración del entorno base.
+
+* A partir del siguiente día comenzará el desarrollo de funcionalidades específicas del gestor de tareas Taskly.
+
+---
+
 *(continúa actualizando este documento día a día...)*
