@@ -87,7 +87,7 @@ Este proyecto sigue una convención de ramas y commits basada en buenas práctic
 * `dev`: rama de integración para nuevas funcionalidades.
 * `feature/nombre`: ramas individuales para nuevas funcionalidades.
 * `bugfix/nombre`: ramas para solucionar errores.
-* `doc/nombre`: ramas para actualizar documentación.
+* `docs`: ramas para actualizar documentación.
 
 ### 📌 Flujo general
 
