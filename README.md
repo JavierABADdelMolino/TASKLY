@@ -115,6 +115,20 @@ git push origin dev
 
 ---
 
+### ✅ Convención de nombres de archivos
+
+| Tipo de archivo      | Convención de nombre                    | Ejemplo                                  |
+| -------------------- | --------------------------------------- | ---------------------------------------- |
+| Rutas                | kebab-case, plural, con `.routes.js`    | `auth.routes.js`, `users.routes.js`      |
+| Controladores        | camelCase singular con `.controller.js` | `authController.js`, `userController.js` |
+| Modelos              | PascalCase singular con `.js`           | `User.js`, `Task.js`                     |
+| Middlewares          | camelCase con `.js`                     | `authMiddleware.js`                      |
+| Configuración        | camelCase con `.js`                     | `database.js`, `serverConfig.js`         |
+| Utilidades / helpers | camelCase con `.js`                     | `generateToken.js`                       |
+| Componentes de React | PascalCase con `.jsx` o `.js`           | `LoginForm.jsx`, `TaskCard.js`           |
+
+---
+
 ## ✍️ Autor
 
 **Javier Abad del Molino**

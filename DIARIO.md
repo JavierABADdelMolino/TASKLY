@@ -88,4 +88,26 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 4 - Jueves 9 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Inicio del desarrollo de funcionalidades: creación de la rama `feature/auth-users` desde `dev`.
+* Implementación del modelo `User` con Mongoose, incluyendo validaciones y método `comparePassword`.
+* Instalación de las dependencias `bcrypt` y `jsonwebtoken` para autenticación.
+* Creación del controlador `authController.js` con las funciones `registerUser` y `loginUser`.
+* Creación del archivo `routes/auth.routes.js` y montaje correcto en `index.js`.
+* Configuración de variable `JWT_SECRET` en el archivo `.env`.
+* Verificación de las rutas `/api/auth/register` y `/api/auth/login` mediante Postman.
+* Corrección de errores comunes de configuración (`secretOrPrivateKey must have a value`, `handler must be a function`).
+* Confirmación del correcto cifrado de contraseñas y emisión de tokens JWT.
+
+### 📝 Observaciones
+
+* Las rutas han sido validadas con éxito mediante pruebas manuales usando Postman.
+* Las validaciones básicas se han definido directamente en el esquema Mongoose, lo que puede requerir refactorización si se complica la lógica.
+* El flujo de autenticación básico (registro y login) está finalizado y listo para integrar en futuras vistas del frontend.
+
+---
+
 *(continúa actualizando este documento día a día...)*
