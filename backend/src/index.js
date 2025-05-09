@@ -6,6 +6,7 @@ const connectDB = require('./config/database');
 
 // Rutas
 const pingRoutes = require('./routes/ping.routes');
+const authRoutes = require('./routes/auth.routes');
 
 // Inicializar la app
 const app = express();
@@ -20,6 +21,7 @@ app.use(morgan('dev')); // Logs de peticiones
 
 // Usar rutas
 app.use('/api', pingRoutes); // Monta las rutas bajo /api
+app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
