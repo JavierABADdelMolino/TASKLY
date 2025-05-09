@@ -101,12 +101,19 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * Verificación de las rutas `/api/auth/register` y `/api/auth/login` mediante Postman.
 * Corrección de errores comunes de configuración (`secretOrPrivateKey must have a value`, `handler must be a function`).
 * Confirmación del correcto cifrado de contraseñas y emisión de tokens JWT.
+* Implementación de middleware `authMiddleware.js` para validar el token JWT.
+* Creación de ruta protegida `/api/private` para testear acceso autenticado.
+* Pruebas realizadas desde Postman con envío de token mediante header `Authorization: Bearer`.
+* Confirmación del flujo completo: registro → login → token → acceso protegido.
 
 ### 📝 Observaciones
 
 * Las rutas han sido validadas con éxito mediante pruebas manuales usando Postman.
 * Las validaciones básicas se han definido directamente en el esquema Mongoose, lo que puede requerir refactorización si se complica la lógica.
 * El flujo de autenticación básico (registro y login) está finalizado y listo para integrar en futuras vistas del frontend.
+* Se aprendió el funcionamiento de los middleware personalizados en Express.
+* Se confirmó que `fetch` puede manejar JWT si se configura correctamente el header.
+* El sistema de autenticación está funcional y listo para extenderse a rutas de tareas.
 
 ---
 

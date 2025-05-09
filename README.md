@@ -12,6 +12,7 @@ TFG-DAM-JavierABAD/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── controllers/
+│   │   ├── middlewares/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
@@ -76,6 +77,22 @@ TFG-DAM-JavierABAD/
 MongoDB ha sido instalado con autenticación activada desde el principio para evitar malas prácticas. La conexión se hace con usuario `admin` y autenticación en la base de datos `admin`.
 
 ---
+
+## 🔐 Autenticación
+
+El backend cuenta con autenticación mediante **JWT**:
+
+* Registro de usuarios con contraseña encriptada (`bcrypt`).
+* Generación y validación de tokens (`jsonwebtoken`).
+* Middleware para proteger rutas privadas.
+* Pruebas realizadas con Postman.
+
+Variables de entorno necesarias:
+
+```env
+JWT_SECRET=claveSuperSecreta
+
+--
 
 ## 🚀 Flujo de trabajo con Git
 
