@@ -117,4 +117,21 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 5 - Sábado 10 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Revisión del sistema de autenticación implementado previamente en la rama feature/auth-users.
+* Verificación de la validación automática del token JWT al iniciar la aplicación.
+* Confirmación del redireccionamiento automático al Dashboard cuando el usuario ya está autenticado.
+* Pruebas manuales del flujo: usuario con token válido en localStorage accede directamente al Dashboard.
+* Deshechos todos los cambios relacionados con personalización de estilos (SCSS, Bootstrap, variables CSS).
+
+📝 Observaciones
+
+* Se decidió no continuar con la personalización de estilos ni con la modificación profunda de Bootstrap para evitar complejidad innecesaria en esta etapa del proyecto.
+* El foco vuelve a estar en la funcionalidad principal: autenticación, gestión de tareas y experiencia de usuario base.
+* Se mantiene una versión estable y funcional del proyecto, lista para continuar con el desarrollo de vistas privadas y manejo de tareas.
+* El próximo paso será implementar la lógica de persistencia de usuario autenticado y comenzar con la vista de tareas por usuario.
+
 *(continúa actualizando este documento día a día...)*
