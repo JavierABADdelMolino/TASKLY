@@ -1,0 +1,51 @@
+.home-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.auth-buttons button {
+  margin: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-box input {
+  margin: 0.5rem 0;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
+
+.modal-box button {
+  margin-top: 1rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
+
+.close-button {
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+}
