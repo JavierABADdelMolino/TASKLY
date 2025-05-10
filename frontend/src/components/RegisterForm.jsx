@@ -1,48 +1,69 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const RegisterForm = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { setUser } = useAuth();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('📩 Enviando registro:', formData);
-    // Aquí luego se hará la petición al backend
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Error al registrarse');
+        return;
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      setError('');
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+      setError('Error del servidor');
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Registrarse</h2>
+      <h3>Registrarse</h3>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
       <input
         type="text"
-        name="username"
         placeholder="Nombre de usuario"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         required
-        value={formData.username}
-        onChange={handleChange}
       />
       <input
         type="email"
-        name="email"
         placeholder="Correo electrónico"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
-        value={formData.email}
-        onChange={handleChange}
       />
       <input
         type="password"
-        name="password"
         placeholder="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         required
-        value={formData.password}
-        onChange={handleChange}
       />
       <button type="submit">Crear cuenta</button>
     </form>
