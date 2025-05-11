@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+// Esquema del modelo de usuario
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -20,14 +21,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6
+  },
+  birthDate: {
+    type: Date,
+    required: true
   }
 }, {
-  timestamps: true
+  timestamps: true // Crea automáticamente createdAt y updatedAt
 });
 
-// Encriptar contraseña antes de guardar
+// Middleware que encripta la contraseña antes de guardar
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return next(); // Solo si ha cambiado
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -37,7 +42,7 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-// Método para comparar contraseñas
+// Método de instancia para verificar contraseñas
 userSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };

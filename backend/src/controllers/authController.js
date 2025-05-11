@@ -18,15 +18,17 @@ const generateToken = (user) => {
  * @access  Público
  */
 exports.registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, birthDate } = req.body;
 
   try {
+    // Verifica si ya existe un usuario con ese email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    const user = new User({ username, email, password });
+    // Crea el nuevo usuario con fecha de nacimiento
+    const user = new User({ username, email, password, birthDate });
     await user.save();
 
     const token = generateToken(user);
@@ -49,6 +51,7 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Busca el usuario y verifica la contraseña
     const user = await User.findOne({ email });
     const isValid = user && await user.comparePassword(password);
     if (!isValid) {
@@ -82,6 +85,7 @@ exports.getMe = async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      birthDate: user.birthDate,
     });
   } catch (err) {
     res.status(500).json({ message: 'Error al recuperar el usuario', error: err.message });
