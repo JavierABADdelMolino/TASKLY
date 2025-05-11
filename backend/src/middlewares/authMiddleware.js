@@ -1,3 +1,6 @@
+// middleware/authMiddleware.js
+// Middleware que verifica el token JWT en rutas protegidas
+
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
@@ -11,9 +14,9 @@ const verifyToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Verifica el token
+    // Verifica el token con la clave secreta
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // adjunta los datos del usuario al request
+    req.user = decoded; // Guarda los datos decodificados del usuario
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Token inválido o expirado' });

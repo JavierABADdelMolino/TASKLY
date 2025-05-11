@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import '../styles/Home.css'; // Si decides mover los estilos fuera
+import '../styles/Home.css';
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null); // 'login' | 'register' | null
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirige automáticamente al dashboard si ya hay un usuario autenticado
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleOpenAuth = (mode) => setAuthMode(mode);
   const handleCloseAuth = () => setAuthMode(null);

@@ -6,12 +6,19 @@ const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validación previa: comprobar que las contraseñas coinciden
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
 
     try {
       const res = await fetch('http://localhost:5000/api/auth/register', {
@@ -27,21 +34,32 @@ const RegisterForm = () => {
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      setUser(data.user);
-      setError('');
+      // Guardar token
+      sessionStorage.setItem('token', data.token);
+
+      // Recuperar datos del usuario
+      const userRes = await fetch('http://localhost:5000/api/auth/me', {
+        headers: { Authorization: `Bearer ${data.token}` },
+      });
+
+      const userData = await userRes.json();
+
+      if (!userRes.ok) {
+        setError(userData.message || 'No se pudo obtener el usuario');
+        return;
+      }
+
+      setUser(userData);
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setError('Error del servidor');
+      setError('Error de conexión con el servidor');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Registrarse</h3>
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <input
@@ -65,6 +83,14 @@ const RegisterForm = () => {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+      <input
+        type="password"
+        placeholder="Confirmar contraseña"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        required
+      />
+
       <button type="submit">Crear cuenta</button>
     </form>
   );
