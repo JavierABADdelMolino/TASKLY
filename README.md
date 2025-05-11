@@ -87,12 +87,16 @@ El backend cuenta con autenticación mediante **JWT**:
 * Middleware para proteger rutas privadas.
 * Pruebas realizadas con Postman.
 
-Variables de entorno necesarias:
+---
 
-```env
-JWT_SECRET=claveSuperSecreta
+### 🔑 Autenticación en el Frontend
 
---
+- El **token JWT** se guarda exclusivamente en `sessionStorage` tras iniciar sesión o registrarse.
+- Al recargar la página, si existe un token, el frontend realiza una petición a `/api/auth/me` para obtener los datos del usuario autenticado.
+- Si el token no es válido o ha expirado, se elimina automáticamente del almacenamiento y el usuario vuelve al estado no autenticado.
+- La sesión se mantiene activa mientras el navegador esté abierto. Cerrar el navegador finaliza la sesión.
+
+---
 
 ## 🚀 Flujo de trabajo con Git
 

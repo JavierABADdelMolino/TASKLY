@@ -134,4 +134,45 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * Se mantiene una versión estable y funcional del proyecto, lista para continuar con el desarrollo de vistas privadas y manejo de tareas.
 * El próximo paso será implementar la lógica de persistencia de usuario autenticado y comenzar con la vista de tareas por usuario.
 
+---
+
+## 🗓️ Día 6 - Domingo 11 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Refactorización del sistema de autenticación en el frontend:
+  * Eliminación del almacenamiento del usuario completo en localStorage.
+  * Uso de sessionStorage para guardar únicamente el token JWT.
+  * Implementación de `useEffect` en el `AuthContext` para recuperar el usuario automáticamente desde `/api/auth/me`.
+  * Redirección automática al Dashboard si el usuario ya está autenticado.
+
+* Mejora de seguridad en rutas privadas:
+  * `PrivateRoute` protegido correctamente por el estado `user`.
+  * Logout centralizado y limpio con redirección a `/`.
+
+* Actualizaciones en el backend:
+  * Implementación de la ruta protegida `GET /api/auth/me` para obtener los datos del usuario autenticado.
+  * Mejora del middleware `authMiddleware` con nombre y estructura estándar.
+  * Ajuste del controlador `authController` para responder con los datos del usuario desde el token.
+
+* Mejoras en el formulario de registro:
+  * Añadido campo de confirmación de contraseña con validación previa.
+  * Añadidos 3 desplegables (día, mes, año) para introducir la fecha de nacimiento.
+  * Validación completa de la fecha antes de enviar al backend.
+
+* Cambios en el modelo de usuario:
+  * Campo obligatorio `birthDate` añadido al esquema de Mongoose.
+  * Adaptación del controlador `registerUser` para recibir y guardar la fecha.
+
+* Eliminación manual de registros previos de MongoDB para evitar conflictos con el nuevo campo obligatorio.
+
+### 📝 Observaciones
+
+* Se confirma que sessionStorage permite mantener la sesión activa mientras el navegador esté abierto, cerrándose automáticamente al salir, lo cual es el comportamiento deseado.
+* Se valida correctamente el flujo completo: registro → login → token → usuario → dashboard.
+* Las futuras rutas protegidas como `/api/tasks` podrán obtener el usuario autenticado mediante token sin requerir ID manual.
+* Todo el sistema de autenticación está ahora estructurado, validado y documentado para ser robusto, seguro y mantenible.
+
+---
+
 *(continúa actualizando este documento día a día...)*
