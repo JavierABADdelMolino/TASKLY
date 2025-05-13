@@ -1,24 +1,16 @@
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import Layout from '../components/layout/Layout';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  const { user } = useAuth();
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2>Bienvenido, {user?.username}</h2>
-      <p>Has iniciado sesión correctamente.</p>
-
-      <button onClick={handleLogout} style={{ marginTop: '1rem' }}>
-        Cerrar sesión
-      </button>
-    </div>
+    <Layout>
+      <div className="text-center py-5">
+        <h2 className="mb-3">Bienvenido, {user?.username}</h2>
+        <p className="mb-4">Has iniciado sesión correctamente.</p>
+      </div>
+    </Layout>
   );
 };
 
