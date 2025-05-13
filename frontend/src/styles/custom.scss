@@ -1,0 +1,10 @@
+// 1. Opcional: importar tus variables antes que Bootstrap si quieres sobrescribir
+//@use "variables" as *; // Crea este archivo si necesitas sobrescribir variables
+
+// 2. Importar Bootstrap usando @use moderno (sin @import)
+@use "bootstrap/scss/bootstrap";
+
+// 3. (Opcional) Tu propio estilo global aquí
+body {
+  font-family: 'Inter', sans-serif;
+}

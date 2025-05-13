@@ -4,17 +4,15 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [checkingSession, setCheckingSession] = useState(true);
 
-  // Restaurar sesión desde el token
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:5000/api/auth/me', {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then((res) => {
-          return res.ok ? res.json() : null;
-        })
+        .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data) {
             setUser(data);
@@ -23,9 +21,14 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.removeItem('token');
           }
         })
-        .catch((err) => {
+        .catch(() => {
           sessionStorage.removeItem('token');
+        })
+        .finally(() => {
+          setCheckingSession(false); // Finaliza validación
         });
+    } else {
+      setCheckingSession(false); // No había token
     }
   }, []);
 
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
+    <AuthContext.Provider value={{ user, setUser, logout, checkingSession }}>
       {children}
     </AuthContext.Provider>
   );

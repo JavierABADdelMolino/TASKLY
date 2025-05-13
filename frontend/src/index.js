@@ -1,11 +1,26 @@
+// src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
+import RouteChangeLoader from './components/RouteChangeLoader';
+import './styles/custom.scss';
+
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { LoaderProvider } from './context/LoaderContext';
+import Loader from './components/Loader';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <LoaderProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Loader />
+          <RouteChangeLoader /> {/* 👈 Loader al navegar entre páginas */}
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </LoaderProvider>
   </React.StrictMode>
 );

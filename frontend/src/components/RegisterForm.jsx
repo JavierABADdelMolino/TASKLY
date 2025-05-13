@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +22,6 @@ const RegisterForm = () => {
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  // Actualiza los días válidos al cambiar mes/año
   useEffect(() => {
     if (birthMonth && birthYear) {
       const days = new Date(birthYear, birthMonth, 0).getDate();
@@ -45,7 +46,7 @@ const RegisterForm = () => {
     const birthDate = new Date(`${birthYear}-${birthMonth}-${birthDay}`);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, birthDate }),
@@ -60,7 +61,7 @@ const RegisterForm = () => {
 
       sessionStorage.setItem('token', data.token);
 
-      const userRes = await fetch('http://localhost:5000/api/auth/me', {
+      const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${data.token}` },
       });
 
@@ -81,11 +82,12 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Registrarse</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <h3 className="mb-3">Registrarse</h3>
+      {error && <p className="text-danger">{error}</p>}
 
       <input
         type="text"
+        className="form-control mb-3"
         placeholder="Nombre de usuario"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -93,6 +95,7 @@ const RegisterForm = () => {
       />
       <input
         type="email"
+        className="form-control mb-3"
         placeholder="Correo electrónico"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -100,6 +103,7 @@ const RegisterForm = () => {
       />
       <input
         type="password"
+        className="form-control mb-3"
         placeholder="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -107,38 +111,58 @@ const RegisterForm = () => {
       />
       <input
         type="password"
+        className="form-control mb-3"
         placeholder="Confirmar contraseña"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
       />
 
-      <label style={{ marginTop: '1rem' }}>Fecha de nacimiento</label>
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-        <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} required>
-          <option value="">Día</option>
-          {daysInMonth.map((day) => (
-            <option key={day} value={day}>{day}</option>
-          ))}
-        </select>
-
-        <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} required>
-          <option value="">Mes</option>
-          {monthNames.map((name, idx) => (
-            <option key={idx + 1} value={idx + 1}>{name}</option>
-          ))}
-        </select>
-
-        <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} required>
-          <option value="">Año</option>
-          {Array.from({ length: 100 }, (_, i) => {
-            const year = new Date().getFullYear() - i;
-            return <option key={year} value={year}>{year}</option>;
-          })}
-        </select>
+      <label className="form-label mt-3">Fecha de nacimiento</label>
+      <div className="row mb-3">
+        <div className="col">
+          <select
+            className="form-select"
+            value={birthDay}
+            onChange={(e) => setBirthDay(e.target.value)}
+            required
+          >
+            <option value="">Día</option>
+            {daysInMonth.map((day) => (
+              <option key={day} value={day}>{day}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col">
+          <select
+            className="form-select"
+            value={birthMonth}
+            onChange={(e) => setBirthMonth(e.target.value)}
+            required
+          >
+            <option value="">Mes</option>
+            {monthNames.map((name, idx) => (
+              <option key={idx + 1} value={idx + 1}>{name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col">
+          <select
+            className="form-select"
+            value={birthYear}
+            onChange={(e) => setBirthYear(e.target.value)}
+            required
+          >
+            <option value="">Año</option>
+            {Array.from({ length: 100 }, (_, i) => {
+              const year = new Date().getFullYear() - i;
+              return <option key={year} value={year}>{year}</option>;
+            })}
+          </select>
+        </div>
       </div>
 
-      <button type="submit">Crear cuenta</button>
+      <button type="submit" className="btn btn-primary w-100">Crear cuenta</button>
     </form>
   );
 };

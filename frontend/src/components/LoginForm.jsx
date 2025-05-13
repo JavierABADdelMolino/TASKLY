@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -28,8 +30,7 @@ const LoginForm = () => {
 
       sessionStorage.setItem('token', data.token);
 
-      // Obtener los datos del usuario
-      const userRes = await fetch('http://localhost:5000/api/auth/me', {
+      const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${data.token}` },
       });
 
@@ -50,10 +51,11 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Iniciar sesión</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <h3 className="mb-3">Iniciar sesión</h3>
+      {error && <p className="text-danger">{error}</p>}
       <input
         type="email"
+        className="form-control mb-3"
         placeholder="Correo electrónico"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -61,12 +63,13 @@ const LoginForm = () => {
       />
       <input
         type="password"
+        className="form-control mb-3"
         placeholder="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">Entrar</button>
+      <button type="submit" className="btn btn-primary w-100">Entrar</button>
     </form>
   );
 };
