@@ -175,4 +175,32 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 7 - Martes 13 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Inicio de la rama `feature/theme-ui` para implementar un sistema de temas claro/oscuro personalizado.
+* Integración de Bootstrap mediante archivo `theme.scss`, en lugar del `custom.scss` anterior.
+* Organización de la carpeta `styles/` con subcarpetas `base/`, `config/`, `components/` y `themes/`.
+* Implementación del componente `ThemeSwitcher` con diseño tipo switch al estilo Apple.
+* Activación y persistencia del tema claro/oscuro mediante `data-theme` en `document.documentElement`.
+* Añadidas variables personalizadas en `light.scss` y `dark.scss`, mapeadas a `--bs-*` para que Bootstrap responda dinámicamente.
+* Inclusión de estructura de layout con componentes `Navbar`, `Footer` y `Layout.jsx`.
+* Implementación de `RouteChangeLoader` que muestra un loader al navegar entre páginas.
+* Rediseño completo de `Home` y `Dashboard` utilizando clases Bootstrap (`container`, `bg-body-tertiary`, `text-body`, etc.).
+* Integración del `ThemeSwitcher` en la `Navbar`, siempre visible.
+* Lógica condicional en la `Navbar` para mostrar botones según la ruta (`/` o `/dashboard`).
+* Refactor de los modales de login y registro para usar clases Bootstrap (`bg-white`, `shadow`, `rounded`, etc.).
+* Correcciones de visibilidad en modo oscuro: inputs, formularios, botones y navbar.
+
+### 📝 Observaciones
+
+* Se detectaron múltiples problemas visuales en modo oscuro debido a clases de Bootstrap que no heredan variables dinámicas.
+* Se redefinieron las variables `--bs-body-bg`, `--bs-body-color`, `--bs-tertiary-bg-rgb`, etc., para asegurar compatibilidad total.
+* El modo oscuro aún requiere mejoras visuales de contraste y legibilidad, especialmente en botones, formularios y navbar.
+* Se documentó la nueva estructura de carpetas en el `README.md`.
+* Se planificó dedicar el Día 8 a mejorar estéticamente el modo oscuro y personalizar profundamente el diseño.
+
+---
+
 *(continúa actualizando este documento día a día...)*
