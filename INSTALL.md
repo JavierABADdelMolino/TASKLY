@@ -187,6 +187,7 @@ TFG-DAM-JavierABAD/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── controllers/
+│   │   ├── middlewares/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js

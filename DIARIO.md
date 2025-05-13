@@ -64,4 +64,115 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 3 - Martes 8 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Modificación del archivo de conexión de MongoDB (mongoose.connect) para eliminar las advertencias useNewUrlParser y useUnifiedTopology según documentación oficial.
+
+* Modificación del README.md general del proyecto para incluir la estructura de ramas Git que se seguirá durante el desarrollo.
+
+* Creación de la rama dev desde main para desarrollo activo.
+
+* Creación de la rama docs desde main para gestión de documentación.
+
+* Se plantea como valor añadido la integración futura de una funcionalidad de IA utilizando la API de OpenAI para sugerencias inteligentes.
+
+### 📝 Observaciones
+
+* El entorno de desarrollo ha quedado completamente funcional y documentado.
+
+* Se considera cerrada la fase de preparación y configuración del entorno base.
+
+* A partir del siguiente día comenzará el desarrollo de funcionalidades específicas del gestor de tareas Taskly.
+
+---
+
+## 🗓️ Día 4 - Jueves 9 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Inicio del desarrollo de funcionalidades: creación de la rama `feature/auth-users` desde `dev`.
+* Implementación del modelo `User` con Mongoose, incluyendo validaciones y método `comparePassword`.
+* Instalación de las dependencias `bcrypt` y `jsonwebtoken` para autenticación.
+* Creación del controlador `authController.js` con las funciones `registerUser` y `loginUser`.
+* Creación del archivo `routes/auth.routes.js` y montaje correcto en `index.js`.
+* Configuración de variable `JWT_SECRET` en el archivo `.env`.
+* Verificación de las rutas `/api/auth/register` y `/api/auth/login` mediante Postman.
+* Corrección de errores comunes de configuración (`secretOrPrivateKey must have a value`, `handler must be a function`).
+* Confirmación del correcto cifrado de contraseñas y emisión de tokens JWT.
+* Implementación de middleware `authMiddleware.js` para validar el token JWT.
+* Creación de ruta protegida `/api/private` para testear acceso autenticado.
+* Pruebas realizadas desde Postman con envío de token mediante header `Authorization: Bearer`.
+* Confirmación del flujo completo: registro → login → token → acceso protegido.
+
+### 📝 Observaciones
+
+* Las rutas han sido validadas con éxito mediante pruebas manuales usando Postman.
+* Las validaciones básicas se han definido directamente en el esquema Mongoose, lo que puede requerir refactorización si se complica la lógica.
+* El flujo de autenticación básico (registro y login) está finalizado y listo para integrar en futuras vistas del frontend.
+* Se aprendió el funcionamiento de los middleware personalizados en Express.
+* Se confirmó que `fetch` puede manejar JWT si se configura correctamente el header.
+* El sistema de autenticación está funcional y listo para extenderse a rutas de tareas.
+
+---
+
+## 🗓️ Día 5 - Sábado 10 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Revisión del sistema de autenticación implementado previamente en la rama feature/auth-users.
+* Verificación de la validación automática del token JWT al iniciar la aplicación.
+* Confirmación del redireccionamiento automático al Dashboard cuando el usuario ya está autenticado.
+* Pruebas manuales del flujo: usuario con token válido en localStorage accede directamente al Dashboard.
+* Deshechos todos los cambios relacionados con personalización de estilos (SCSS, Bootstrap, variables CSS).
+
+📝 Observaciones
+
+* Se decidió no continuar con la personalización de estilos ni con la modificación profunda de Bootstrap para evitar complejidad innecesaria en esta etapa del proyecto.
+* El foco vuelve a estar en la funcionalidad principal: autenticación, gestión de tareas y experiencia de usuario base.
+* Se mantiene una versión estable y funcional del proyecto, lista para continuar con el desarrollo de vistas privadas y manejo de tareas.
+* El próximo paso será implementar la lógica de persistencia de usuario autenticado y comenzar con la vista de tareas por usuario.
+
+---
+
+## 🗓️ Día 6 - Domingo 11 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Refactorización del sistema de autenticación en el frontend:
+  * Eliminación del almacenamiento del usuario completo en localStorage.
+  * Uso de sessionStorage para guardar únicamente el token JWT.
+  * Implementación de `useEffect` en el `AuthContext` para recuperar el usuario automáticamente desde `/api/auth/me`.
+  * Redirección automática al Dashboard si el usuario ya está autenticado.
+
+* Mejora de seguridad en rutas privadas:
+  * `PrivateRoute` protegido correctamente por el estado `user`.
+  * Logout centralizado y limpio con redirección a `/`.
+
+* Actualizaciones en el backend:
+  * Implementación de la ruta protegida `GET /api/auth/me` para obtener los datos del usuario autenticado.
+  * Mejora del middleware `authMiddleware` con nombre y estructura estándar.
+  * Ajuste del controlador `authController` para responder con los datos del usuario desde el token.
+
+* Mejoras en el formulario de registro:
+  * Añadido campo de confirmación de contraseña con validación previa.
+  * Añadidos 3 desplegables (día, mes, año) para introducir la fecha de nacimiento.
+  * Validación completa de la fecha antes de enviar al backend.
+
+* Cambios en el modelo de usuario:
+  * Campo obligatorio `birthDate` añadido al esquema de Mongoose.
+  * Adaptación del controlador `registerUser` para recibir y guardar la fecha.
+
+* Eliminación manual de registros previos de MongoDB para evitar conflictos con el nuevo campo obligatorio.
+
+### 📝 Observaciones
+
+* Se confirma que sessionStorage permite mantener la sesión activa mientras el navegador esté abierto, cerrándose automáticamente al salir, lo cual es el comportamiento deseado.
+* Se valida correctamente el flujo completo: registro → login → token → usuario → dashboard.
+* Las futuras rutas protegidas como `/api/tasks` podrán obtener el usuario autenticado mediante token sin requerir ID manual.
+* Todo el sistema de autenticación está ahora estructurado, validado y documentado para ser robusto, seguro y mantenible.
+
+---
+
 *(continúa actualizando este documento día a día...)*

@@ -12,6 +12,7 @@ TFG-DAM-JavierABAD/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── controllers/
+│   │   ├── middlewares/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
@@ -77,6 +78,26 @@ MongoDB ha sido instalado con autenticación activada desde el principio para ev
 
 ---
 
+## 🔐 Autenticación
+
+El backend cuenta con autenticación mediante **JWT**:
+
+* Registro de usuarios con contraseña encriptada (`bcrypt`).
+* Generación y validación de tokens (`jsonwebtoken`).
+* Middleware para proteger rutas privadas.
+* Pruebas realizadas con Postman.
+
+---
+
+### 🔑 Autenticación en el Frontend
+
+- El **token JWT** se guarda exclusivamente en `sessionStorage` tras iniciar sesión o registrarse.
+- Al recargar la página, si existe un token, el frontend realiza una petición a `/api/auth/me` para obtener los datos del usuario autenticado.
+- Si el token no es válido o ha expirado, se elimina automáticamente del almacenamiento y el usuario vuelve al estado no autenticado.
+- La sesión se mantiene activa mientras el navegador esté abierto. Cerrar el navegador finaliza la sesión.
+
+---
+
 ## 🚀 Flujo de trabajo con Git
 
 Este proyecto sigue una convención de ramas y commits basada en buenas prácticas dentro del stack MERN.
@@ -87,7 +108,7 @@ Este proyecto sigue una convención de ramas y commits basada en buenas práctic
 * `dev`: rama de integración para nuevas funcionalidades.
 * `feature/nombre`: ramas individuales para nuevas funcionalidades.
 * `bugfix/nombre`: ramas para solucionar errores.
-* `doc/nombre`: ramas para actualizar documentación.
+* `docs`: ramas para actualizar documentación.
 
 ### 📌 Flujo general
 
@@ -106,12 +127,26 @@ git push origin dev
 
 | Tipo     | Emoji | Ejemplo                             |
 | -------- | ----- | ----------------------------------- |
-| Nueva    | ✨     | `✨ Añadir vista de tareas`          |
+| Nueva    | ✨    | `✨ Añadir vista de tareas`         |
 | Fix      | 🐛    | `🐛 Corregir validación de correo`  |
 | Docs     | 📝    | `📝 Completar INSTALL.md`           |
 | Estilo   | 💄    | `💄 Ajustar diseño del navbar`      |
 | Refactor | ♻️    | `♻️ Reorganizar lógica del backend` |
 | Infra    | 🔧    | `🔧 Configurar puerto desde .env`   |
+
+---
+
+### ✅ Convención de nombres de archivos
+
+| Tipo de archivo      | Convención de nombre                    | Ejemplo                                  |
+| -------------------- | --------------------------------------- | ---------------------------------------- |
+| Rutas                | kebab-case, plural, con `.routes.js`    | `auth.routes.js`, `users.routes.js`      |
+| Controladores        | camelCase singular con `.controller.js` | `authController.js`, `userController.js` |
+| Modelos              | PascalCase singular con `.js`           | `User.js`, `Task.js`                     |
+| Middlewares          | camelCase con `.js`                     | `authMiddleware.js`                      |
+| Configuración        | camelCase con `.js`                     | `database.js`, `serverConfig.js`         |
+| Utilidades / helpers | camelCase con `.js`                     | `generateToken.js`                       |
+| Componentes de React | PascalCase con `.jsx` o `.js`           | `LoginForm.jsx`, `TaskCard.js`           |
 
 ---
 
