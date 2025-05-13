@@ -1,10 +1,14 @@
-// 1. Opcional: importar tus variables antes que Bootstrap si quieres sobrescribir
-//@use "variables" as *; // Crea este archivo si necesitas sobrescribir variables
+// src/styles/custom.scss
 
-// 2. Importar Bootstrap usando @use moderno (sin @import)
-@use "bootstrap/scss/bootstrap";
+// 1. Tus variables antes de importar Bootstrap
+@import './config/_variables';
 
-// 3. (Opcional) Tu propio estilo global aquí
-body {
-  font-family: 'Inter', sans-serif;
-}
+// 2. Bootstrap base
+@import 'bootstrap/scss/bootstrap';
+
+// 3. Temas dinámicos (usando CSS vars)
+@import './themes/_light';
+@import './themes/_dark';
+
+// 4. Base o utilidades extra
+@import './base/_reset';

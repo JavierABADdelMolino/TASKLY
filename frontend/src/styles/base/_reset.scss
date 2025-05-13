@@ -1,0 +1,38 @@
+// src/styles/base/_reset.scss
+
+// Estilos básicos para toda la aplicación
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--bs-body-font-family);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Opcional: elimina subrayado de enlaces
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// Evita que los botones hereden padding raros
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+// Mejora visual para inputs
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
