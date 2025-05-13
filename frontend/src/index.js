@@ -2,13 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import RouteChangeLoader from './components/RouteChangeLoader';
+import RouteChangeLoader from './components/ui/RouteChangeLoader';
 import './styles/theme.scss';
 
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LoaderProvider } from './context/LoaderContext';
-import Loader from './components/Loader';
+import Loader from './components/ui/Loader';
 import { ThemeProvider } from './context/ThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

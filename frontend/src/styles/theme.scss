@@ -10,3 +10,7 @@
 
 // 4. Base o utilidades extra
 @import './base/_reset';
+@import './base/forms';
+
+// 5. Componentes visuales
+@import './components/theme-switcher';

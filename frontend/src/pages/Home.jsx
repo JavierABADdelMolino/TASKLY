@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/auth/LoginForm';
+import RegisterForm from '../components/auth/RegisterForm';
 import Layout from '../components/layout/Layout';
 
 const Home = () => {

@@ -1,5 +1,5 @@
 // src/components/GlobalLoader.jsx
-import { useLoader } from '../context/LoaderContext';
+import { useLoader } from '../../context/LoaderContext';
 
 const Loader = () => {
   const { showLoader } = useLoader();

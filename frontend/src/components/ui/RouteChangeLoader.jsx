@@ -1,7 +1,7 @@
 // src/components/RouteChangeLoader.jsx
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useLoader } from '../context/LoaderContext';
+import { useLoader } from '../../context/LoaderContext';
 
 const RouteChangeLoader = () => {
   const location = useLocation();
