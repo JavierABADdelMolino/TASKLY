@@ -27,7 +27,7 @@ const RegisterForm = () => {
       setDaysInMonth(Array.from({ length: days }, (_, i) => i + 1));
       if (birthDay > days) setBirthDay('');
     }
-  }, [birthMonth, birthYear]);
+  }, [birthDay, birthMonth, birthYear]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
