@@ -191,9 +191,10 @@ TFG-DAM-JavierABAD/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
+│   ├── uploads/   
+│   │   └── images/
 │   ├── .env
-│   ├── package.json
-│   └── README.md
+│   └── .gitignore
 ├── frontend/
 │   ├── public/
 │   ├── src/

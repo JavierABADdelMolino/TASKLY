@@ -4,87 +4,76 @@ Este documento describe el funcionamiento, estructura y personalización del sis
 
 ---
 
-## 📁 Estructura de estilos
+## 📁 Estructura actual de estilos
 
 ```bash
 src/styles/
-├── base/         # Reseteos, formularios, helpers globales
-├── config/       # Variables SCSS base
-├── components/   # Estilos SCSS específicos por componente
-├── themes/       # Temas claro y oscuro
-│   ├── light.scss
-│   └── dark.scss
-├── theme.scss    # Archivo principal de importación de Bootstrap + overrides
+├── base/         # Reset, helpers globales
+├── config/       # Variables SCSS
+├── components/   # Estilos específicos por componente
+├── themes/       # Archivos de tema claro y oscuro (vacíos actualmente)
+│   ├── light.scss        # ⚠️ Pendiente de implementar
+│   └── dark.scss         # ⚠️ Pendiente de implementar
+├── theme.scss    # Archivo central que importa Bootstrap + override básico
 ```
 
 ---
 
-## 🧠 Lógica de funcionamiento
+## 🧠 Estado actual del sistema de temas
 
-1. El tema actual se almacena en `ThemeContext` (`light` o `dark`).
-2. Se aplica dinámicamente en el `data-theme` del `<html>` (`document.documentElement`).
-3. Las variables CSS se definen en `light.scss` y `dark.scss`, y afectan a Bootstrap redefiniendo:
+Actualmente, `theme.scss` es el único archivo activo. Este:
 
-```css
---bs-body-bg
---bs-body-color
---bs-primary
---bs-tertiary-bg-rgb
---bs-body-color-rgb
-...
-```
-
-4. Bootstrap utiliza estas variables para sus clases (`bg-body-tertiary`, `text-body`, etc.), lo que permite que todo el UI cambie dinámicamente de estilo.
-
----
-
-## 🧩 Ejemplo de override
+- Importa Bootstrap.
+- Puede incluir `@import` de `base/`, `config/` o `components/`.
+- No aplica aún variables dinámicas para modo claro/oscuro.
 
 ```scss
-// light.scss
+// src/styles/theme.scss
+@import "bootstrap/scss/bootstrap";
+@import "./base/reset";
+@import "./config/variables";
+// etc.
+```
+
+---
+
+## 📌 Plan futuro para tematización completa
+
+1. Implementar dos temas reales (`light.scss`, `dark.scss`) que redefinan variables CSS como:
+
+```scss
 :root {
-  --color-bg: #ffffff;
-  --color-text: #111827;
-  --color-primary: #6366f1;
-
-  --bs-body-bg: var(--color-bg);
-  --bs-body-color: var(--color-text);
-  --bs-primary: var(--color-primary);
-
-  --bs-tertiary-bg-rgb: 255, 255, 255;
+  --bs-body-bg: #fff;
+  --bs-body-color: #111;
+  --bs-primary: #6366f1;
+  ...
 }
-```
 
-```scss
-// dark.scss
 [data-theme='dark'] {
-  --color-bg: #111827;
-  --color-text: #f9fafb;
-  --color-primary: #8b5cf6;
-
-  --bs-body-bg: var(--color-bg);
-  --bs-body-color: var(--color-text);
-  --bs-primary: var(--color-primary);
-
-  --bs-tertiary-bg-rgb: 17, 24, 39;
+  --bs-body-bg: #111;
+  --bs-body-color: #eee;
+  --bs-primary: #8b5cf6;
+  ...
 }
 ```
 
----
-
-## 🔧 Personalizaciones actuales
-
-- Switch de tema (`ThemeSwitcher`) tipo Apple.
-- Redefinición total de variables Bootstrap con sistema propio (`--color-*`).
-- Formularios, inputs y botones adaptados con clases globales.
-- Soporte completo de clases Bootstrap reactivas (`bg-body-tertiary`, `text-body`, `btn-outline-primary`, etc.).
-- Scrollbar adaptado a tema (en proceso).
-- Modo oscuro aún en revisión visual.
+2. Separar colores y tokens personalizados en `config/variables.scss`.
+3. Integrar selectores condicionales (`[data-theme='dark']`) para adaptar formularios, botones y modales.
 
 ---
 
-## ✅ Pendiente de mejorar
+## 🔧 Situación actual
 
-- Contraste en botones y textos en modo oscuro.
-- Mejor visualización de inputs y modales.
-- Integración con sistema de tarjetas y tareas en próximas fases.
+- No hay variables dinámicas aún.
+- No se aplican los temas `light.scss` ni `dark.scss` (están vacíos).
+- Se usa Bootstrap tal cual, con pequeños overrides si acaso en `config/`.
+
+---
+
+## ✅ Próximos pasos
+
+- Completar definición de colores personalizados (`--color-*`) y mapearlos a `--bs-*`.
+- Aplicar estas definiciones en `light.scss` y `dark.scss`.
+- Confirmar que `ThemeContext` cambia `data-theme` correctamente.
+- Adaptar componentes visuales a esas variables para que se actualicen con el tema.
+

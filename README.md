@@ -16,9 +16,10 @@ TFG-DAM-JavierABAD/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
+│   ├── uploads/   
+│   │   └── images/
 │   ├── .env
-│   ├── package.json
-│   └── README.md
+│   └── .gitignore
 ├── frontend/
 │   ├── public/
 │   ├── src/
@@ -110,6 +111,32 @@ El backend cuenta con autenticación mediante **JWT**:
 * Switch dinámico integrado en el Navbar.
 * Formularios, modales y botones adaptan colores automáticamente.
 * Cambios aplicados a través del atributo data-theme.
+
+---
+
+### 🖼️ Gestión de imágenes de usuario (avatares)
+
+* Las imágenes de perfil se almacenan en la carpeta `backend/uploads/images/`, fuera del código fuente (`src/`).
+* Express sirve esta ruta como carpeta estática, configurada así en `backend/src/index.js`:
+  ```js
+  const path = require('path');
+  const express = require('express');
+  const app = express();
+
+  app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+  ```
+* Al registrarse, los usuarios pueden subir una imagen. Si no lo hacen, se asigna un avatar por defecto.
+* Desde el frontend, las imágenes se cargan usando la variable de entorno `REACT_APP_FILES_URL`, definida en el `.env` del frontend:
+  ```env
+  REACT_APP_FILES_URL=http://localhost:5000
+  ```
+
+* Ejemplo de uso en React:
+  ```jsx
+  <img src={`${process.env.REACT_APP_FILES_URL}${user.avatarUrl}`} alt="Avatar" />
+  ```
+
+* Asegúrate de que la carpeta `uploads/` existe y tiene permisos de escritura si estás en producción.
 
 ---
 

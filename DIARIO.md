@@ -203,4 +203,40 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 8 - Miércoles 14 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Finalización visual y funcional del formulario de **registro en dos pasos**:
+  - Validación visual por campo (`email`, `username`, contraseñas, nombre, apellidos, etc.).
+  - Eliminación de `alert` en favor de mensajes Bootstrap (`text-danger`, `is-invalid`, `alert-danger`).
+  - Uso de `label` en todos los inputs para mejor accesibilidad.
+* Refactor completo del formulario de **login** con las mismas validaciones y diseño limpio.
+* Integración de subida de avatar en el registro mediante input de tipo `file`.
+* Configuración del backend para servir archivos estáticos desde `/uploads` con Express:
+  ```js
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  ```
+* Comprobación de acceso correcto a imágenes vía `http://localhost:5000/uploads/images/...`.
+* Creación y uso de nueva variable de entorno `REACT_APP_FILES_URL` para separar las rutas de imágenes del backend de las del API:
+  ```env
+  REACT_APP_FILES_URL=http://localhost:5000
+  ```
+* Refactor del componente `Navbar` para mostrar:
+  - Foto de perfil del usuario (avatar en círculo).
+  - Nombre (`firstName`) al lado de la imagen.
+  - Menú desplegable Bootstrap con botón de “Cerrar sesión”.
+* Eliminación del botón antiguo de logout en la navbar.
+* Asegurada compatibilidad entre rutas, imágenes locales y el backend Express.
+
+### 📝 Observaciones
+
+* El error `ERR_CONNECTION_REFUSED` al cargar imágenes se resolvió ejecutando correctamente el backend.
+* El error `path is not defined` fue corregido añadiendo `const path = require('path')` en el `index.js` del backend.
+* Se añadió una imagen de avatar por defecto que se carga automáticamente si el usuario no sube una imagen.
+* El sistema actual permite extender el menú desplegable para opciones futuras como “Mi perfil” o “Configuración”.
+* Se planificó para el Día 9 mejorar el diseño visual general del dashboard y preparar una vista de perfil editable.
+
+---
+
 *(continúa actualizando este documento día a día...)*
