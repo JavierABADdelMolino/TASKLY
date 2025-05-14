@@ -1,169 +1,47 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import RegisterStep1 from './RegisterStep1';
+import RegisterStep2 from './RegisterStep2';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const RegisterForm = ({ onRegister }) => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    birthDate: '',
+    gender: '',
+    theme: 'light',
+    avatarFile: null,
+  });
 
-const RegisterForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [birthDay, setBirthDay] = useState('');
-  const [birthMonth, setBirthMonth] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [daysInMonth, setDaysInMonth] = useState([]);
-  const [error, setError] = useState('');
-  const { setUser } = useAuth();
-  const navigate = useNavigate();
+  const nextStep = () => setStep(step + 1);
+  const prevStep = () => setStep(step - 1);
 
-  const monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-
-  useEffect(() => {
-    if (birthMonth && birthYear) {
-      const days = new Date(birthYear, birthMonth, 0).getDate();
-      setDaysInMonth(Array.from({ length: days }, (_, i) => i + 1));
-      if (birthDay > days) setBirthDay('');
-    }
-  }, [birthDay, birthMonth, birthYear]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
-
-    if (!birthDay || !birthMonth || !birthYear) {
-      setError('Debes seleccionar una fecha de nacimiento válida');
-      return;
-    }
-
-    const birthDate = new Date(`${birthYear}-${birthMonth}-${birthDay}`);
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, birthDate }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || 'Error al registrarse');
-        return;
-      }
-
-      sessionStorage.setItem('token', data.token);
-
-      const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${data.token}` },
-      });
-
-      const userData = await userRes.json();
-
-      if (!userRes.ok) {
-        setError(userData.message || 'No se pudo obtener el usuario');
-        return;
-      }
-
-      setUser(userData);
-      navigate('/dashboard');
-    } catch (err) {
-      console.error(err);
-      setError('Error de conexión con el servidor');
-    }
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3 className="mb-3">Registrarse</h3>
-      {error && <p className="text-danger">{error}</p>}
-
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Nombre de usuario"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
-      <input
-        type="email"
-        className="form-control mb-3"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        className="form-control mb-3"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        className="form-control mb-3"
-        placeholder="Confirmar contraseña"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        required
-      />
-
-      <label className="form-label mt-3">Fecha de nacimiento</label>
-      <div className="row mb-3">
-        <div className="col">
-          <select
-            className="form-select"
-            value={birthDay}
-            onChange={(e) => setBirthDay(e.target.value)}
-            required
-          >
-            <option value="">Día</option>
-            {daysInMonth.map((day) => (
-              <option key={day} value={day}>{day}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col">
-          <select
-            className="form-select"
-            value={birthMonth}
-            onChange={(e) => setBirthMonth(e.target.value)}
-            required
-          >
-            <option value="">Mes</option>
-            {monthNames.map((name, idx) => (
-              <option key={idx + 1} value={idx + 1}>{name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col">
-          <select
-            className="form-select"
-            value={birthYear}
-            onChange={(e) => setBirthYear(e.target.value)}
-            required
-          >
-            <option value="">Año</option>
-            {Array.from({ length: 100 }, (_, i) => {
-              const year = new Date().getFullYear() - i;
-              return <option key={year} value={year}>{year}</option>;
-            })}
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" className="btn btn-primary w-100">Crear cuenta</button>
-    </form>
+    <div className="auth-form-wrapper">
+      {step === 1 && (
+        <RegisterStep1
+          data={formData}
+          onChange={handleChange}
+          onNext={nextStep}
+        />
+      )}
+      {step === 2 && (
+        <RegisterStep2
+          data={formData}
+          onChange={handleChange}
+          onBack={prevStep}
+          onSubmit={onRegister}
+        />
+      )}
+    </div>
   );
 };
 

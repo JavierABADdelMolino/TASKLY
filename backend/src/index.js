@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/database');
+const path = require('path');
 
 // Rutas
 const pingRoutes = require('./routes/ping.routes');
@@ -19,6 +20,7 @@ connectDB();
 app.use(express.json()); // Para parsear JSON
 app.use(cors()); // Habilita CORS para peticiones cross-origin
 app.use(morgan('dev')); // Logs de peticiones
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Usar rutas
 app.use('/api', pingRoutes); // Monta las rutas bajo /api
