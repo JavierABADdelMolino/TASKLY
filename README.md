@@ -17,9 +17,8 @@ TFG-DAM-JavierABAD/
 │   │   ├── routes/
 │   │   └── index.js
 │   ├── uploads/   
-│   │   └── images/
-│   ├── .env
-│   └── .gitignore
+│   │   └── avatars/
+│   └── .env
 ├── frontend/
 │   ├── public/
 │   ├── src/
@@ -116,7 +115,7 @@ El backend cuenta con autenticación mediante **JWT**:
 
 ### 🖼️ Gestión de imágenes de usuario (avatares)
 
-* Las imágenes de perfil se almacenan en la carpeta `backend/uploads/images/`, fuera del código fuente (`src/`).
+* Las imágenes de perfil se almacenan en la carpeta `backend/uploads/avatars/`, fuera del código fuente (`src/`).
 * Express sirve esta ruta como carpeta estática, configurada así en `backend/src/index.js`:
   ```js
   const path = require('path');

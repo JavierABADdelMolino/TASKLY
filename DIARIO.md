@@ -239,4 +239,40 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 9 - Jueves 16 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación completa de subida opcional de avatar durante el registro:
+  * Creación del middleware `uploadAvatarMiddleware` usando `multer` para aceptar imágenes.
+  * Configuración del backend para servir la carpeta `uploads/avatars` como ruta estática.
+  * Ajuste del controlador `registerUser` para guardar la URL del avatar si se sube, o asignar una imagen por defecto según el género.
+  * Verificación de nombres de archivo únicos combinando `username` y timestamp para evitar conflictos.
+  * Revisión del archivo `app.js` para capturar errores de `multer` mediante middleware global.
+
+* Refactor completo del frontend para eliminar `alert()`:
+  * Todos los errores ahora se muestran en el formulario con clases Bootstrap (`text-danger`, `alert-danger`, `is-invalid`).
+  * Redirección automática al dashboard tras registro exitoso.
+  * Almacén de sesión con `sessionStorage` y recuperación del usuario mediante `/auth/me`.
+  * Uso del contexto `AuthContext` para guardar al usuario tras el login o registro.
+
+* Mejora del diseño del `RegisterForm`:
+  * División en dos pasos (`RegisterStep1`, `RegisterStep2`) con validaciones independientes.
+  * Manejo de errores del servidor (`serverErrors.general`) directamente en los formularios.
+
+* Confirmación de correcto funcionamiento de:
+  * Subida de avatar al registrarse.
+  * Visualización del avatar en el dashboard y navbar.
+  * Logout funcional desde el dropdown.
+  * Login posterior con imagen correctamente cargada desde backend.
+
+### 📝 Observaciones
+
+* El registro ahora es robusto, visualmente limpio y funcional tanto si el usuario sube una imagen como si no.
+* Se utiliza la variable `REACT_APP_URL` para componer la URL final del avatar en el frontend.
+* Se ha mantenido la consistencia con el estilo y flujo del `LoginForm` en cuanto a validaciones y control de errores.
+* El sistema actual está preparado para escalar y soportar edición de perfil o recambio de avatar en futuras iteraciones.
+
+---
+
 *(continúa actualizando este documento día a día...)*
