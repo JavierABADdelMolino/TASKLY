@@ -20,7 +20,7 @@ connectDB();
 app.use(express.json()); // Para parsear JSON
 app.use(cors()); // Habilita CORS para peticiones cross-origin
 app.use(morgan('dev')); // Logs de peticiones
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Usar rutas
 app.use('/api', pingRoutes); // Monta las rutas bajo /api

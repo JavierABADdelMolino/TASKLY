@@ -41,8 +41,8 @@ exports.registerUser = async (req, res) => {
     if (!finalAvatarUrl) {
       finalAvatarUrl =
         gender === 'female'
-          ? '/uploads/images/default-avatar-female.png'
-          : '/uploads/images/default-avatar-male.png';
+          ? '/uploads/avatars/default-avatar-female.png'
+          : '/uploads/avatars/default-avatar-male.png';
     }
 
     // Crear y guardar el usuario
