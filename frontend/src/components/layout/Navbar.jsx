@@ -15,7 +15,6 @@ const Navbar = () => {
     navigate('/');
   };
 
-  // 🧠 Si hay usuario, redirige a /dashboard. Si no, a /
   const brandLink = user ? '/dashboard' : '/';
 
   return (
@@ -48,9 +47,30 @@ const Navbar = () => {
           )}
 
           {user && isDashboard && (
-            <button className="btn btn-outline-danger me-2" onClick={handleLogout}>
-              Cerrar sesión
-            </button>
+            <div className="dropdown">
+              <button
+                className="btn d-flex align-items-center dropdown-toggle"
+                id="userMenu"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src={`${process.env.REACT_APP_URL}${user.avatarUrl}`}
+                  alt="avatar"
+                  className="rounded-circle me-2 border"
+                  style={{ width: '36px', height: '36px', objectFit: 'cover' }}
+                />
+                <span className="d-none d-md-inline">{user.firstName}</span>
+              </button>
+
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <li>
+                  <button className="dropdown-item text-danger" onClick={handleLogout}>
+                    Cerrar sesión
+                  </button>
+                </li>
+              </ul>
+            </div>
           )}
         </div>
       </div>

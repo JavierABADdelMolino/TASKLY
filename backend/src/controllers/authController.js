@@ -18,24 +18,68 @@ const generateToken = (user) => {
  * @access  Público
  */
 exports.registerUser = async (req, res) => {
-  const { username, email, password, birthDate } = req.body;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    password,
+    birthDate,
+    gender,
+    theme,
+    avatarUrl // opcional: por si eliges un avatar sin subir archivo
+  } = req.body;
 
   try {
-    // Verifica si ya existe un usuario con ese email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    // Crea el nuevo usuario con fecha de nacimiento
-    const user = new User({ username, email, password, birthDate });
+    // Obtener la URL del avatar subido, manual o por defecto
+    let finalAvatarUrl = '';
+
+    if (req.file) {
+      finalAvatarUrl = `/uploads/avatars/${req.file.filename}`;
+    } else if (avatarUrl) {
+      finalAvatarUrl = avatarUrl; // Opción manual desde el frontend (opcional)
+    } else {
+      finalAvatarUrl =
+        gender === 'female'
+          ? '/uploads/avatars/default-avatar-female.png'
+          : '/uploads/avatars/default-avatar-male.png';
+    }
+
+    // Crear y guardar el usuario
+    const user = new User({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      birthDate,
+      gender,
+      theme,
+      avatarUrl: finalAvatarUrl
+    });
+
     await user.save();
 
     const token = generateToken(user);
 
     res.status(201).json({
       token,
-      user: { id: user._id, username, email },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        gender: user.gender,
+        theme: user.theme,
+        avatarUrl: user.avatarUrl
+      }
     });
   } catch (err) {
     res.status(500).json({ message: 'Error en el servidor', error: err.message });
@@ -51,7 +95,6 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Busca el usuario y verifica la contraseña
     const user = await User.findOne({ email });
     const isValid = user && await user.comparePassword(password);
     if (!isValid) {
@@ -62,7 +105,17 @@ exports.loginUser = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, username: user.username, email },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        gender: user.gender,
+        theme: user.theme,
+        avatarUrl: user.avatarUrl
+      }
     });
   } catch (err) {
     res.status(500).json({ message: 'Error en el servidor', error: err.message });
@@ -85,7 +138,12 @@ exports.getMe = async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       birthDate: user.birthDate,
+      gender: user.gender,
+      theme: user.theme,
+      avatarUrl: user.avatarUrl
     });
   } catch (err) {
     res.status(500).json({ message: 'Error al recuperar el usuario', error: err.message });
