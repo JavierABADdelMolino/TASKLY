@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
-  const [errors, setErrors] = useState({});
+const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
+  const [localErrors, setLocalErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
@@ -22,14 +22,14 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
       newErrors.gender = 'Selecciona una opción válida';
     }
 
-    setErrors(newErrors);
+    setLocalErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      onSubmit(data);
+      onSubmit();
     }
   };
 
@@ -37,16 +37,22 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
     <form onSubmit={handleSubmit} className="d-flex flex-column justify-content-between h-100">
       <h3 className="mb-3 text-center">Información personal</h3>
 
+      {errors.general && (
+        <div className="alert alert-danger text-center small mb-3">
+          {errors.general}
+        </div>
+      )}
+
       <div className="mb-3">
         <label htmlFor="firstName" className="form-label">Nombre</label>
         <input
           id="firstName"
           type="text"
-          className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.firstName ? 'is-invalid' : ''}`}
           value={data.firstName}
           onChange={(e) => onChange('firstName', e.target.value)}
         />
-        {errors.firstName && <small className="text-danger">{errors.firstName}</small>}
+        {localErrors.firstName && <small className="text-danger">{localErrors.firstName}</small>}
       </div>
 
       <div className="mb-3">
@@ -54,11 +60,11 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
         <input
           id="lastName"
           type="text"
-          className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.lastName ? 'is-invalid' : ''}`}
           value={data.lastName}
           onChange={(e) => onChange('lastName', e.target.value)}
         />
-        {errors.lastName && <small className="text-danger">{errors.lastName}</small>}
+        {localErrors.lastName && <small className="text-danger">{localErrors.lastName}</small>}
       </div>
 
       <div className="mb-3">
@@ -66,11 +72,11 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
         <input
           id="birthDate"
           type="date"
-          className={`form-control ${errors.birthDate ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.birthDate ? 'is-invalid' : ''}`}
           value={data.birthDate}
           onChange={(e) => onChange('birthDate', e.target.value)}
         />
-        {errors.birthDate && <small className="text-danger">{errors.birthDate}</small>}
+        {localErrors.birthDate && <small className="text-danger">{localErrors.birthDate}</small>}
       </div>
 
       <div className="row mb-3">
@@ -78,7 +84,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
           <label htmlFor="gender" className="form-label">Sexo</label>
           <select
             id="gender"
-            className={`form-select ${errors.gender ? 'is-invalid' : ''}`}
+            className={`form-select ${localErrors.gender ? 'is-invalid' : ''}`}
             value={data.gender}
             onChange={(e) => onChange('gender', e.target.value)}
           >
@@ -86,7 +92,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit }) => {
             <option value="male">Hombre</option>
             <option value="female">Mujer</option>
           </select>
-          {errors.gender && <small className="text-danger">{errors.gender}</small>}
+          {localErrors.gender && <small className="text-danger">{localErrors.gender}</small>}
         </div>
 
         <div className="col-6">

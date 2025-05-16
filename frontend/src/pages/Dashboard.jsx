@@ -7,8 +7,8 @@ const Dashboard = () => {
   return (
     <Layout>
       <div className="text-center py-5">
-        <h2 className="mb-3">Bienvenido, {user?.username}</h2>
-        <p className="mb-4">Has iniciado sesión correctamente.</p>
+        <h2 className="mb-2">¡Hola, {user?.firstName}!</h2>
+        <p className="text-muted">Te damos la bienvenida a tu panel de tareas.</p>
       </div>
     </Layout>
   );

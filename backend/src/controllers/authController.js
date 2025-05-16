@@ -27,7 +27,7 @@ exports.registerUser = async (req, res) => {
     birthDate,
     gender,
     theme,
-    avatarUrl
+    avatarUrl // opcional: por si eliges un avatar sin subir archivo
   } = req.body;
 
   try {
@@ -36,9 +36,14 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    // Definir avatar por defecto si no se ha subido
-    let finalAvatarUrl = avatarUrl;
-    if (!finalAvatarUrl) {
+    // Obtener la URL del avatar subido, manual o por defecto
+    let finalAvatarUrl = '';
+
+    if (req.file) {
+      finalAvatarUrl = `/uploads/avatars/${req.file.filename}`;
+    } else if (avatarUrl) {
+      finalAvatarUrl = avatarUrl; // Opción manual desde el frontend (opcional)
+    } else {
       finalAvatarUrl =
         gender === 'female'
           ? '/uploads/avatars/default-avatar-female.png'
