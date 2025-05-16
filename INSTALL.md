@@ -191,29 +191,35 @@ TFG-DAM-JavierABAD/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
-│   ├── .env
-│   ├── package.json
-│   └── README.md
+│   ├── uploads/   
+│   │   └── avatars/
+│   └── .env
 ├── frontend/
 │   ├── public/
 │   ├── src/
-│   │   ├── assets/        # Imágenes, fuentes, íconos, etc.
-│   │   ├── components/    # Componentes reutilizables
-│   │   ├── context/       # Contextos globales (AuthContext, etc.)
-│   │   ├── hooks/         # Custom hooks (useAuth, etc.)
-│   │   ├── pages/         # Páginas principales (Home, Login, etc.)
-│   │   ├── services/      # Funciones para llamadas HTTP (fetch/axios)
-│   │   ├── utils/         # Funciones auxiliares (formateo, validación)
-│   │   ├── styles/        # Estilos globales o comunes
+│   │   ├── assets/           # Logos, iconos, imágenes, fuentes
+│   │   ├── components/
+│   │   │   ├── layout/       # Navbar, Footer, Layout general
+│   │   │   ├── auth/         # Formularios de login y registro
+│   │   │   ├── ui/           # Loader, ThemeSwitcher, etc.
+│   │   ├── context/          # AuthContext, ThemeContext, LoaderContext
+│   │   ├── hooks/            # Custom Hooks
+│   │   ├── pages/            # Home, Dashboard, etc.
+│   │   ├── services/         # Lógica de comunicación HTTP (fetch)
+│   │   ├── styles/           # Estilos globales con SCSS y Bootstrap
+│   │   │   ├── base/         # Reset, formularios
+│   │   │   ├── config/       # Variables SCSS
+│   │   │   ├── components/   # Estilos de componentes específicos
+│   │   │   └── themes/       # Tema claro y oscuro
 │   │   ├── App.js
 │   │   └── index.js
 │   ├── .env
-│   ├── package.json
-│   └── README.md
+│   └── package.json
 ├── DIARIO.md
 ├── INSTALL.md
 ├── .gitignore
-└── README.md
+├── README.md
+└── THEME.md
 ```
 
 ---

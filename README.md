@@ -16,30 +16,35 @@ TFG-DAM-JavierABAD/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   └── index.js
-│   ├── .env
-│   ├── package.json
-│   └── README.md
+│   ├── uploads/   
+│   │   └── avatars/
+│   └── .env
 ├── frontend/
 │   ├── public/
 │   ├── src/
-│   │   ├── assets/        # Imágenes, fuentes, íconos, etc.
-│   │   ├── components/    # Componentes reutilizables
-│   │   ├── context/       # Contextos globales (AuthContext, etc.)
-│   │   ├── hooks/         # Custom hooks (useAuth, etc.)
-│   │   ├── pages/         # Páginas principales (Home, Login, etc.)
-│   │   ├── services/      # Funciones para llamadas HTTP (fetch/axios)
-│   │   ├── utils/         # Funciones auxiliares (formateo, validación)
-│   │   ├── styles/        # Estilos globales o comunes
+│   │   ├── assets/           # Logos, iconos, imágenes, fuentes
+│   │   ├── components/
+│   │   │   ├── layout/       # Navbar, Footer, Layout general
+│   │   │   ├── auth/         # Formularios de login y registro
+│   │   │   ├── ui/           # Loader, ThemeSwitcher, etc.
+│   │   ├── context/          # AuthContext, ThemeContext, LoaderContext
+│   │   ├── hooks/            # Custom Hooks
+│   │   ├── pages/            # Home, Dashboard, etc.
+│   │   ├── services/         # Lógica de comunicación HTTP (fetch)
+│   │   ├── styles/           # Estilos globales con SCSS y Bootstrap
+│   │   │   ├── base/         # Reset, formularios
+│   │   │   ├── config/       # Variables SCSS
+│   │   │   ├── components/   # Estilos de componentes específicos
+│   │   │   └── themes/       # Tema claro y oscuro
 │   │   ├── App.js
 │   │   └── index.js
 │   ├── .env
-│   ├── .gitignore
-│   ├── package.json
-│   └── README.md
+│   └── package.json
 ├── DIARIO.md
 ├── INSTALL.md
 ├── .gitignore
-└── README.md
+├── README.md
+└── THEME.md
 ```
 
 ---
@@ -95,6 +100,42 @@ El backend cuenta con autenticación mediante **JWT**:
 - Al recargar la página, si existe un token, el frontend realiza una petición a `/api/auth/me` para obtener los datos del usuario autenticado.
 - Si el token no es válido o ha expirado, se elimina automáticamente del almacenamiento y el usuario vuelve al estado no autenticado.
 - La sesión se mantiene activa mientras el navegador esté abierto. Cerrar el navegador finaliza la sesión.
+
+---
+
+### 🎨 Sistema de temas (claro/oscuro)
+
+* Implementado 100% con variables CSS (--bs-*) y SCSS ($primary, etc.).
+* Soporta personalización de colores desde un único punto.
+* Switch dinámico integrado en el Navbar.
+* Formularios, modales y botones adaptan colores automáticamente.
+* Cambios aplicados a través del atributo data-theme.
+
+---
+
+### 🖼️ Gestión de imágenes de usuario (avatares)
+
+* Las imágenes de perfil se almacenan en la carpeta `backend/uploads/avatars/`, fuera del código fuente (`src/`).
+* Express sirve esta ruta como carpeta estática, configurada así en `backend/src/index.js`:
+  ```js
+  const path = require('path');
+  const express = require('express');
+  const app = express();
+
+  app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+  ```
+* Al registrarse, los usuarios pueden subir una imagen. Si no lo hacen, se asigna un avatar por defecto.
+* Desde el frontend, las imágenes se cargan usando la variable de entorno `REACT_APP_FILES_URL`, definida en el `.env` del frontend:
+  ```env
+  REACT_APP_FILES_URL=http://localhost:5000
+  ```
+
+* Ejemplo de uso en React:
+  ```jsx
+  <img src={`${process.env.REACT_APP_FILES_URL}${user.avatarUrl}`} alt="Avatar" />
+  ```
+
+* Asegúrate de que la carpeta `uploads/` existe y tiene permisos de escritura si estás en producción.
 
 ---
 

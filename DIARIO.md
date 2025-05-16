@@ -175,4 +175,104 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 7 - Martes 13 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Inicio de la rama `feature/theme-ui` para implementar un sistema de temas claro/oscuro personalizado.
+* Integración de Bootstrap mediante archivo `theme.scss`, en lugar del `custom.scss` anterior.
+* Organización de la carpeta `styles/` con subcarpetas `base/`, `config/`, `components/` y `themes/`.
+* Implementación del componente `ThemeSwitcher` con diseño tipo switch al estilo Apple.
+* Activación y persistencia del tema claro/oscuro mediante `data-theme` en `document.documentElement`.
+* Añadidas variables personalizadas en `light.scss` y `dark.scss`, mapeadas a `--bs-*` para que Bootstrap responda dinámicamente.
+* Inclusión de estructura de layout con componentes `Navbar`, `Footer` y `Layout.jsx`.
+* Implementación de `RouteChangeLoader` que muestra un loader al navegar entre páginas.
+* Rediseño completo de `Home` y `Dashboard` utilizando clases Bootstrap (`container`, `bg-body-tertiary`, `text-body`, etc.).
+* Integración del `ThemeSwitcher` en la `Navbar`, siempre visible.
+* Lógica condicional en la `Navbar` para mostrar botones según la ruta (`/` o `/dashboard`).
+* Refactor de los modales de login y registro para usar clases Bootstrap (`bg-white`, `shadow`, `rounded`, etc.).
+* Correcciones de visibilidad en modo oscuro: inputs, formularios, botones y navbar.
+
+### 📝 Observaciones
+
+* Se detectaron múltiples problemas visuales en modo oscuro debido a clases de Bootstrap que no heredan variables dinámicas.
+* Se redefinieron las variables `--bs-body-bg`, `--bs-body-color`, `--bs-tertiary-bg-rgb`, etc., para asegurar compatibilidad total.
+* El modo oscuro aún requiere mejoras visuales de contraste y legibilidad, especialmente en botones, formularios y navbar.
+* Se documentó la nueva estructura de carpetas en el `README.md`.
+* Se planificó dedicar el Día 8 a mejorar estéticamente el modo oscuro y personalizar profundamente el diseño.
+
+---
+
+## 🗓️ Día 8 - Miércoles 14 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Finalización visual y funcional del formulario de **registro en dos pasos**:
+  - Validación visual por campo (`email`, `username`, contraseñas, nombre, apellidos, etc.).
+  - Eliminación de `alert` en favor de mensajes Bootstrap (`text-danger`, `is-invalid`, `alert-danger`).
+  - Uso de `label` en todos los inputs para mejor accesibilidad.
+* Refactor completo del formulario de **login** con las mismas validaciones y diseño limpio.
+* Integración de subida de avatar en el registro mediante input de tipo `file`.
+* Configuración del backend para servir archivos estáticos desde `/uploads` con Express:
+  ```js
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  ```
+* Comprobación de acceso correcto a imágenes vía `http://localhost:5000/uploads/images/...`.
+* Creación y uso de nueva variable de entorno `REACT_APP_FILES_URL` para separar las rutas de imágenes del backend de las del API:
+  ```env
+  REACT_APP_FILES_URL=http://localhost:5000
+  ```
+* Refactor del componente `Navbar` para mostrar:
+  - Foto de perfil del usuario (avatar en círculo).
+  - Nombre (`firstName`) al lado de la imagen.
+  - Menú desplegable Bootstrap con botón de “Cerrar sesión”.
+* Eliminación del botón antiguo de logout en la navbar.
+* Asegurada compatibilidad entre rutas, imágenes locales y el backend Express.
+
+### 📝 Observaciones
+
+* El error `ERR_CONNECTION_REFUSED` al cargar imágenes se resolvió ejecutando correctamente el backend.
+* El error `path is not defined` fue corregido añadiendo `const path = require('path')` en el `index.js` del backend.
+* Se añadió una imagen de avatar por defecto que se carga automáticamente si el usuario no sube una imagen.
+* El sistema actual permite extender el menú desplegable para opciones futuras como “Mi perfil” o “Configuración”.
+* Se planificó para el Día 9 mejorar el diseño visual general del dashboard y preparar una vista de perfil editable.
+
+---
+
+## 🗓️ Día 9 - Jueves 16 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación completa de subida opcional de avatar durante el registro:
+  * Creación del middleware `uploadAvatarMiddleware` usando `multer` para aceptar imágenes.
+  * Configuración del backend para servir la carpeta `uploads/avatars` como ruta estática.
+  * Ajuste del controlador `registerUser` para guardar la URL del avatar si se sube, o asignar una imagen por defecto según el género.
+  * Verificación de nombres de archivo únicos combinando `username` y timestamp para evitar conflictos.
+  * Revisión del archivo `app.js` para capturar errores de `multer` mediante middleware global.
+
+* Refactor completo del frontend para eliminar `alert()`:
+  * Todos los errores ahora se muestran en el formulario con clases Bootstrap (`text-danger`, `alert-danger`, `is-invalid`).
+  * Redirección automática al dashboard tras registro exitoso.
+  * Almacén de sesión con `sessionStorage` y recuperación del usuario mediante `/auth/me`.
+  * Uso del contexto `AuthContext` para guardar al usuario tras el login o registro.
+
+* Mejora del diseño del `RegisterForm`:
+  * División en dos pasos (`RegisterStep1`, `RegisterStep2`) con validaciones independientes.
+  * Manejo de errores del servidor (`serverErrors.general`) directamente en los formularios.
+
+* Confirmación de correcto funcionamiento de:
+  * Subida de avatar al registrarse.
+  * Visualización del avatar en el dashboard y navbar.
+  * Logout funcional desde el dropdown.
+  * Login posterior con imagen correctamente cargada desde backend.
+
+### 📝 Observaciones
+
+* El registro ahora es robusto, visualmente limpio y funcional tanto si el usuario sube una imagen como si no.
+* Se utiliza la variable `REACT_APP_URL` para componer la URL final del avatar en el frontend.
+* Se ha mantenido la consistencia con el estilo y flujo del `LoginForm` en cuanto a validaciones y control de errores.
+* El sistema actual está preparado para escalar y soportar edición de perfil o recambio de avatar en futuras iteraciones.
+
+---
+
 *(continúa actualizando este documento día a día...)*
