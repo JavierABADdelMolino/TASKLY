@@ -9,6 +9,8 @@
 ```bash
 TFG-DAM-JavierABAD/
 ├── backend/
+│   ├── public/   
+│   │   └── avatars/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── controllers/
@@ -61,8 +63,6 @@ TFG-DAM-JavierABAD/
 
 * [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
 * [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
-* [`backend/README.md`](./backend/README.md): guía técnica del backend (Node.js + Express + MongoDB).
-* [`frontend/README.md`](./frontend/README.md): guía técnica del frontend (React).
 
 ---
 
