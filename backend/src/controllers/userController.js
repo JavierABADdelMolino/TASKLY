@@ -75,11 +75,10 @@ exports.updateUserProfile = async (req, res) => {
       user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
       updated = true;
 
-      if (oldAvatarPath && !oldAvatarPath.startsWith('/public/avatars/')) {
-        const fullPath = path.resolve(__dirname, '..' + oldAvatarPath);
+      if (oldAvatarPath && !oldAvatarPath.includes('/uploads/images/')) {
+        const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
           if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
-          else console.log('Avatar eliminado correctamente:', fullPath);
         });
       }
     }
@@ -88,14 +87,13 @@ exports.updateUserProfile = async (req, res) => {
     if (!avatarFile && typeof avatar !== 'undefined' && avatar === '') {
       const oldAvatarPath = user.avatarUrl;
       const defaultAvatar = user.gender === 'female'
-        ? '/public/avatars/default-avatar-female.png'
-        : '/public/avatars/default-avatar-male.png';
+        ? '/uploads/images/default-avatar-female.png'
+        : '/uploads/images/default-avatar-male.png';
 
-      if (oldAvatarPath && !oldAvatarPath.startsWith('/public/avatars/')) {
-        const fullPath = path.resolve(__dirname, '..' + oldAvatarPath);
+      if (oldAvatarPath && !oldAvatarPath.includes('/uploads/images/')) {
+       const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
           if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
-          else console.log('Avatar eliminado correctamente:', fullPath);
         });
       }
 
@@ -147,14 +145,13 @@ exports.deleteUserAccount = async (req, res) => {
     const user = await User.findByIdAndDelete(req.user.id);
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-    if (user.avatarUrl && !user.avatarUrl.startsWith('/public/avatars/')) {
-      const avatarPath = path.resolve(__dirname, '..' + user.avatarUrl);
-      fs.unlink(avatarPath, err => {
+    if (user.avatarUrl && !user.avatarUrl.includes('/uploads/images/')) {
+      const fullPath = path.join(__dirname, '..', '..', user.avatarUrl.replace(/^\/+/, ''));
+      fs.unlink(fullPath, err => {
         if (err) console.warn('No se pudo eliminar el avatar del usuario:', err.message);
-        else console.log('Avatar del usuario eliminado:', avatarPath);
       });
     }
-    
+
     res.json({ message: 'Cuenta eliminada correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar cuenta', error: err.message });
