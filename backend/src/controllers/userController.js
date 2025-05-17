@@ -114,20 +114,21 @@ exports.updateUserProfile = async (req, res) => {
 // PUT /api/users/change-password
 exports.changePassword = async (req, res) => {
   try {
-    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    if (!currentPassword || !newPassword || !confirmPassword)
-      return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-
-    if (newPassword !== confirmPassword)
-      return res.status(400).json({ message: 'Las nuevas contraseñas no coinciden' });
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Los campos son obligatorios' });
+    }
 
     const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res.status(401).json({ message: 'La contraseña actual no es correcta' });
+    }
 
     user.password = newPassword;
     await user.save();
