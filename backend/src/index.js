@@ -10,6 +10,7 @@ const path = require('path');
 const pingRoutes = require('./routes/ping.routes');
 const authRoutes = require('./routes/auth.routes');
 const privateRoutes = require('./routes/private.routes');
+const userRoutes = require('./routes/user.routes');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use('/api', pingRoutes);
 app.use('/api', privateRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Manejo de errores (especialmente para Multer)
 app.use((err, req, res, next) => {
