@@ -9,6 +9,7 @@ const Navbar = () => {
   const currentPath = location.pathname;
   const isHome = currentPath === '/';
   const isDashboard = currentPath.startsWith('/dashboard');
+  const isProfile = currentPath.startsWith('/profile');
 
   const handleLogout = () => {
     logout();
@@ -46,7 +47,7 @@ const Navbar = () => {
             </>
           )}
 
-          {user && isDashboard && (
+          {user && (isDashboard || isProfile) && (
             <div className="dropdown">
               <button
                 className="btn d-flex align-items-center dropdown-toggle"
@@ -64,6 +65,14 @@ const Navbar = () => {
               </button>
 
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => navigate('/profile')}
+                  >
+                    Mi perfil
+                  </button>
+                </li>
                 <li>
                   <button className="dropdown-item text-danger" onClick={handleLogout}>
                     Cerrar sesión
