@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getMe } = require('../controllers/authController');
 const verifyToken = require('../middlewares/authMiddleware');
-const uploadAvatarMiddleware = require('../middlewares/uploadAvatarMiddleware');
+const avatarMiddleware = require('../middlewares/avatarMiddleware');
 
 // @route   POST /api/auth/register
 // @desc    Registrar nuevo usuario con posible avatar
-router.post('/register', uploadAvatarMiddleware.single('avatar'), registerUser);
+router.post('/register', avatarMiddleware.single('avatar'), registerUser);
 
 // @route   POST /api/auth/login
 // @desc    Iniciar sesión
