@@ -14,7 +14,7 @@ const RouteChangeLoader = () => {
     // Simula carga (puedes ajustarlo o quitarlo)
     const timeout = setTimeout(() => {
       setShowLoader(false);
-    }, 500); // Duración del loader (puede depender de cada vista)
+    }, 1000); // Duración del loader (puede depender de cada vista)
 
     return () => clearTimeout(timeout);
   }, [location.pathname, setShowLoader]); // Solo reacciona al cambiar de ruta

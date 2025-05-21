@@ -141,7 +141,8 @@ exports.deleteUserAccount = async (req, res) => {
     const user = await User.findByIdAndDelete(req.user.id);
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-    if (user.avatarUrl && !user.avatarUrl.includes('/uploads/images/')) {
+    // Solo eliminar avatares personalizados (ubicados en uploads/avatars)
+    if (user.avatarUrl && user.avatarUrl.includes('/uploads/avatars/')) {
       const fullPath = path.join(__dirname, '..', '..', user.avatarUrl.replace(/^\/+/, ''));
       fs.unlink(fullPath, err => {
         if (err) console.warn('No se pudo eliminar el avatar del usuario:', err.message);
@@ -153,3 +154,4 @@ exports.deleteUserAccount = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar cuenta', error: err.message });
   }
 };
+
