@@ -87,8 +87,8 @@ exports.updateUserProfile = async (req, res) => {
     if (!avatarFile && typeof avatar !== 'undefined' && avatar === '') {
       const oldAvatarPath = user.avatarUrl;
       const defaultAvatar = user.gender === 'female'
-        ? '/uploads/images/default-avatar-female.png'
-        : '/uploads/images/default-avatar-male.png';
+        ? '/public/avatars/default-avatar-female.png'
+        : '/public/avatars/default-avatar-male.png';
 
       if (oldAvatarPath && !oldAvatarPath.includes('/uploads/images/')) {
        const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
