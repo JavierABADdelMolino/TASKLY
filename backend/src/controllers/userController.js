@@ -21,11 +21,10 @@ exports.updateUserProfile = async (req, res) => {
       firstName,
       lastName,
       username,
-      email,
       birthDate,
       gender,
       theme,
-      avatar // puede venir vacío ("") si quiere eliminar el avatar actual
+      avatar // string vacío si se quiere eliminar
     } = req.body;
 
     const avatarFile = req.file;
@@ -34,48 +33,40 @@ exports.updateUserProfile = async (req, res) => {
 
     let updated = false;
 
+    // Actualización de campos simples
     if (firstName && firstName !== user.firstName) {
       user.firstName = firstName;
       updated = true;
     }
-
     if (lastName && lastName !== user.lastName) {
       user.lastName = lastName;
       updated = true;
     }
-
     if (username && username !== user.username) {
       user.username = username;
       updated = true;
     }
-
-    if (email && email !== user.email) {
-      user.email = email;
-      updated = true;
-    }
-
     if (birthDate && new Date(birthDate).toISOString() !== user.birthDate.toISOString()) {
       user.birthDate = new Date(birthDate);
       updated = true;
     }
-
     if (gender && gender !== user.gender) {
       user.gender = gender;
       updated = true;
     }
-
     if (theme && theme !== user.theme) {
       user.theme = theme;
       updated = true;
     }
 
-    // Subida de nuevo avatar
+    // Subida de un nuevo avatar
     if (avatarFile) {
       const oldAvatarPath = user.avatarUrl;
       user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
       updated = true;
 
-      if (oldAvatarPath && !oldAvatarPath.includes('/uploads/images/')) {
+      // Eliminar avatar anterior si era personalizado
+      if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
         const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
           if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
@@ -83,15 +74,19 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
-    // Eliminación del avatar actual y asignación del predeterminado
-    if (!avatarFile && typeof avatar !== 'undefined' && avatar === '') {
+    // Eliminar avatar actual (volver al predeterminado)
+    if (!avatarFile && avatar === '') {
       const oldAvatarPath = user.avatarUrl;
-      const defaultAvatar = user.gender === 'female'
+
+      // Establecer avatar por defecto según el género actual o actualizado
+      const newGender = gender || user.gender;
+      const defaultAvatar = newGender === 'female'
         ? '/public/avatars/default-avatar-female.png'
         : '/public/avatars/default-avatar-male.png';
 
-      if (oldAvatarPath && !oldAvatarPath.includes('/uploads/images/')) {
-       const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
+      // Eliminar avatar anterior si era personalizado
+      if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
+        const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
           if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
         });
@@ -103,10 +98,11 @@ exports.updateUserProfile = async (req, res) => {
 
     if (updated) await user.save();
 
-    const updatedUser = await User.findById(req.user.id).select('-password');
+    const updatedUser = await User.findById(user.id).select('-password');
     res.json(updatedUser);
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Error al actualizar perfil', error: err.message });
   }
 };

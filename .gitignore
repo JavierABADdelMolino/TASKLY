@@ -20,3 +20,6 @@ backend/dist/
 # Configs de editores
 .vscode/
 .idea/
+
+/uploads/avatars/*
+!/uploads/avatars/.gitkeep

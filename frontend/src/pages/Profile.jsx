@@ -8,7 +8,7 @@ import AvatarUploader from '../components/profile/AvatarUploader';
 
 const Profile = () => {
   const { setShowLoader } = useLoader();
-  const { setUser } = useAuth(); // actualizar contexto global
+  const { setUser } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -28,6 +28,9 @@ const Profile = () => {
   const [errors, setErrors] = useState({});
   const [showPwdModal, setShowPwdModal] = useState(false);
   const [showDelModal, setShowDelModal] = useState(false);
+
+  const isDefaultAvatar = (url) =>
+    url?.includes('/public/avatars/default-avatar-');
 
   const fetchUser = useCallback(async () => {
     try {
@@ -49,7 +52,7 @@ const Profile = () => {
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt
         });
-        setUser(data); // ← actualiza el contexto global
+        setUser(data);
       } else {
         console.error('Error al cargar el usuario:', data.message);
       }
@@ -64,7 +67,18 @@ const Profile = () => {
     fetchUser();
   }, [fetchUser]);
 
-  const formatJoinDate = iso =>
+  // Actualiza avatar por defecto si cambia el género y tiene un avatar por defecto
+  useEffect(() => {
+    if (!newAvatarFile && isDefaultAvatar(formData.avatarUrl)) {
+      const newDefault =
+        formData.gender === 'female'
+          ? '/public/avatars/default-avatar-female.png'
+          : '/public/avatars/default-avatar-male.png';
+      setFormData((prev) => ({ ...prev, avatarUrl: newDefault }));
+    }
+  }, [formData.gender, formData.avatarUrl, newAvatarFile]);
+
+  const formatJoinDate = (iso) =>
     iso
       ? `Miembro desde ${new Date(iso).toLocaleDateString('es-ES', {
           year: 'numeric',
@@ -80,7 +94,7 @@ const Profile = () => {
     setNewAvatarFile(null);
     setAvatarDeleted(false);
     setErrors({});
-    fetchUser(); // recarga datos actuales
+    fetchUser();
   };
 
   const handleInputChange = (e) =>
@@ -94,6 +108,11 @@ const Profile = () => {
   const handleAvatarDelete = () => {
     setAvatarDeleted(true);
     setNewAvatarFile(null);
+    const newDefault =
+      formData.gender === 'female'
+        ? '/public/avatars/default-avatar-female.png'
+        : '/public/avatars/default-avatar-male.png';
+    setFormData((prev) => ({ ...prev, avatarUrl: newDefault }));
   };
 
   const handleSaveChanges = async () => {
@@ -140,7 +159,7 @@ const Profile = () => {
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt
         });
-        setUser(data); // ← actualiza el user global
+        setUser(data);
         setEditMode(false);
         setNewAvatarFile(null);
         setAvatarDeleted(false);
