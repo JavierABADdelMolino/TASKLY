@@ -139,6 +139,20 @@ El backend cuenta con autenticación mediante **JWT**:
 
 ---
 
+### 👤 Gestión del perfil de usuario
+
+Una vez autenticado, el usuario puede:
+
+- Ver su perfil y fecha de registro.
+- Editar campos personales (nombre, apellidos, usuario, fecha de nacimiento, género, tema visual).
+- Subir, eliminar o restaurar su avatar (asignación automática según género si no se elige imagen).
+- Cambiar su contraseña actual con validación.
+- Eliminar su cuenta de forma permanente.
+
+Las rutas protegidas del backend (`/api/users`) están aseguradas mediante tokens JWT.
+
+---
+
 ## 🚀 Flujo de trabajo con Git
 
 Este proyecto sigue una convención de ramas y commits basada en buenas prácticas dentro del stack MERN.

@@ -309,4 +309,29 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * Mañana se comenzará con el desarrollo de la vista `ProfilePage` para implementar estas funcionalidades desde la interfaz del cliente.
 
 ---
+
+## 🗓️ Día 11 - Miércoles 21 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación de la vista `Profile.jsx` en React con lógica completa de edición.
+* Carga del usuario desde `/api/users/me` al entrar en la página.
+* Componente `AvatarUploader` con gestión de avatar (vista previa, eliminación y restauración según género).
+* Modales funcionales:
+  * `ChangePasswordModal` con validaciones y errores controlados.
+  * `ConfirmDeleteModal` con confirmación textual y cierre de sesión tras eliminación.
+* Sincronización automática del contexto global `AuthContext` al modificar perfil o avatar.
+* Centralización del `fetchUserFromAPI()` para actualizar el usuario desde cualquier vista.
+* Mejora del loader global (`LoaderContext`) para mostrar carga al cambiar de página o enviar formularios.
+* Estilos refinados en los formularios y corrección de errores visuales.
+
+### 📝 Observaciones
+
+* El avatar se actualiza correctamente en tiempo real.
+* Los cambios se reflejan en el navbar al guardar.
+* Se corrigió la ruta de los avatares por defecto.
+* Backend y frontend están completamente conectados para el CRUD del perfil.
+
+---
+
 *(continúa actualizando este documento día a día...)*
