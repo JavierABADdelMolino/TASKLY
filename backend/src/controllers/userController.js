@@ -32,6 +32,7 @@ exports.updateUserProfile = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
     let updated = false;
+    const previousGender = user.gender;
 
     // Actualización de campos simples
     if (firstName && firstName !== user.firstName) {
@@ -77,14 +78,11 @@ exports.updateUserProfile = async (req, res) => {
     // Eliminar avatar actual (volver al predeterminado)
     if (!avatarFile && avatar === '') {
       const oldAvatarPath = user.avatarUrl;
-
-      // Establecer avatar por defecto según el género actual o actualizado
       const newGender = gender || user.gender;
       const defaultAvatar = newGender === 'female'
         ? '/public/avatars/default-avatar-female.png'
         : '/public/avatars/default-avatar-male.png';
 
-      // Eliminar avatar anterior si era personalizado
       if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
         const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
@@ -94,6 +92,17 @@ exports.updateUserProfile = async (req, res) => {
 
       user.avatarUrl = defaultAvatar;
       updated = true;
+    }
+
+    // Si el avatar actual es uno por defecto del género anterior y ha cambiado el género
+    if (!avatarFile && !avatar && gender && previousGender !== gender) {
+      const defaultOld = `/public/avatars/default-avatar-${previousGender}.png`;
+      const defaultNew = `/public/avatars/default-avatar-${gender}.png`;
+
+      if (user.avatarUrl === defaultOld) {
+        user.avatarUrl = defaultNew;
+        updated = true;
+      }
     }
 
     if (updated) await user.save();
@@ -154,4 +163,3 @@ exports.deleteUserAccount = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar cuenta', error: err.message });
   }
 };
-

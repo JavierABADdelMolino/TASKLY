@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
@@ -7,26 +7,54 @@ const Navbar = () => {
   const location = useLocation();
 
   const currentPath = location.pathname;
-  const isHome = currentPath === '/';
-  const isDashboard = currentPath.startsWith('/dashboard');
-  const isProfile = currentPath.startsWith('/profile');
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const brandLink = user ? '/dashboard' : '/';
+  // Rutas y títulos fijos
+  const pageTitles = {
+    '/dashboard': 'Panel de tareas',
+    '/profile': 'Mi perfil',
+    '/': 'Inicio',
+  };
+
+  // Detectar ruta base de la página actual
+  const matching = Object.entries(pageTitles)
+    .sort((a, b) => b[0].length - a[0].length)
+    .find(([route]) => currentPath.startsWith(route));
+
+  const currentPagePath = matching?.[0] || '/';
+  const currentPageName = matching?.[1] || '';
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary text-body border-bottom">
-      <div className="container">
-        <Link className="navbar-brand" to={brandLink}>
-          Taskly
-        </Link>
+      <div className="container d-flex justify-content-between align-items-center">
+        {/* Zona izquierda con dos botones fijos */}
+        <div className="d-flex align-items-center gap-3">
+          {/* Botón 1: Taskly → siempre a /dashboard */}
+          <button
+            className="btn btn-sm btn-link fw-bold p-0"
+            onClick={() => navigate('/dashboard')}
+            style={{ textDecoration: 'none' }}
+          >
+            Taskly
+          </button>
 
-        <div className="d-flex ms-auto align-items-center">
-          {!user && isHome && (
+          {/* Botón 2: nombre dinámico según página actual */}
+          <button
+            className="btn btn-sm btn-link text-muted p-0"
+            onClick={() => navigate(currentPagePath)}
+            style={{ textDecoration: 'none' }}
+          >
+            {currentPageName}
+          </button>
+        </div>
+
+        {/* Zona derecha con login o menú de usuario */}
+        <div className="d-flex align-items-center">
+          {!user && currentPath === '/' && (
             <>
               <button
                 className="btn btn-outline-primary me-2"
@@ -47,8 +75,8 @@ const Navbar = () => {
             </>
           )}
 
-          {user && (isDashboard || isProfile) && (
-            <div className="dropdown">
+          {user && (
+            <div className="dropdown ms-3">
               <button
                 className="btn d-flex align-items-center dropdown-toggle"
                 id="userMenu"
@@ -66,10 +94,7 @@ const Navbar = () => {
 
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                 <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => navigate('/profile')}
-                  >
+                  <button className="dropdown-item" onClick={() => navigate('/profile')}>
                     Mi perfil
                   </button>
                 </li>
