@@ -184,6 +184,8 @@ mongosh --version
 ```bash
 TFG-DAM-JavierABAD/
 ├── backend/
+│   ├── public/   
+│   │   └── avatars/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── controllers/

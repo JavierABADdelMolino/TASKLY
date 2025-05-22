@@ -275,4 +275,63 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 10 - Sábado 17 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación completa del CRUD de usuario autenticado en el backend (`/api/users`), protegido con JWT:
+  * **GET /me**: obtener el perfil del usuario actual.
+  * **PUT /me**: actualizar perfil, incluidos campos opcionales y avatar.
+  * **PUT /change-password**: cambiar contraseña mediante validación de la actual.
+  * **DELETE /me**: eliminación de cuenta de usuario y su avatar asociado.
+
+* Configuración del backend para eliminación física de archivos:
+  * Uso de `fs.unlink()` para borrar imágenes anteriores del avatar al actualizar o eliminar el usuario.
+  * Ajuste de rutas relativas usando `path.join(__dirname, '..', '..', ...)` para apuntar correctamente a la carpeta `uploads/avatars`.
+  * Reestructuración de los logs y protección con `fs.existsSync()` para evitar errores si el archivo no existe.
+
+* Incorporación de lógica para restaurar el avatar por defecto si el usuario elimina su imagen personalizada:
+  * Diferenciación clara entre avatares subidos por el usuario (`/uploads/avatars/...`) y avatares por defecto (`/avatars/default-avatar-*.png`).
+  * Asignación dinámica del avatar según el género del usuario.
+  * Verificación de rutas para evitar eliminar imágenes por defecto accidentalmente.
+
+* Verificación exhaustiva de rutas mediante Postman:
+  * Testeo de subida de avatar, cambio de contraseña, eliminación del avatar actual y del usuario completo.
+  * Validación del comportamiento correcto del backend ante cada tipo de acción.
+  * Revisión manual del sistema de archivos para confirmar eliminación física de imágenes.
+
+### 📝 Observaciones
+
+* Toda la lógica de modificación y eliminación de avatares se ha centralizado correctamente en el controlador `user.controller.js`.
+* Las rutas están protegidas por el middleware `verifyToken`, que extrae el `user.id` del token JWT.
+* Se ha garantizado la consistencia en la obtención del usuario mediante `req.user.id` en todos los endpoints.
+* El sistema ya está preparado para ser conectado con el frontend en React, permitiendo la edición visual del perfil de usuario.
+* Mañana se comenzará con el desarrollo de la vista `ProfilePage` para implementar estas funcionalidades desde la interfaz del cliente.
+
+---
+
+## 🗓️ Día 11 - Miércoles 21 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación de la vista `Profile.jsx` en React con lógica completa de edición.
+* Carga del usuario desde `/api/users/me` al entrar en la página.
+* Componente `AvatarUploader` con gestión de avatar (vista previa, eliminación y restauración según género).
+* Modales funcionales:
+  * `ChangePasswordModal` con validaciones y errores controlados.
+  * `ConfirmDeleteModal` con confirmación textual y cierre de sesión tras eliminación.
+* Sincronización automática del contexto global `AuthContext` al modificar perfil o avatar.
+* Centralización del `fetchUserFromAPI()` para actualizar el usuario desde cualquier vista.
+* Mejora del loader global (`LoaderContext`) para mostrar carga al cambiar de página o enviar formularios.
+* Estilos refinados en los formularios y corrección de errores visuales.
+
+### 📝 Observaciones
+
+* El avatar se actualiza correctamente en tiempo real.
+* Los cambios se reflejan en el navbar al guardar.
+* Se corrigió la ruta de los avatares por defecto.
+* Backend y frontend están completamente conectados para el CRUD del perfil.
+
+---
+
 *(continúa actualizando este documento día a día...)*
