@@ -153,6 +153,22 @@ Las rutas protegidas del backend (`/api/users`) están aseguradas mediante token
 
 ---
 
+## 🧩 Funcionalidad de Pizarras y Columnas
+
+### Pizarras (`/api/boards`)
+- `GET /` → Obtener todas las pizarras del usuario
+- `POST /` → Crear nueva pizarra (requiere `title`)
+- `PUT /:id` → Actualizar pizarra (título, descripción)
+- `DELETE /:id` → Eliminar pizarra por ID
+
+### Columnas (`/api/columns`)
+- `GET /:boardId` → Obtener columnas de una pizarra
+- `POST /:boardId` → Crear nueva columna en pizarra
+- `PUT /:id` → Actualizar columna
+- `DELETE /:id` → Eliminar columna
+
+---
+
 ## 🚀 Flujo de trabajo con Git
 
 Este proyecto sigue una convención de ramas y commits basada en buenas prácticas dentro del stack MERN.

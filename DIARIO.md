@@ -334,4 +334,28 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 12 - Jueves 22 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Creación y validación del modelo `Board` (pizarras) en Mongoose.
+* Creación y validación del modelo `Column` (columnas por pizarra).
+* Implementación de los controladores:
+  * `boardController.js` con CRUD completo (GET, POST, PUT, DELETE).
+  * `columnController.js` con lógica por `boardId` y orden.
+* Implementación de rutas protegidas:
+  * `boards.routes.js` y `columns.routes.js`, todas con `verifyToken`.
+* Registro de nuevas rutas en el servidor principal (`app.js`).
+* Homogeneización del estilo de las rutas con `users.routes.js`.
+* Estructura clara y escalable para empezar la lógica visual de pizarras y columnas en el frontend.
+
+### 📝 Observaciones
+
+* Todos los endpoints están protegidos por token y listos para Postman o frontend.
+* La estructura actual permite extender fácilmente la lógica de tareas (`Task.js`) en una rama futura.
+* El proyecto ha consolidado su base de datos y API REST de forma sólida y modular.
+* Se decidió dejar la implementación de `Task.js` para una rama independiente (`feature/tasks`).
+
+---
+
 *(continúa actualizando este documento día a día...)*
