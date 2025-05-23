@@ -1,6 +1,6 @@
 // src/components/profile/ChangePasswordModal.jsx
 import { useState } from 'react';
-import { useLoader } from '../../context/LoaderContext';
+import { useLoader } from '../../../context/LoaderContext';
 
 export default function ChangePasswordModal({ onClose }) {
   const { setShowLoader } = useLoader();

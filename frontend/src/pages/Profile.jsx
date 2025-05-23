@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLoader } from '../context/LoaderContext';
 import Layout from '../components/layout/Layout';
-import ChangePasswordModal from '../components/profile/ChangePasswordModal';
-import ConfirmDeleteModal from '../components/profile/ConfirmDeleteModal';
+import ChangePasswordModal from '../components/profile/modals/ChangePasswordModal';
+import ConfirmDeleteModal from '../components/profile/modals/ConfirmDeleteModal';
 import AvatarUploader from '../components/profile/AvatarUploader';
 
 const Profile = () => {

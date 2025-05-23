@@ -1,8 +1,8 @@
 // src/components/profile/ConfirmDeleteModal.jsx
 
 import { useState } from 'react';
-import { useLoader } from '../../context/LoaderContext';
-import { useAuth } from '../../context/AuthContext';
+import { useLoader } from '../../../context/LoaderContext';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function ConfirmDeleteModal({ onClose }) {
   const { setShowLoader } = useLoader();
