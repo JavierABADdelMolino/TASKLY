@@ -29,8 +29,8 @@ const boardRoutes = require('./routes/boards.routes');
 const columnRoutes = require('./routes/columns.routes');
 
 // 🚦 Usar rutas
-app.use('/api', pingRoutes);
-app.use('/api', privateRoutes);
+app.use('/api/ping', pingRoutes);
+app.use('/api/private', privateRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/boards', boardRoutes);

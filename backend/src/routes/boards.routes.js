@@ -3,6 +3,7 @@ const router = express.Router();
 const verifyToken = require('../middlewares/authMiddleware');
 const {
   getBoards,
+  getBoardById,
   createBoard,
   updateBoard,
   deleteBoard
@@ -10,6 +11,9 @@ const {
 
 // Obtener todas las pizarras del usuario autenticado
 router.get('/', verifyToken, getBoards);
+
+// Obtener una pizarra concreta por ID (si pertenece al usuario)
+router.get('/:id', verifyToken, getBoardById);
 
 // Crear nueva pizarra
 router.post('/', verifyToken, createBoard);

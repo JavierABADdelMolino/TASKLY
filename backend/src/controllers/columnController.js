@@ -1,5 +1,5 @@
-// controllers/columnController.js
 const Column = require('../models/Column');
+const Board = require('../models/Board');
 
 // Obtener columnas de una pizarra
 exports.getColumnsByBoard = async (req, res) => {
@@ -9,6 +9,25 @@ exports.getColumnsByBoard = async (req, res) => {
     res.json(columns);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener columnas', error: err.message });
+  }
+};
+
+// Obtener una columna por ID (con validación de propiedad)
+exports.getColumnById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const column = await Column.findById(id);
+    if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
+
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes acceso a esta columna' });
+    }
+
+    res.json(column);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al obtener columna', error: err.message });
   }
 };
 
@@ -35,7 +54,7 @@ exports.createColumn = async (req, res) => {
   }
 };
 
-// Actualizar columna por ID
+// Actualizar columna por ID con validación de propiedad
 exports.updateColumn = async (req, res) => {
   try {
     const { id } = req.params;
@@ -43,6 +62,11 @@ exports.updateColumn = async (req, res) => {
 
     const column = await Column.findById(id);
     if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
+
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes permiso para modificar esta columna' });
+    }
 
     if (title) column.title = title;
     if (order !== undefined) column.order = order;
@@ -54,13 +78,20 @@ exports.updateColumn = async (req, res) => {
   }
 };
 
-// Eliminar columna por ID
+// Eliminar columna por ID con validación de propiedad
 exports.deleteColumn = async (req, res) => {
   try {
     const { id } = req.params;
-    const column = await Column.findByIdAndDelete(id);
+
+    const column = await Column.findById(id);
     if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
 
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes permiso para eliminar esta columna' });
+    }
+
+    await column.deleteOne();
     res.json({ message: 'Columna eliminada correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar columna', error: err.message });
