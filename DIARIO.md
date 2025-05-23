@@ -358,4 +358,45 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 13 - Viernes 23 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Verificación completa en Postman de las rutas de `Board` y `Column`, incluyendo autenticación y control de propiedad.
+* Creación de un modal visual (`CreateBoardModal`) para añadir nuevas pizarras desde el frontend.
+* Integración del modal de creación en la `Navbar`, visible solo en el dashboard y para usuarios autenticados.
+* Ajustes visuales al modal: centrado vertical, fondo opaco, y uso correcto de Bootstrap 5.
+* Mejora de la vista de bienvenida del dashboard:
+  * Mensaje motivador cuando no hay pizarras.
+  * Botón visual llamativo para crear una pizarra.
+* Creación del componente `Board.jsx` para renderizar una pizarra seleccionada:
+  * Inclusión de `BoardSelector` para cambiar entre pizarras del usuario.
+  * Botón "+ Añadir columna" integrado y funcional.
+* Creación del modal `CreateColumnModal` con validaciones, orden inicial y conexión a backend por `boardId`.
+* Estilizado general de columnas y visualización.
+* Implementación de `Column.jsx` y `ColumnList.jsx`:
+  * Carga dinámica de columnas por `boardId`.
+  * Refresco automático de columnas al añadir una nueva (`refresh` prop).
+  * Eliminación del warning de ESLint con `API_BASE_URL`.
+
+### 🐞 Problemas detectados
+
+* El modal de creación de columnas lanza error al conectar con el servidor.
+* Probable problema con cómo se está pasando `boardId` entre componentes (`Board → Modal`).
+* El botón "+ Añadir columna" no crea correctamente nuevas columnas pese a que el backend está operativo.
+* El diseño visual del dashboard necesita mejoras:
+  * Falta cohesión visual entre elementos.
+  * Las columnas aún no están representadas de forma visual atractiva.
+  * Falta espacio adecuado, bordes y color de fondo para delimitar bien la pizarra.
+
+### 📝 Observaciones
+
+* El diseño base y la arquitectura están bien encaminados, pero hay que revisar con calma:
+  * Cómo se construye y pasa `boardId` al modal.
+  * Cómo se actualiza la lista de columnas tras una nueva creación.
+* El estado del frontend es funcional, pero requiere validación lógica y ajustes visuales.
+* El próximo paso será resolver los errores del modal de columna y avanzar con las tareas (`Task`).
+
+---
+
 *(continúa actualizando este documento día a día...)*
