@@ -11,7 +11,7 @@ const ColumnList = ({ boardId, refresh }) => {
   useEffect(() => {
     const fetchColumns = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/columns/${boardId}`, {
+        const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
           headers: {
             Authorization: 'Bearer ' + sessionStorage.getItem('token')
           }
