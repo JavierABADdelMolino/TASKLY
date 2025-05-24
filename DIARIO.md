@@ -399,4 +399,19 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 14 - Sábado 24 de mayo de 2025
+
+### ✅ Tareas realizadas
+* Callback `handleBoardCreated` en **Dashboard** → nuevas pizarras aparecen sin recargar.  
+* `Layout` y `Navbar` actualizados para propagar `onBoardCreated`.  
+* `ColumnList` refactorizado (warning ESLint resuelto, prop `refresh`).  
+* Commit guardado: `🐛 fix(navbar & dashboard): propagar creación de boards desde el modal`.
+
+### 📝 Observaciones
+* Falta depurar el error del modal **CreateColumn** (problema con `boardId` / URL).  
+* Diseño del dashboard necesita pulido (bordes, columnas, cohesión).  
+* Próximo paso: arreglar creación de columnas y empezar módulo de tareas con llamada a IA.
+
+---
+
 *(continúa actualizando este documento día a día...)*
