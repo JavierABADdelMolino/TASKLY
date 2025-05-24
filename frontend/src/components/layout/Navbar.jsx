@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import CreateBoardModal from '../../components/dashboard/modals/CreateBoardModal';
 
-const Navbar = () => {
+const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPath = location.pathname;
+
+  /* Si Layout ya pasa currentPath lo usamos; si no, tomamos location */
+  const path = currentPath || location.pathname;
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -16,6 +18,7 @@ const Navbar = () => {
     navigate('/');
   };
 
+  /* Rutas para mostrar título dinámico */
   const pageTitles = {
     '/dashboard': 'Panel de tareas',
     '/profile': 'Mi perfil',
@@ -24,7 +27,7 @@ const Navbar = () => {
 
   const matching = Object.entries(pageTitles)
     .sort((a, b) => b[0].length - a[0].length)
-    .find(([route]) => currentPath.startsWith(route));
+    .find(([route]) => path.startsWith(route));
 
   const currentPagePath = matching?.[0] || '/';
   const currentPageName = matching?.[1] || '';
@@ -33,7 +36,7 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary text-body border-bottom">
         <div className="container d-flex justify-content-between align-items-center">
-          {/* Izquierda: título + ruta */}
+          {/* Izquierda: logo + título dinámico */}
           <div className="d-flex align-items-center gap-3">
             <button
               className="btn btn-sm btn-link fw-bold p-0"
@@ -51,10 +54,10 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Derecha: crear board + usuario/login */}
+          {/* Derecha: botones según autenticación */}
           <div className="d-flex align-items-center">
-            {/* ✅ Solo en dashboard y logueado */}
-            {user && currentPath === '/dashboard' && (
+            {/* Botón + pizarra: solo en dashboard y logueado */}
+            {user && path === '/dashboard' && (
               <button
                 className="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 me-3"
                 onClick={() => setShowCreateModal(true)}
@@ -66,8 +69,8 @@ const Navbar = () => {
               </button>
             )}
 
-            {/* Login/registro si no está logueado */}
-            {!user && currentPath === '/' && (
+            {/* Login / Registro: solo cuando NO hay usuario y estás en la home */}
+            {!user && path === '/' && (
               <>
                 <button
                   className="btn btn-outline-primary me-2"
@@ -88,7 +91,7 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Menú de usuario */}
+            {/* Menú usuario (avatar) */}
             {user && (
               <div className="dropdown ms-3">
                 <button
@@ -131,8 +134,7 @@ const Navbar = () => {
           onClose={() => setShowCreateModal(false)}
           onBoardCreated={(board) => {
             setShowCreateModal(false);
-            console.log('Board creada:', board);
-            // Aquí puedes actualizar el selector o recargar lista
+            onBoardCreated(board);   // notifica al Dashboard/Layout
           }}
         />
       )}

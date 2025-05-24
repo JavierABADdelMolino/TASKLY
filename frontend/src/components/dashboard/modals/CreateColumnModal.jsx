@@ -22,7 +22,7 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/columns/${boardId}`, {
+      const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
