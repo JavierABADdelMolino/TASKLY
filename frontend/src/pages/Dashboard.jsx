@@ -2,27 +2,30 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLoader } from '../context/LoaderContext';
 import Layout from '../components/layout/Layout';
-import CreateBoardModal from '../components/dashboard/modals/CreateBoardModal';
+import BoardHeader from '../components/dashboard/BoardHeader';
 import Board from '../components/dashboard/Board';
+import CreateBoardModal from '../components/dashboard/modals/CreateBoardModal';
 
 const Dashboard = () => {
   const { user, setUser } = useAuth();
   const { setShowLoader } = useLoader();
-  const [error, setError] = useState(null);
+
   const [boards, setBoards] = useState([]);
+  const [activeBoard, setActiveBoard] = useState(null);
+  const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  /* Callback central: agrega la nueva board al estado */
-  const handleBoardCreated = (newBoard) => {
-    setBoards((prev) => [...prev, newBoard]);
+  /* Agrega nueva board */
+  const handleBoardCreated = (b) => {
+    setBoards((prev) => [...prev, b]);
+    setActiveBoard(b);
   };
 
-  /* Cargar usuario + boards al montar */
+  /* Cargar usuario y boards */
   useEffect(() => {
     const fetchAll = async () => {
       const token = sessionStorage.getItem('token');
       if (!token) return;
-
       setShowLoader(true);
       try {
         const resUser = await fetch(`${process.env.REACT_APP_API_URL}/users/me`, {
@@ -37,7 +40,9 @@ const Dashboard = () => {
         });
         const boardsData = await resBoards.json();
         if (!resBoards.ok) throw new Error(boardsData.message);
+
         setBoards(boardsData);
+        setActiveBoard(boardsData[0] || null);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -49,11 +54,12 @@ const Dashboard = () => {
 
   return (
     <Layout onBoardCreated={handleBoardCreated}>
-      <div className="container py-5 text-center">
-        {error ? (
-          <div className="alert alert-danger">{error}</div>
-        ) : boards.length === 0 ? (
-          <>
+      <div className="container py-5">
+
+        {error && <div className="alert alert-danger text-center">{error}</div>}
+
+        {boards.length === 0 ? (
+          <div className="text-center">
             <h2 className="mb-3">¡Hola, {user?.firstName || 'usuario'}!</h2>
             <p className="text-muted fs-5 mb-4">
               Aún no tienes ninguna pizarra. ¡Crea tu primera para comenzar!
@@ -61,24 +67,30 @@ const Dashboard = () => {
             <button className="btn btn-lg btn-primary" onClick={() => setShowModal(true)}>
               + Crear tu primera pizarra
             </button>
-          </>
+          </div>
         ) : (
           <>
-            <h2 className="mb-4">Tus pizarras</h2>
-            <Board boards={boards} />
+            {/* CABECERA CON FLECHAS, TÍTULO, ℹ️ */}
+            {activeBoard && (
+              <BoardHeader
+                boards={boards}
+                activeBoard={activeBoard}
+                setActiveBoard={setActiveBoard}
+              />
+            )}
+
+            {/* CONTENIDO DE LA PIZARRA */}
+            {activeBoard && <Board board={activeBoard} />}
           </>
         )}
       </div>
 
-      {/* Modal inicial cuando aún no hay boards */}
+      {/* Modal para crear board */}
       {showModal && (
         <CreateBoardModal
           show={showModal}
           onClose={() => setShowModal(false)}
-          onBoardCreated={(b) => {
-            handleBoardCreated(b);
-            setShowModal(false);
-          }}
+          onBoardCreated={handleBoardCreated}
         />
       )}
     </Layout>

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import Column from './Column';
 
-// Constante fuera del componente para evitar warning de ESLint
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const ColumnList = ({ boardId, refresh }) => {
+const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
 
@@ -18,7 +17,14 @@ const ColumnList = ({ boardId, refresh }) => {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Error al obtener columnas');
-        setColumns(data);
+
+        const sorted = data.sort((a, b) => a.order - b.order);
+        setColumns(sorted);
+
+        // 🆕 Notificar al padre cuántas columnas hay
+        if (onColumnCountChange) {
+          onColumnCountChange(sorted.length);
+        }
       } catch (err) {
         console.error(err);
         setError(err.message);
@@ -28,7 +34,7 @@ const ColumnList = ({ boardId, refresh }) => {
     if (boardId) {
       fetchColumns();
     }
-  }, [boardId, refresh]); // ← reactualiza si cambia el board o si se crea una nueva columna
+  }, [boardId, refresh, onColumnCountChange]);
 
   if (error) {
     return <div className="text-danger">{error}</div>;

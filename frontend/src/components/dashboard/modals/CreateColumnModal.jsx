@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
-const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
+const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated, currentColumnCount }) => {
   const [title, setTitle] = useState('');
-  const [order, setOrder] = useState(1);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +20,9 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
 
     setLoading(true);
 
+    // 🔢 Calculamos automáticamente el orden
+    const order = currentColumnCount + 1;
+
     try {
       const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
         method: 'POST',
@@ -36,8 +38,8 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
       if (!res.ok) {
         setError(data.message || 'Error al crear la columna');
       } else {
-        onColumnCreated(data); // Notifica al padre
-        onClose(); // Cierra el modal
+        onColumnCreated(data);
+        onClose();
       }
     } catch (err) {
       setError('Error al conectar con el servidor');
@@ -66,17 +68,6 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
                   className="form-control"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="order" className="form-label">Orden</label>
-                <input
-                  type="number"
-                  id="order"
-                  className="form-control"
-                  value={order}
-                  onChange={(e) => setOrder(Number(e.target.value))}
                 />
               </div>
 
