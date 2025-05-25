@@ -7,34 +7,56 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchColumns = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
-          headers: {
-            Authorization: 'Bearer ' + sessionStorage.getItem('token')
-          }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Error al obtener columnas');
+  // función para obtener y ordenar columnas
+  const fetchColumns = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
+        headers: { Authorization: 'Bearer ' + sessionStorage.getItem('token') }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Error al obtener columnas');
 
-        const sorted = data.sort((a, b) => a.order - b.order);
-        setColumns(sorted);
-
-        // 🆕 Notificar al padre cuántas columnas hay
-        if (onColumnCountChange) {
-          onColumnCountChange(sorted.length);
-        }
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      }
-    };
-
-    if (boardId) {
-      fetchColumns();
+      const sorted = data.sort((a, b) => a.order - b.order);
+      setColumns(sorted);
+      if (onColumnCountChange) onColumnCountChange(sorted.length);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
     }
-  }, [boardId, refresh, onColumnCountChange]);
+  };
+
+  // mover columna en UI y backend
+  const moveColumn = async (column, direction) => {
+    const idx = columns.findIndex((c) => c._id === column._id);
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= columns.length) return;
+    const target = columns[targetIdx];
+    try {
+      const token = sessionStorage.getItem('token');
+      // intercambiar order en backend
+      await Promise.all([
+        fetch(`${API_BASE_URL}/columns/${column._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ order: target.order })
+        }),
+        fetch(`${API_BASE_URL}/columns/${target._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ order: column.order })
+        })
+      ]);
+      // recargar
+      fetchColumns();
+    } catch (err) {
+      console.error('Error al mover columna', err);
+    }
+  };
+
+  // cargar columnas al montar o al cambiar boardId/refresh
+  useEffect(() => {
+    if (boardId) fetchColumns();
+  }, [boardId, refresh]);
 
   if (error) {
     return <div className="text-danger">{error}</div>;
@@ -45,7 +67,15 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
       {columns.length === 0 ? (
         <p className="text-muted">No hay columnas aún en esta pizarra.</p>
       ) : (
-        columns.map((col) => <Column key={col._id} column={col} />)
+        columns.map((col, idx) => (
+          <Column
+            key={col._id}
+            column={col}
+            index={idx}
+            total={columns.length}
+            onMove={moveColumn}
+          />
+        ))
       )}
     </div>
   );

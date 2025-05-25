@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FaChevronLeft, FaChevronRight, FaInfoCircle } from 'react-icons/fa';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FaInfoCircle } from 'react-icons/fa';
 
 const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
   const [idx, setIdx] = useState(0);
@@ -26,13 +27,14 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
       {/* barra principal */}
       <div className="d-flex align-items-center justify-content-center gap-3 flex-wrap mb-3">
         {/* ← Flecha izquierda */}
-        <button
-          className="btn btn-outline-secondary btn-sm"
-          onClick={() => go(-1)}
-          disabled={!prev}
-        >
-          <FaChevronLeft />
-        </button>
+        {prev && (
+          <button
+            className="btn btn-link p-1 text-secondary"
+            onClick={() => go(-1)}
+          >
+            <FiChevronLeft size={16} />
+          </button>
+        )}
 
         {/* Nombre anterior */}
         <span className="text-muted small">{prev?.title}</span>
@@ -55,13 +57,14 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
         <span className="text-muted small">{next?.title}</span>
 
         {/* Flecha derecha → */}
-        <button
-          className="btn btn-outline-secondary btn-sm"
-          onClick={() => go(1)}
-          disabled={!next}
-        >
-          <FaChevronRight />
-        </button>
+        {next && (
+          <button
+            className="btn btn-link p-1 text-secondary"
+            onClick={() => go(1)}
+          >
+            <FiChevronRight size={16} />
+          </button>
+        )}
       </div>
 
       {/* Modal descripción */}
