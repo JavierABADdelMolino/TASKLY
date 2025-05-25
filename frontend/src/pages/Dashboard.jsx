@@ -31,15 +31,29 @@ const Dashboard = () => {
       );
       const updated = await res.json();
       if (!res.ok) throw new Error(updated.message);
-      // actualizar lista: solo esta board es favorite
-      setBoards((prev) =>
-        prev.map((b) => (b._id === updated._id ? updated : { ...b, favorite: false }))
-      );
+      // actualizar lista: conservar orden original, solo marcar/desmarcar favorito
+      setBoards((prev) => prev.map((b) => (b._id === updated._id ? updated : { ...b })));
       setActiveBoard(updated);
     } catch (err) {
       console.error(err);
       setError(err.message);
     }
+  };
+
+  /* Actualiza una board tras editar */
+  const handleBoardUpdated = (updated) => {
+    setBoards((prev) => prev.map((b) => (b._id === updated._id ? updated : b)));
+    setActiveBoard(updated);
+  };
+
+  /* Borra una board tras eliminar */
+  const handleBoardDeleted = (id) => {
+    setBoards((prev) => prev.filter((b) => b._id !== id));
+    // actualizar activeBoard
+    setActiveBoard((prev) => {
+      const remaining = boards.filter((b) => b._id !== id);
+      return remaining[0] || null;
+    });
   };
 
   /* Cargar usuario y boards */
@@ -63,7 +77,9 @@ const Dashboard = () => {
         if (!resBoards.ok) throw new Error(boardsData.message);
 
         setBoards(boardsData);
-        setActiveBoard(boardsData[0] || null);
+        // cargar por defecto la board favorita si existe
+        const fav = boardsData.find((b) => b.favorite);
+        setActiveBoard(fav || boardsData[0] || null);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -102,7 +118,12 @@ const Dashboard = () => {
 
             {/* CONTENIDO DE LA PIZARRA */}
             {activeBoard && (
-              <Board board={activeBoard} onToggleFavorite={handleToggleFavorite} />
+              <Board
+                board={activeBoard}
+                onToggleFavorite={handleToggleFavorite}
+                onBoardUpdated={handleBoardUpdated}
+                onBoardDeleted={handleBoardDeleted}
+              />
             )}
           </>
         )}

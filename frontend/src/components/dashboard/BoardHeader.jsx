@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaInfoCircle } from 'react-icons/fa';
+import InfoModal from './modals/InfoModal';
 
 const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
   const [idx, setIdx] = useState(0);
@@ -40,16 +41,27 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
         <span className="text-muted small">{prev?.title}</span>
 
         {/* Nombre actual + botón info */}
-        <span className="fw-bold fs-3 d-flex align-items-center gap-2">
+        <span className="fw-bold fs-3 d-flex align-items-center gap-2 position-relative">
           {activeBoard?.title}
           {activeBoard?.description && (
-            <button
-              className="btn btn-link p-0"
-              onClick={() => setShowInfo(true)}
-              title="Ver descripción"
+            <div
+              className="position-relative d-inline-block"
+              onMouseEnter={() => setShowInfo(true)}
+              onMouseLeave={() => setShowInfo(false)}
             >
-              <FaInfoCircle />
-            </button>
+              <button
+                className="btn btn-link p-1 text-secondary"
+                title="Ver descripción"
+              >
+                <FaInfoCircle size={20} />
+              </button>
+              {showInfo && (
+                <InfoModal
+                  description={activeBoard.description}
+                  isFavorite={activeBoard.favorite}
+                />
+              )}
+            </div>
           )}
         </span>
 
@@ -66,33 +78,6 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
           </button>
         )}
       </div>
-
-      {/* Modal descripción */}
-      {showInfo && (
-        <div
-          className="modal show d-block"
-          tabIndex="-1"
-          role="dialog"
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{activeBoard.title}</h5>
-                <button className="btn-close" onClick={() => setShowInfo(false)} />
-              </div>
-              <div className="modal-body">
-                <p>{activeBoard.description}</p>
-              </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setShowInfo(false)}>
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

@@ -3,7 +3,7 @@ import CreateColumnModal from './modals/CreateColumnModal';
 import ColumnList from './ColumnList';
 import { FaStar } from 'react-icons/fa';
 
-const Board = ({ board, onToggleFavorite }) => {
+const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [columnCount, setColumnCount] = useState(0);
@@ -15,20 +15,15 @@ const Board = ({ board, onToggleFavorite }) => {
 
   return (
     <div className="border rounded shadow-sm p-4 bg-white">
-      {/* Botón favorito */}
-      <div className="d-flex justify-content-end mb-2">
+      {/* Favorito & Añadir columna */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <button
-          type="button"
-          className="btn btn-link p-0"
+          className="btn btn-link p-1"
           onClick={() => onToggleFavorite && onToggleFavorite(board._id)}
           title={board.favorite ? 'Eliminar favorito' : 'Marcar como favorito'}
         >
           <FaStar color={board.favorite ? 'gold' : 'gray'} size={20} />
         </button>
-      </div>
-
-      {/* Botón añadir columna */}
-      <div className="d-flex justify-content-end mb-3">
         <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
           + Añadir columna
         </button>

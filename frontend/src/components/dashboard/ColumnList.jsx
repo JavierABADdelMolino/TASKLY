@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Column from './Column';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -8,7 +8,7 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [error, setError] = useState(null);
 
   // función para obtener y ordenar columnas
-  const fetchColumns = async () => {
+  const fetchColumns = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
         headers: { Authorization: 'Bearer ' + sessionStorage.getItem('token') }
@@ -23,7 +23,7 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
       console.error(err);
       setError(err.message);
     }
-  };
+  }, [boardId, onColumnCountChange]);
 
   // mover columna en UI y backend
   const moveColumn = async (column, direction) => {
@@ -56,7 +56,7 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   // cargar columnas al montar o al cambiar boardId/refresh
   useEffect(() => {
     if (boardId) fetchColumns();
-  }, [boardId, refresh]);
+  }, [boardId, refresh, fetchColumns]);
 
   if (error) {
     return <div className="text-danger">{error}</div>;

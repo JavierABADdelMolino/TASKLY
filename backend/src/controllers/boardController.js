@@ -3,8 +3,8 @@ const Board = require('../models/Board');
 // GET /api/boards - Obtener todas las pizarras del usuario autenticado
 exports.getBoards = async (req, res) => {
   try {
-    // ordenar favorito primero, luego más recientes
-    const boards = await Board.find({ user: req.user.id }).sort({ favorite: -1, createdAt: -1 });
+    // ordenar por fecha de creación (más recientes primero)
+    const boards = await Board.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(boards);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener pizarras', error: err.message });
