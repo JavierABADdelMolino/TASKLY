@@ -6,7 +6,8 @@ const {
   getBoardById,
   createBoard,
   updateBoard,
-  deleteBoard
+  deleteBoard,
+  setFavorite
 } = require('../controllers/boardController');
 
 // Obtener todas las pizarras del usuario autenticado
@@ -23,5 +24,8 @@ router.put('/:id', verifyToken, updateBoard);
 
 // Eliminar pizarra por ID
 router.delete('/:id', verifyToken, deleteBoard);
+
+// Marcar pizarra como favorita exclusiva
+router.put('/:id/favorite', verifyToken, setFavorite);
 
 module.exports = router;

@@ -21,6 +21,27 @@ const Dashboard = () => {
     setActiveBoard(b);
   };
 
+  /* Marca una board como favorita exclusiva */
+  const handleToggleFavorite = async (boardId) => {
+    const token = sessionStorage.getItem('token');
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/boards/${boardId}/favorite`,
+        { method: 'PUT', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+      );
+      const updated = await res.json();
+      if (!res.ok) throw new Error(updated.message);
+      // actualizar lista: solo esta board es favorite
+      setBoards((prev) =>
+        prev.map((b) => (b._id === updated._id ? updated : { ...b, favorite: false }))
+      );
+      setActiveBoard(updated);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
   /* Cargar usuario y boards */
   useEffect(() => {
     const fetchAll = async () => {
@@ -80,7 +101,9 @@ const Dashboard = () => {
             )}
 
             {/* CONTENIDO DE LA PIZARRA */}
-            {activeBoard && <Board board={activeBoard} />}
+            {activeBoard && (
+              <Board board={activeBoard} onToggleFavorite={handleToggleFavorite} />
+            )}
           </>
         )}
       </div>

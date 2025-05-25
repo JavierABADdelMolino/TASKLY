@@ -15,6 +15,10 @@ const BoardSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  favorite: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true // crea createdAt y updatedAt automáticamente
 });

@@ -3,7 +3,8 @@ const Board = require('../models/Board');
 // GET /api/boards - Obtener todas las pizarras del usuario autenticado
 exports.getBoards = async (req, res) => {
   try {
-    const boards = await Board.find({ user: req.user.id }).sort({ createdAt: -1 });
+    // ordenar favorito primero, luego más recientes
+    const boards = await Board.find({ user: req.user.id }).sort({ favorite: -1, createdAt: -1 });
     res.json(boards);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener pizarras', error: err.message });
@@ -79,5 +80,30 @@ exports.deleteBoard = async (req, res) => {
     res.json({ message: 'Pizarra eliminada correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar la pizarra', error: err.message });
+  }
+};
+
+// PUT /api/boards/:id/favorite - Marcar una pizarra como favorita exclusiva
+exports.setFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // find the board
+    const board = await Board.findOne({ _id: id, user: req.user.id });
+    if (!board) {
+      return res.status(404).json({ message: 'Pizarra no encontrada' });
+    }
+    if (board.favorite) {
+      // quitar favorito si ya lo era
+      board.favorite = false;
+      await board.save();
+      return res.json(board);
+    }
+    // desmarcar otros favoritos y marcar éste
+    await Board.updateMany({ user: req.user.id, favorite: true }, { favorite: false });
+    board.favorite = true;
+    await board.save();
+    res.json(board);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al marcar favorito', error: err.message });
   }
 };
