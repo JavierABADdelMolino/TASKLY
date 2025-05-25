@@ -414,4 +414,24 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 15 - Domingo 25 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Se extendió el modelo `Board` con el campo `favorite` y lógica en el backend (`PUT /api/boards/:id/favorite`) para marcar/desmarcar favoritos de forma exclusiva.
+* Se integró el toggle de favorito en el componente `Board.jsx`, devolviendo el botón de estrella en la cabecera.
+* Se crearon modales `EditBoardModal.jsx` y `EditColumnModal.jsx` para editar y eliminar pizarras y columnas desde la UI.
+* En `Dashboard.jsx` se implementaron `handleBoardUpdated` y `handleBoardDeleted` para actualizar el listado tras editar o borrar.
+* Se refactorizó `ColumnList.jsx` usando `useCallback` para `fetchColumns` y se resolvió el warning de ESLint en el hook de efecto.
+* En `Column.jsx` se añadieron flechas de reordenamiento condicionales con `react-icons/fi` y se eliminó el display de orden numérico.
+* Se creó `InfoModal.jsx` más atractivo para descripción, y se ajustó `BoardHeader.jsx` para mostrarlo al hacer hover sobre el icono de información.
+* Se actualizaron `INSTALL.md` y `README.md` para documentar la instalación de `react-icons` y las nuevas funcionalidades (favorito, edición, reordenamiento, modales).
+
+### 📝 Observaciones
+
+* La UX de los modales de edición/borrado está funcional, pero podría pulir el diseño y la accesibilidad en iteraciones futuras.
+* El flujo de marcado/desmarcado de favorito ya funciona sin alterar el orden original de las pizarras.
+* La lógica de reordenamiento de columnas funciona correctamente, pero requiere pruebas de extremo a extremo.
+* Próximo paso: empezar el desarrollo del módulo de tareas (`Task.js`) integrando en este flujo de pizarras y columnas.
+
 *(continúa actualizando este documento día a día...)*

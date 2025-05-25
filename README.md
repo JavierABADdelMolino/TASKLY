@@ -85,6 +85,20 @@ TFG-DAM-JavierABAD/
 
 ---
 
+## 🛠️ Instalación y configuración adicional
+
+- Se añadió la librería `react-icons` para iconos de flecha, estrella e información.
+
+## 💡 Funcionalidades recientes
+
+- CRUD de pizarras y columnas con modales de edición y eliminación.
+- Añadir/quitar favorito en pizarras, con visualización por defecto al cargar el dashboard.
+- Reordenamiento de columnas con flechas de movimiento.
+- Edición y eliminación de pizarras/columnas directamente desde la UI.
+- Popover en hover para ver descripción de la pizarra.
+
+---
+
 ## 🧪 Stack Utilizado
 
 * Node.js 22.15.0

@@ -230,4 +230,20 @@ TFG-DAM-JavierABAD/
 
 ---
 
+## 🔧 Instalación de dependencias del Frontend
+
+### 1. Navegar al directorio del frontend
+
+```bash
+cd frontend
+```
+
+### 2. Instalación de librerías adicionales
+
+```bash
+npm install react-icons
+```
+
+---
+
 > Este archivo forma parte de la documentación técnica del Trabajo de Fin de Grado y quedará versionado dentro del repositorio oficial de Taskly.
