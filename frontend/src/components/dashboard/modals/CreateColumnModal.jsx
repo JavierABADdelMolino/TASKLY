@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated, currentColumnCount }) => {
+const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,9 +20,6 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated, currentCol
 
     setLoading(true);
 
-    // 🔢 Calculamos automáticamente el orden
-    const order = currentColumnCount + 1;
-
     try {
       const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
         method: 'POST',
@@ -30,7 +27,7 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated, currentCol
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + sessionStorage.getItem('token')
         },
-        body: JSON.stringify({ title, order })
+        body: JSON.stringify({ title })
       });
 
       const data = await res.json();

@@ -34,19 +34,14 @@ exports.getColumnById = async (req, res) => {
 // Crear columna en una pizarra
 exports.createColumn = async (req, res) => {
   try {
-    const { boardId } = req.params;
-    const { title, order } = req.body;
-
-    if (!title || order === undefined) {
-      return res.status(400).json({ message: 'Título y orden son obligatorios' });
+    const { title } = req.body;
+    const boardId = req.params.boardId;
+    if (!title) {
+      return res.status(400).json({ message: 'El título es obligatorio' });
     }
-
-    const column = new Column({
-      board: boardId,
-      title,
-      order
-    });
-
+    // contar las columnas actuales y asignar el siguiente índice
+    const count = await Column.countDocuments({ board: boardId });
+    const column = new Column({ title, board: boardId, order: count });
     await column.save();
     res.status(201).json(column);
   } catch (err) {

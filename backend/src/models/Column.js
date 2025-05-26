@@ -13,7 +13,7 @@ const ColumnSchema = new mongoose.Schema({
   },
   order: {
     type: Number,
-    required: true
+    default: 0
   }
 }, {
   timestamps: true // createdAt, updatedAt
