@@ -53,6 +53,26 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
     }
   };
 
+  // eliminar columna y recargar
+  const handleColumnDeleted = useCallback(async (id) => {
+    const token = sessionStorage.getItem('token');
+    try {
+      const res = await fetch(`${API_BASE_URL}/columns/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!res.ok) throw new Error('Error al eliminar columna');
+      fetchColumns();
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  }, [fetchColumns]);
+  // actualizar columna localmente recargando lista
+  const handleColumnUpdated = useCallback(() => {
+    fetchColumns();
+  }, [fetchColumns]);
+
   // cargar columnas al montar o al cambiar boardId/refresh
   useEffect(() => {
     if (boardId) fetchColumns();
@@ -63,18 +83,21 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   }
 
   return (
-    <div className="d-flex gap-4 flex-wrap">
+    <div className="d-flex gap-4 flex-nowrap overflow-auto">
       {columns.length === 0 ? (
         <p className="text-muted">No hay columnas aún en esta pizarra.</p>
       ) : (
         columns.map((col, idx) => (
-          <Column
-            key={col._id}
-            column={col}
-            index={idx}
-            total={columns.length}
-            onMove={moveColumn}
-          />
+          <div key={col._id} className="flex-shrink-0">
+            <Column
+              column={col}
+              index={idx}
+              total={columns.length}
+              onMove={moveColumn}
+              onColumnDeleted={handleColumnDeleted}
+              onColumnUpdated={handleColumnUpdated}
+            />
+          </div>
         ))
       )}
     </div>

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import CreateColumnModal from './modals/CreateColumnModal';
+import ConfirmDeleteBoardModal from './modals/ConfirmDeleteBoardModal';
 import ColumnList from './ColumnList';
 import { FaStar } from 'react-icons/fa';
 
 const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [showDeleteBoard, setShowDeleteBoard] = useState(false);
   const [columnCount, setColumnCount] = useState(0);
 
   const handleColumnCreated = () => {
@@ -16,7 +18,8 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   return (
     <div className="border rounded shadow-sm p-4 bg-white">
       {/* Favorito & Añadir columna */}
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex align-items-center mb-3">
+        {/* Botón favorito */}
         <button
           className="btn btn-link p-1"
           onClick={() => onToggleFavorite && onToggleFavorite(board._id)}
@@ -24,9 +27,15 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         >
           <FaStar color={board.favorite ? 'gold' : 'gray'} size={20} />
         </button>
-        <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
-          + Añadir columna
-        </button>
+        {/* Botones añadir columna y eliminar pizarra alineados a la derecha */}
+        <div className="ms-auto d-flex gap-2">
+          <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
+            + Añadir columna
+          </button>
+          <button className="btn btn-sm btn-outline-danger" onClick={() => setShowDeleteBoard(true)}>
+            Eliminar pizarra
+          </button>
+        </div>
       </div>
 
       {/* Columnas */}
@@ -46,6 +55,13 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
           onColumnCreated={handleColumnCreated}
         />
       )}
+
+      {/* Confirm delete board */}
+      <ConfirmDeleteBoardModal
+        show={showDeleteBoard}
+        onClose={() => setShowDeleteBoard(false)}
+        onConfirm={() => onBoardDeleted(board._id)}
+      />
     </div>
   );
 };
