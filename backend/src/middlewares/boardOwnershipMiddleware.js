@@ -3,7 +3,8 @@
 const Board = require('../models/Board');
 
 const verifyBoardOwnership = async (req, res, next) => {
-  const boardId = req.params.boardId || req.body.boardId;
+  // Accept boardId or id route params or body
+  const boardId = req.params.boardId || req.params.id || req.body.boardId;
 
   if (!boardId) {
     return res.status(400).json({ message: 'ID de la pizarra no proporcionado' });

@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import ConfirmDeleteBoardModal from './ConfirmDeleteBoardModal';
 
 const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }) => {
   const [title, setTitle] = useState(board.title);
   const [description, setDescription] = useState(board.description || '');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   if (!show) return null;
@@ -33,7 +35,8 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('¿Seguro que quieres eliminar esta pizarra?')) return;
+    setError('');
+    setLoading(true);
     try {
       const token = sessionStorage.getItem('token');
       const res = await fetch(`${API_BASE_URL}/boards/${board._id}`, {
@@ -45,9 +48,12 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
         throw new Error(err.message);
       }
       onBoardDeleted(board._id);
+      setShowConfirm(false);
       onClose();
     } catch (err) {
-      alert('Error al eliminar pizarra: ' + err.message);
+      setError('Error al eliminar pizarra: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,15 +89,23 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              <button type="button" className="btn btn-danger me-auto" onClick={handleDelete}>Eliminar</button>
+              <button type="button" className="btn btn-danger me-auto" onClick={() => setShowConfirm(true)}>Eliminar</button>
               <button type="submit" className="btn btn-primary" disabled={loading}>
                 {loading ? 'Guardando...' : 'Guardar cambios'}
               </button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+        {/* Confirm delete board modal */}
+        {showConfirm && (
+          <ConfirmDeleteBoardModal
+            show={showConfirm}
+            onClose={() => setShowConfirm(false)}
+            onConfirm={handleDelete}
+          />
+        )}
+         </div>
+       </div>
+     </div>
   );
 };
 

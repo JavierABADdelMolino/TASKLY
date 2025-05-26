@@ -2,7 +2,7 @@ const Column = require('../models/Column');
 const Board = require('../models/Board');
 
 const verifyColumnOwnership = async (req, res, next) => {
-  const columnId = req.params.columnId || req.body.column;
+  const columnId = req.params.columnId || req.params.id || req.body.column;
   if (!columnId) {
     return res.status(400).json({ message: 'ID de la columna no proporcionado' });
   }

@@ -32,7 +32,14 @@ const Dashboard = () => {
       const updated = await res.json();
       if (!res.ok) throw new Error(updated.message);
       // actualizar lista: conservar orden original, solo marcar/desmarcar favorito
-      setBoards((prev) => prev.map((b) => (b._id === updated._id ? updated : { ...b })));
+      setBoards((prev) =>
+        prev.map((b) => {
+          if (b._id === updated._id) return updated;
+          // si la nueva board quedó favorita, desmarcar las demás
+          if (updated.favorite) return { ...b, favorite: false };
+          return b;
+        })
+      );
       setActiveBoard(updated);
     } catch (err) {
       console.error(err);

@@ -46,7 +46,8 @@ const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDelet
       onColumnDeleted(column._id);
       onClose();
     } catch (err) {
-      alert('Error al eliminar columna: ' + err.message);
+      // Mostrar error en modal
+      setError('Error al eliminar columna: ' + err.message);
     }
   };
 
