@@ -23,7 +23,7 @@ exports.getTasksByColumn = async (req, res) => {
 exports.createTask = async (req, res) => {
   try {
     const { columnId } = req.params;
-    const { title, description, importance, order } = req.body;
+    const { title, description, importance } = req.body;
     if (!title) return res.status(400).json({ message: 'Título es obligatorio' });
     const column = await Column.findById(columnId);
     if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
@@ -37,7 +37,7 @@ exports.createTask = async (req, res) => {
       description: description || '',
       importance: importance || 'medium',
       column: columnId,
-      order: order !== undefined ? order : count
+      order: count
     });
     await task.save();
     res.status(201).json(task);
