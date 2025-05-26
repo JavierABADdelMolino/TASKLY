@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import CreateColumnModal from './modals/CreateColumnModal';
-import ConfirmDeleteBoardModal from './modals/ConfirmDeleteBoardModal';
+import EditBoardModal from './modals/EditBoardModal';
 import ColumnList from './ColumnList';
 import { FaStar } from 'react-icons/fa';
 
 const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [refreshFlag, setRefreshFlag] = useState(false);
-  const [showDeleteBoard, setShowDeleteBoard] = useState(false);
+  const [showEditBoard, setShowEditBoard] = useState(false);
   const [columnCount, setColumnCount] = useState(0);
 
   const handleColumnCreated = () => {
@@ -32,8 +32,8 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
           <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
             + Añadir columna
           </button>
-          <button className="btn btn-sm btn-outline-danger" onClick={() => setShowDeleteBoard(true)}>
-            Eliminar pizarra
+          <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowEditBoard(true)}>
+            Editar pizarra
           </button>
         </div>
       </div>
@@ -56,12 +56,16 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         />
       )}
 
-      {/* Confirm delete board */}
-      <ConfirmDeleteBoardModal
-        show={showDeleteBoard}
-        onClose={() => setShowDeleteBoard(false)}
-        onConfirm={() => onBoardDeleted(board._id)}
-      />
+      {/* Edit board modal includes delete and save */}
+      {showEditBoard && (
+        <EditBoardModal
+          show={showEditBoard}
+          board={board}
+          onClose={() => setShowEditBoard(false)}
+          onBoardUpdated={onBoardUpdated}
+          onBoardDeleted={onBoardDeleted}
+        />
+      )}
     </div>
   );
 };
