@@ -27,6 +27,7 @@ const privateRoutes = require('./routes/private.routes');
 const userRoutes = require('./routes/user.routes');
 const boardRoutes = require('./routes/boards.routes');
 const columnRoutes = require('./routes/columns.routes');
+const taskRoutes = require('./routes/tasks.routes');
 
 // 🚦 Usar rutas
 app.use('/api/ping', pingRoutes);
@@ -35,6 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/boards', boardRoutes);
 app.use('/api/columns', columnRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // ⚠️ Manejo de errores (especialmente para Multer)
 app.use((err, req, res, next) => {
