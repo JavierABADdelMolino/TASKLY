@@ -113,7 +113,7 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * El flujo de autenticación básico (registro y login) está finalizado y listo para integrar en futuras vistas del frontend.
 * Se aprendió el funcionamiento de los middleware personalizados en Express.
 * Se confirmó que `fetch` puede manejar JWT si se configura correctamente el header.
-* El sistema de autenticación está funcional y listo para extenderse a rutas de tareas.
+* El sistema de autenticación está funcional y ready para extenderse a rutas de tareas.
 
 ---
 
@@ -433,5 +433,37 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * El flujo de marcado/desmarcado de favorito ya funciona sin alterar el orden original de las pizarras.
 * La lógica de reordenamiento de columnas funciona correctamente, pero requiere pruebas de extremo a extremo.
 * Próximo paso: empezar el desarrollo del módulo de tareas (`Task.js`) integrando en este flujo de pizarras y columnas.
+
+---
+
+## 🗓️ Día 16 - Lunes 26 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación completa del CRUD de tareas (Task) en backend y frontend:
+  * Modelo `Task` en Mongoose con campos `title`, `description`, `importance`, `column`, `order`.
+  * Controlador y rutas `/api/tasks` protegidas con `verifyToken` y validación de propiedad (`verifyColumnOwnership`, `verifyTaskOwnership`).
+  * Lógica de asignación automática de `order` tanto en columnas como en tareas (no se requiere ya desde el frontend).
+  * Refactor de los controladores para que el campo `order` se calcule en el backend al crear columnas/tareas.
+* Creación e integración del modal `CreateTaskModal.jsx` en el frontend:
+  * Formulario con campos `title`, `description` e `importance` (enum).
+  * Validación visual y feedback de errores en el modal.
+  * Llamada a la API para crear tareas sin enviar el campo `order`.
+* Refactor de `CreateColumnModal.jsx` para eliminar el cálculo/envío de `order` desde el frontend.
+* Ajuste de los modelos Mongoose (`Column.js`, `Task.js`) para que `order` tenga `default: 0` y no sea obligatorio al crear.
+* Refactor de los controladores de columnas y tareas para calcular el orden automáticamente según el número de elementos existentes.
+* Pruebas manuales en Postman de todos los endpoints de boards, columns y tasks, verificando seguridad y validaciones.
+* Mejoras en la UX:
+  * Al marcar una pizarra como favorita, se desmarcan automáticamente las demás en el frontend (sin recargar).
+  * Eliminación de alertas nativas, uso de modales de confirmación para borrar boards/columns.
+  * Ajustes visuales en el dashboard y columnas para mayor claridad y usabilidad.
+* Documentación de todos los cambios en `README.md` y actualización del diario de desarrollo.
+
+### 📝 Observaciones
+
+* El flujo de creación y gestión de tareas ya es completamente funcional y seguro.
+* El backend ahora es más robusto y desacoplado del frontend en cuanto a la gestión de orden.
+* La experiencia de usuario es más fluida, sin necesidad de recargar para ver cambios de favorito o nuevos elementos.
+* Próximos pasos: integración de drag&drop para reordenar columnas/tareas y sugerencia de prioridad vía IA.
 
 *(continúa actualizando este documento día a día...)*

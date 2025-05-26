@@ -91,11 +91,13 @@ TFG-DAM-JavierABAD/
 
 ## 💡 Funcionalidades recientes
 
-- CRUD de pizarras y columnas con modales de edición y eliminación.
+- CRUD de pizarras, columnas y tareas con modales de creación, edición y eliminación.
 - Añadir/quitar favorito en pizarras, con visualización por defecto al cargar el dashboard.
-- Reordenamiento de columnas con flechas de movimiento.
-- Edición y eliminación de pizarras/columnas directamente desde la UI.
+- Reordenamiento de columnas y tareas con flechas de movimiento (próximamente drag&drop).
+- Edición y eliminación de pizarras/columnas/tareas directamente desde la UI.
 - Popover en hover para ver descripción de la pizarra.
+- Orden automático de columnas y tareas gestionado por el backend.
+- UX mejorada: cambios de favorito y nuevos elementos reflejados al instante sin recargar.
 
 ---
 
@@ -186,19 +188,26 @@ Las rutas protegidas del backend (`/api/users`) están aseguradas mediante token
 
 ---
 
-## 🧩 Funcionalidad de Pizarras y Columnas
+## 🧩 Funcionalidad de Pizarras, Columnas y Tareas
 
 ### Pizarras (`/api/boards`)
 - `GET /` → Obtener todas las pizarras del usuario
 - `POST /` → Crear nueva pizarra (requiere `title`)
 - `PUT /:id` → Actualizar pizarra (título, descripción)
 - `DELETE /:id` → Eliminar pizarra por ID
+- `PUT /:id/favorite` → Marcar/desmarcar como favorita exclusiva
 
 ### Columnas (`/api/columns`)
-- `GET /:boardId` → Obtener columnas de una pizarra
-- `POST /:boardId` → Crear nueva columna en pizarra
-- `PUT /:id` → Actualizar columna
+- `GET /board/:boardId` → Obtener columnas de una pizarra
+- `POST /board/:boardId` → Crear nueva columna en pizarra (solo `title`, el orden se asigna automáticamente)
+- `PUT /:id` → Actualizar columna (título, orden)
 - `DELETE /:id` → Eliminar columna
+
+### Tareas (`/api/tasks`)
+- `GET /columns/:columnId` → Obtener tareas de una columna
+- `POST /columns/:columnId` → Crear nueva tarea (solo `title`, `description`, `importance`; el orden se asigna automáticamente)
+- `PUT /:id` → Actualizar tarea (título, descripción, importancia, columna, orden)
+- `DELETE /:id` → Eliminar tarea
 
 ---
 
