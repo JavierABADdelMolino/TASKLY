@@ -466,4 +466,23 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * La experiencia de usuario es más fluida, sin necesidad de recargar para ver cambios de favorito o nuevos elementos.
 * Próximos pasos: integración de drag&drop para reordenar columnas/tareas y sugerencia de prioridad vía IA.
 
+---
+
+## 🗓️ Día 17 - Martes 27 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación y pulido completo de la gestión de tareas en el frontend: creación, edición, borrado y movimiento entre columnas con flechas.
+* Creación de los modales `CreateTaskModal`, `EditTaskModal` y `ConfirmDeleteTaskModal` para CRUD de tareas.
+* Auto-refresco de tareas en origen y destino tras operaciones CRUD sin recargar la página.
+* Integración de sugerencia de importancia vía IA (stub) en el modal de creación, con prefetch onBlur del título y marcado “(Recomendado IA)”.
+* Ajustes de UI: flechas de mover una a cada lado, confirmación mediante modal y badges de importancia.
+* Actualización de la documentación (`README.md`, `INSTALL.md`, `DIARIO.md`).
+
+### 📝 Observaciones
+
+* La experiencia de usuario es más fluida: las tareas se actualizan en tiempo real y las acciones utilizan modales coherentes.
+* El stub de IA ofrece recomendación instantánea y el prefetch onBlur garantiza que la sugerencia esté disponible al abrir el desplegable.
+* Próximos pasos: implementar drag&drop y conectar la IA real para sugerencias dinámicas.
+
 *(continúa actualizando este documento día a día...)*
