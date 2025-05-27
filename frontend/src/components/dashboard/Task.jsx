@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2 } from 'react-icons/fi';
 import EditTaskModal from './modals/EditTaskModal';
+import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
+  const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [loadingMove, setLoadingMove] = useState(false);
   const [errorMove, setErrorMove] = useState('');
@@ -48,13 +50,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
             <button className="btn btn-link btn-sm p-0 text-secondary" onClick={() => setShowEdit(true)} title="Editar tarea">
               <FiEdit size={14} />
             </button>
-            <button className="btn btn-link btn-sm p-0 text-danger" onClick={async () => {
-              if (window.confirm('¿Eliminar esta tarea?')) {
-                const token = sessionStorage.getItem('token');
-                await fetch(`${API_BASE_URL}/tasks/${task._id}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token }});
-                onTaskDeleted && onTaskDeleted(task._id);
-              }
-            }} title="Eliminar tarea">
+            <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => setShowDelete(true)} title="Eliminar tarea">
               <FiTrash2 size={14} />
             </button>
           </div>
@@ -81,6 +77,16 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
         </div>
         {/* Mensaje de error de movimiento */}
         {errorMove && <div className="text-danger small mt-1 text-center">{errorMove}</div>}
+        {/* Modal confirmar borrar tarea */}
+        <ConfirmDeleteTaskModal
+          show={showDelete}
+          onClose={() => setShowDelete(false)}
+          onConfirm={async () => {
+            const token = sessionStorage.getItem('token');
+            await fetch(`${API_BASE_URL}/tasks/${task._id}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+            onTaskDeleted && onTaskDeleted(task._id);
+          }}
+        />
       </div>
       {showEdit && (
         <EditTaskModal
