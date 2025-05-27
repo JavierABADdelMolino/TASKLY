@@ -25,9 +25,9 @@ const pingRoutes = require('./routes/ping.routes');
 const authRoutes = require('./routes/auth.routes');
 const privateRoutes = require('./routes/private.routes');
 const userRoutes = require('./routes/user.routes');
-const boardRoutes = require('./routes/boards.routes');
-const columnRoutes = require('./routes/columns.routes');
-const taskRoutes = require('./routes/tasks.routes');
+const boardRoutes = require('./routes/board.routes');
+const columnRoutes = require('./routes/column.routes');
+const taskRoutes = require('./routes/task.routes');
 
 // 🚦 Usar rutas
 app.use('/api/ping', pingRoutes);
