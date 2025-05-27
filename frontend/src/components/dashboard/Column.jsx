@@ -1,15 +1,44 @@
 import { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
+import Task from './Task';
+import CreateTaskModal from './modals/CreateTaskModal';
+
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated }) => {
+const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
+  const [tasks, setTasks] = useState([]);
+  const [loadingTasks, setLoadingTasks] = useState(false);
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [taskError, setTaskError] = useState('');
+  const [refreshTasks, setRefreshTasks] = useState(false);
 
   // keep title in sync
   useEffect(() => { setNewTitle(column.title); }, [column.title]);
+
+  // Fetch tasks for this column
+  useEffect(() => {
+    const fetchTasks = async () => {
+      setLoadingTasks(true);
+      setTaskError('');
+      try {
+        const res = await fetch(`${API_BASE_URL}/tasks/columns/${column._id}`, {
+          headers: { Authorization: 'Bearer ' + sessionStorage.getItem('token') }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Error al obtener tareas');
+        setTasks(data);
+      } catch (err) {
+        setTaskError(err.message);
+      } finally {
+        setLoadingTasks(false);
+      }
+    };
+    fetchTasks();
+  }, [column._id, refreshTasks, refreshKey]); // Añade refreshKey como dependencia
 
   return (
     <div className="card shadow-sm" style={{ width: '280px', position: 'relative' }}>
@@ -77,7 +106,44 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
             )}
           </div>
         </div>
+        {/* Botón crear tarea */}
+        <div className="d-grid mb-2">
+          <button className="btn btn-sm btn-outline-success" onClick={() => setShowCreateTask(true)}>
+            + Añadir tarea
+          </button>
+        </div>
+        {/* Lista de tareas */}
+        {loadingTasks ? (
+          <div className="text-center text-muted small">Cargando tareas...</div>
+        ) : taskError ? (
+          <div className="text-danger small">{taskError}</div>
+        ) : tasks.length === 0 ? (
+          <div className="text-muted small">No hay tareas en esta columna.</div>
+        ) : (
+          <div className="d-flex flex-column gap-2">
+            {tasks.map((task) => (
+              <Task
+                key={task._id}
+                task={task}
+                column={column}
+                columns={allColumns}
+                onTaskMoved={onAnyTaskChange}
+                onTaskUpdated={onAnyTaskChange}
+                onTaskDeleted={onAnyTaskChange}
+              />
+            ))}
+          </div>
+        )}
       </div>
+      {/* Modal crear tarea */}
+      {showCreateTask && (
+        <CreateTaskModal
+          show={showCreateTask}
+          onClose={() => setShowCreateTask(false)}
+          columnId={column._id}
+          onTaskCreated={() => setRefreshTasks((p) => !p)}
+        />
+      )}
       {/* Confirm delete column */}
       <ConfirmDeleteColumnModal
         show={showDelete}

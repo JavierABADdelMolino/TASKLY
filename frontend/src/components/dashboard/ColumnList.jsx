@@ -6,6 +6,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
 const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // Nuevo estado global de refresco
 
   // función para obtener y ordenar columnas
   const fetchColumns = useCallback(async () => {
@@ -73,6 +74,9 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
     fetchColumns();
   }, [fetchColumns]);
 
+  // Handler global para refrescar todas las columnas/tareas
+  const handleGlobalRefresh = () => setRefreshKey((k) => k + 1);
+
   // cargar columnas al montar o al cambiar boardId/refresh
   useEffect(() => {
     if (boardId) fetchColumns();
@@ -93,9 +97,12 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
               column={col}
               index={idx}
               total={columns.length}
+              allColumns={columns}
               onMove={moveColumn}
               onColumnDeleted={handleColumnDeleted}
               onColumnUpdated={handleColumnUpdated}
+              refreshKey={refreshKey}
+              onAnyTaskChange={handleGlobalRefresh}
             />
           </div>
         ))
