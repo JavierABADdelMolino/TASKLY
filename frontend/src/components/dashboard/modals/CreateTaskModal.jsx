@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -12,8 +12,25 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   const [importance, setImportance] = useState('medium');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [suggestedImportance, setSuggestedImportance] = useState(null);
 
   const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+  // Obtener sugerencia de importancia via IA (stub)
+  useEffect(() => {
+    if (!show) return; // solo cuando el modal está abierto
+    // Simulación de llamada a IA
+    const getSuggestion = async () => {
+      try {
+        // Aquí iría la llamada real a la IA
+        const suggestion = 'medium';
+        setSuggestedImportance(suggestion);
+      } catch {
+        setSuggestedImportance(null);
+      }
+    };
+    getSuggestion();
+  }, [show, title, description]);
 
   if (!show) return null;
 
@@ -87,7 +104,10 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                   onChange={(e) => setImportance(e.target.value)}
                 >
                   {importanceOptions.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                      {opt.value === suggestedImportance && ' (Recomendado IA)'}
+                    </option>
                   ))}
                 </select>
               </div>
