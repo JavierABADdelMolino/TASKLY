@@ -1,5 +1,6 @@
 const Column = require('../models/Column');
 const Board = require('../models/Board');
+const Task = require('../models/Task'); // Asegúrate de que la ruta sea correcta
 
 // Obtener columnas de una pizarra
 exports.getColumnsByBoard = async (req, res) => {
@@ -73,21 +74,21 @@ exports.updateColumn = async (req, res) => {
   }
 };
 
-// Eliminar columna por ID con validación de propiedad
+// Eliminar columna por ID con validación de propiedad y cascada de tareas
 exports.deleteColumn = async (req, res) => {
   try {
     const { id } = req.params;
-
     const column = await Column.findById(id);
     if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
-
     const board = await Board.findById(column.board);
     if (!board || board.user.toString() !== req.user.id) {
       return res.status(403).json({ message: 'No tienes permiso para eliminar esta columna' });
     }
-
+    // borrar tareas asociadas a esta columna
+    await Task.deleteMany({ column: id });
+    // borrar la columna
     await column.deleteOne();
-    res.json({ message: 'Columna eliminada correctamente' });
+    res.json({ message: 'Columna y tareas asociadas eliminadas correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar columna', error: err.message });
   }

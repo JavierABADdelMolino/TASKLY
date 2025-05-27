@@ -67,17 +67,25 @@ exports.updateBoard = async (req, res) => {
   }
 };
 
-// DELETE /api/boards/:id - Eliminar pizarra por ID
+// DELETE /api/boards/:id - Eliminar pizarra por ID y cascada de columnas y tareas
 exports.deleteBoard = async (req, res) => {
   try {
     const { id } = req.params;
-
+    // borrar la pizarra
     const board = await Board.findOneAndDelete({ _id: id, user: req.user.id });
     if (!board) {
       return res.status(404).json({ message: 'Pizarra no encontrada' });
     }
-
-    res.json({ message: 'Pizarra eliminada correctamente' });
+    // eliminar columnas y tareas asociadas
+    const columns = require('../models/Column');
+    const Task = require('../models/Task');
+    const cols = await columns.find({ board: id }).select('_id');
+    const colIds = cols.map(c => c._id);
+    // eliminar tareas de esas columnas
+    await Task.deleteMany({ column: { $in: colIds } });
+    // eliminar columnas
+    await columns.deleteMany({ board: id });
+    res.json({ message: 'Pizarra y datos relacionados eliminados correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar la pizarra', error: err.message });
   }
