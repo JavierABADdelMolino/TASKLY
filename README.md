@@ -21,27 +21,46 @@ TFG-DAM-JavierABAD/
 │   ├── uploads/   
 │   │   └── avatars/
 │   └── .env
-├── frontend/
-│   ├── public/
+```bash
+TFG-DAM-JavierABAD/
+├── backend/
+│   ├── public/   
+│   │   └── avatars/
 │   ├── src/
-│   │   ├── assets/           # Logos, iconos, imágenes, fuentes
-│   │   ├── components/
-│   │   │   ├── layout/       # Navbar, Footer, Layout general
-│   │   │   ├── auth/         # Formularios de login y registro
-│   │   │   ├── ui/           # Loader, ThemeSwitcher, etc.
-│   │   ├── context/          # AuthContext, ThemeContext, LoaderContext
-│   │   ├── hooks/            # Custom Hooks
-│   │   ├── pages/            # Home, Dashboard, etc.
-│   │   ├── services/         # Lógica de comunicación HTTP (fetch)
-│   │   ├── styles/           # Estilos globales con SCSS y Bootstrap
-│   │   │   ├── base/         # Reset, formularios
-│   │   │   ├── config/       # Variables SCSS
-│   │   │   ├── components/   # Estilos de componentes específicos
-│   │   │   └── themes/       # Tema claro y oscuro
-│   │   ├── App.js
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middlewares/
+│   │   ├── models/
+│   │   ├── routes/
 │   │   └── index.js
-│   ├── .env
-│   └── package.json
+│   ├── uploads/   
+│   │   └── avatars/
+│   └── .env
+├── frontend/
+│   ├── public/                         # Archivos estáticos públicos (favicon, index.html)
+│   ├── src/
+│   │   ├── assets/                     # Logos, iconos, imágenes, fuentes personalizadas
+│   │   ├── components/
+│   │   │   ├── dashboard/              # Componentes específicos del panel de tareas (board, columnas, selector)
+│   │   │   │   └── modals/             # Modales relacionados con las pizarras y columnas
+│   │   │   ├── layout/                 # Componentes generales de estructura como Navbar, Footer, Layout
+│   │   │   ├── profile/                # Componentes para la gestión del perfil de usuario
+│   │   │   │   └── modals/             # Modales del perfil: editar, cambiar contraseña, eliminar cuenta
+│   │   │   ├── auth/                   # Formularios de autenticación (login, registro)
+│   │   │   ├── ui/                     # Componentes visuales reutilizables (Loader, ThemeSwitcher, etc.)
+│   │   ├── context/                    # Contextos globales de la aplicación (Auth, Theme, Loader)
+│   │   ├── hooks/                      # Custom Hooks reutilizables
+│   │   ├── pages/                      # Vistas principales de la app (Home, Dashboard, Profile, etc.)
+│   │   ├── services/                   # Lógica de conexión con la API (fetch abstraído)
+│   │   ├── styles/                     # Estilos globales organizados con SCSS y Bootstrap
+│   │   │   ├── base/                   # Estilos base: reset, formularios, tipografía
+│   │   │   ├── config/                 # Variables SCSS y configuración de temas
+│   │   │   ├── components/             # Estilos específicos de componentes individuales
+│   │   │   └── themes/                 # Estilos de tema claro y oscuro con variables CSS
+│   │   ├── App.js                      # Componente principal de rutas y layout
+│   │   └── index.js                    # Punto de entrada de la app React
+│   ├── .env                            # Variables de entorno del frontend
+│   └── package.json                    # Dependencias y scripts del proyecto frontend
 ├── DIARIO.md
 ├── INSTALL.md
 ├── .gitignore
@@ -63,6 +82,22 @@ TFG-DAM-JavierABAD/
 
 * [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
 * [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
+
+---
+
+## 🛠️ Instalación y configuración adicional
+
+- Se añadió la librería `react-icons` para iconos de flecha, estrella e información.
+
+## 💡 Funcionalidades recientes
+
+- CRUD de pizarras, columnas y tareas con modales de creación, edición y eliminación.
+- Añadir/quitar favorito en pizarras, con visualización por defecto al cargar el dashboard.
+- Reordenamiento de columnas y tareas con flechas de movimiento (próximamente drag&drop).
+- Edición y eliminación de pizarras/columnas/tareas directamente desde la UI.
+- Popover en hover para ver descripción de la pizarra.
+- Orden automático de columnas y tareas gestionado por el backend.
+- UX mejorada: cambios de favorito y nuevos elementos reflejados al instante sin recargar.
 
 ---
 
@@ -150,6 +185,29 @@ Una vez autenticado, el usuario puede:
 - Eliminar su cuenta de forma permanente.
 
 Las rutas protegidas del backend (`/api/users`) están aseguradas mediante tokens JWT.
+
+---
+
+## 🧩 Funcionalidad de Pizarras, Columnas y Tareas
+
+### Pizarras (`/api/boards`)
+- `GET /` → Obtener todas las pizarras del usuario
+- `POST /` → Crear nueva pizarra (requiere `title`)
+- `PUT /:id` → Actualizar pizarra (título, descripción)
+- `DELETE /:id` → Eliminar pizarra por ID
+- `PUT /:id/favorite` → Marcar/desmarcar como favorita exclusiva
+
+### Columnas (`/api/columns`)
+- `GET /board/:boardId` → Obtener columnas de una pizarra
+- `POST /board/:boardId` → Crear nueva columna en pizarra (solo `title`, el orden se asigna automáticamente)
+- `PUT /:id` → Actualizar columna (título, orden)
+- `DELETE /:id` → Eliminar columna
+
+### Tareas (`/api/tasks`)
+- `GET /columns/:columnId` → Obtener tareas de una columna
+- `POST /columns/:columnId` → Crear nueva tarea (solo `title`, `description`, `importance`; el orden se asigna automáticamente)
+- `PUT /:id` → Actualizar tarea (título, descripción, importancia, columna, orden)
+- `DELETE /:id` → Eliminar tarea
 
 ---
 

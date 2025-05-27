@@ -113,7 +113,7 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * El flujo de autenticación básico (registro y login) está finalizado y listo para integrar en futuras vistas del frontend.
 * Se aprendió el funcionamiento de los middleware personalizados en Express.
 * Se confirmó que `fetch` puede manejar JWT si se configura correctamente el header.
-* El sistema de autenticación está funcional y listo para extenderse a rutas de tareas.
+* El sistema de autenticación está funcional y ready para extenderse a rutas de tareas.
 
 ---
 
@@ -333,5 +333,156 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * Backend y frontend están completamente conectados para el CRUD del perfil.
 
 ---
+
+## 🗓️ Día 12 - Jueves 22 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Creación y validación del modelo `Board` (pizarras) en Mongoose.
+* Creación y validación del modelo `Column` (columnas por pizarra).
+* Implementación de los controladores:
+  * `boardController.js` con CRUD completo (GET, POST, PUT, DELETE).
+  * `columnController.js` con lógica por `boardId` y orden.
+* Implementación de rutas protegidas:
+  * `boards.routes.js` y `columns.routes.js`, todas con `verifyToken`.
+* Registro de nuevas rutas en el servidor principal (`app.js`).
+* Homogeneización del estilo de las rutas con `users.routes.js`.
+* Estructura clara y escalable para empezar la lógica visual de pizarras y columnas en el frontend.
+
+### 📝 Observaciones
+
+* Todos los endpoints están protegidos por token y listos para Postman o frontend.
+* La estructura actual permite extender fácilmente la lógica de tareas (`Task.js`) en una rama futura.
+* El proyecto ha consolidado su base de datos y API REST de forma sólida y modular.
+* Se decidió dejar la implementación de `Task.js` para una rama independiente (`feature/tasks`).
+
+---
+
+## 🗓️ Día 13 - Viernes 23 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Verificación completa en Postman de las rutas de `Board` y `Column`, incluyendo autenticación y control de propiedad.
+* Creación de un modal visual (`CreateBoardModal`) para añadir nuevas pizarras desde el frontend.
+* Integración del modal de creación en la `Navbar`, visible solo en el dashboard y para usuarios autenticados.
+* Ajustes visuales al modal: centrado vertical, fondo opaco, y uso correcto de Bootstrap 5.
+* Mejora de la vista de bienvenida del dashboard:
+  * Mensaje motivador cuando no hay pizarras.
+  * Botón visual llamativo para crear una pizarra.
+* Creación del componente `Board.jsx` para renderizar una pizarra seleccionada:
+  * Inclusión de `BoardSelector` para cambiar entre pizarras del usuario.
+  * Botón "+ Añadir columna" integrado y funcional.
+* Creación del modal `CreateColumnModal` con validaciones, orden inicial y conexión a backend por `boardId`.
+* Estilizado general de columnas y visualización.
+* Implementación de `Column.jsx` y `ColumnList.jsx`:
+  * Carga dinámica de columnas por `boardId`.
+  * Refresco automático de columnas al añadir una nueva (`refresh` prop).
+  * Eliminación del warning de ESLint con `API_BASE_URL`.
+
+### 🐞 Problemas detectados
+
+* El modal de creación de columnas lanza error al conectar con el servidor.
+* Probable problema con cómo se está pasando `boardId` entre componentes (`Board → Modal`).
+* El botón "+ Añadir columna" no crea correctamente nuevas columnas pese a que el backend está operativo.
+* El diseño visual del dashboard necesita mejoras:
+  * Falta cohesión visual entre elementos.
+  * Las columnas aún no están representadas de forma visual atractiva.
+  * Falta espacio adecuado, bordes y color de fondo para delimitar bien la pizarra.
+
+### 📝 Observaciones
+
+* El diseño base y la arquitectura están bien encaminados, pero hay que revisar con calma:
+  * Cómo se construye y pasa `boardId` al modal.
+  * Cómo se actualiza la lista de columnas tras una nueva creación.
+* El estado del frontend es funcional, pero requiere validación lógica y ajustes visuales.
+* El próximo paso será resolver los errores del modal de columna y avanzar con las tareas (`Task`).
+
+---
+
+## 🗓️ Día 14 - Sábado 24 de mayo de 2025
+
+### ✅ Tareas realizadas
+* Callback `handleBoardCreated` en **Dashboard** → nuevas pizarras aparecen sin recargar.  
+* `Layout` y `Navbar` actualizados para propagar `onBoardCreated`.  
+* `ColumnList` refactorizado (warning ESLint resuelto, prop `refresh`).  
+* Commit guardado: `🐛 fix(navbar & dashboard): propagar creación de boards desde el modal`.
+
+### 📝 Observaciones
+* Falta depurar el error del modal **CreateColumn** (problema con `boardId` / URL).  
+* Diseño del dashboard necesita pulido (bordes, columnas, cohesión).  
+* Próximo paso: arreglar creación de columnas y empezar módulo de tareas con llamada a IA.
+
+---
+
+## 🗓️ Día 15 - Domingo 25 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Se extendió el modelo `Board` con el campo `favorite` y lógica en el backend (`PUT /api/boards/:id/favorite`) para marcar/desmarcar favoritos de forma exclusiva.
+* Se integró el toggle de favorito en el componente `Board.jsx`, devolviendo el botón de estrella en la cabecera.
+* Se crearon modales `EditBoardModal.jsx` y `EditColumnModal.jsx` para editar y eliminar pizarras y columnas desde la UI.
+* En `Dashboard.jsx` se implementaron `handleBoardUpdated` y `handleBoardDeleted` para actualizar el listado tras editar o borrar.
+* Se refactorizó `ColumnList.jsx` usando `useCallback` para `fetchColumns` y se resolvió el warning de ESLint en el hook de efecto.
+* En `Column.jsx` se añadieron flechas de reordenamiento condicionales con `react-icons/fi` y se eliminó el display de orden numérico.
+* Se creó `InfoModal.jsx` más atractivo para descripción, y se ajustó `BoardHeader.jsx` para mostrarlo al hacer hover sobre el icono de información.
+* Se actualizaron `INSTALL.md` y `README.md` para documentar la instalación de `react-icons` y las nuevas funcionalidades (favorito, edición, reordenamiento, modales).
+
+### 📝 Observaciones
+
+* La UX de los modales de edición/borrado está funcional, pero podría pulir el diseño y la accesibilidad en iteraciones futuras.
+* El flujo de marcado/desmarcado de favorito ya funciona sin alterar el orden original de las pizarras.
+* La lógica de reordenamiento de columnas funciona correctamente, pero requiere pruebas de extremo a extremo.
+* Próximo paso: empezar el desarrollo del módulo de tareas (`Task.js`) integrando en este flujo de pizarras y columnas.
+
+---
+
+## 🗓️ Día 16 - Lunes 26 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación completa del CRUD de tareas (Task) en backend y frontend:
+  * Modelo `Task` en Mongoose con campos `title`, `description`, `importance`, `column`, `order`.
+  * Controlador y rutas `/api/tasks` protegidas con `verifyToken` y validación de propiedad (`verifyColumnOwnership`, `verifyTaskOwnership`).
+  * Lógica de asignación automática de `order` tanto en columnas como en tareas (no se requiere ya desde el frontend).
+  * Refactor de los controladores para que el campo `order` se calcule en el backend al crear columnas/tareas.
+* Creación e integración del modal `CreateTaskModal.jsx` en el frontend:
+  * Formulario con campos `title`, `description` e `importance` (enum).
+  * Validación visual y feedback de errores en el modal.
+  * Llamada a la API para crear tareas sin enviar el campo `order`.
+* Refactor de `CreateColumnModal.jsx` para eliminar el cálculo/envío de `order` desde el frontend.
+* Ajuste de los modelos Mongoose (`Column.js`, `Task.js`) para que `order` tenga `default: 0` y no sea obligatorio al crear.
+* Refactor de los controladores de columnas y tareas para calcular el orden automáticamente según el número de elementos existentes.
+* Pruebas manuales en Postman de todos los endpoints de boards, columns y tasks, verificando seguridad y validaciones.
+* Mejoras en la UX:
+  * Al marcar una pizarra como favorita, se desmarcan automáticamente las demás en el frontend (sin recargar).
+  * Eliminación de alertas nativas, uso de modales de confirmación para borrar boards/columns.
+  * Ajustes visuales en el dashboard y columnas para mayor claridad y usabilidad.
+* Documentación de todos los cambios en `README.md` y actualización del diario de desarrollo.
+
+### 📝 Observaciones
+
+* El flujo de creación y gestión de tareas ya es completamente funcional y seguro.
+* El backend ahora es más robusto y desacoplado del frontend en cuanto a la gestión de orden.
+* La experiencia de usuario es más fluida, sin necesidad de recargar para ver cambios de favorito o nuevos elementos.
+* Próximos pasos: integración de drag&drop para reordenar columnas/tareas y sugerencia de prioridad vía IA.
+
+---
+
+## 🗓️ Día 17 - Martes 27 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Implementación y pulido completo de la gestión de tareas en el frontend: creación, edición, borrado y movimiento entre columnas con flechas.
+* Creación de los modales `CreateTaskModal`, `EditTaskModal` y `ConfirmDeleteTaskModal` para CRUD de tareas.
+* Auto-refresco de tareas en origen y destino tras operaciones CRUD sin recargar la página.
+* Integración de sugerencia de importancia vía IA (stub) en el modal de creación, con prefetch onBlur del título y marcado “(Recomendado IA)”.
+* Ajustes de UI: flechas de mover una a cada lado, confirmación mediante modal y badges de importancia.
+* Actualización de la documentación (`README.md`, `INSTALL.md`, `DIARIO.md`).
+
+### 📝 Observaciones
+
+* La experiencia de usuario es más fluida: las tareas se actualizan en tiempo real y las acciones utilizan modales coherentes.
+* El stub de IA ofrece recomendación instantánea y el prefetch onBlur garantiza que la sugerencia esté disponible al abrir el desplegable.
+* Próximos pasos: implementar drag&drop y conectar la IA real para sugerencias dinámicas.
 
 *(continúa actualizando este documento día a día...)*
