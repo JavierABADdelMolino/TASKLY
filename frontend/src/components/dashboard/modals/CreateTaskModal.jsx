@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -13,26 +13,27 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [suggestedImportance, setSuggestedImportance] = useState(null);
+  const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-  // Obtener sugerencia de importancia via IA (stub)
-  useEffect(() => {
-    if (!show) return; // solo cuando el modal está abierto
-    // Simulación de llamada a IA
-    const getSuggestion = async () => {
-      try {
-        // Aquí iría la llamada real a la IA
-        const suggestion = 'medium';
-        setSuggestedImportance(suggestion);
-      } catch {
-        setSuggestedImportance(null);
-      }
-    };
-    getSuggestion();
-  }, [show, title, description]);
-
   if (!show) return null;
+
+  // Función para obtener sugerencia IA tras terminar de escribir título
+  const fetchSuggestion = async () => {
+    if (!title.trim()) return;
+    setLoadingSuggestion(true);
+    try {
+      // Llamada al stub o endpoint real
+      // Como aún no existe ID de tarea, usamos un stub local
+      await new Promise(r => setTimeout(r, 200)); // simula retardo
+      setSuggestedImportance('medium');
+    } catch {
+      setSuggestedImportance(null);
+    } finally {
+      setLoadingSuggestion(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,7 +83,8 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                   id="title"
                   className="form-control"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => { setTitle(e.target.value); setSuggestedImportance(null); }}
+                  onBlur={fetchSuggestion}
                 />
               </div>
               <div className="mb-3">
@@ -102,7 +104,9 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                   className="form-select"
                   value={importance}
                   onChange={(e) => setImportance(e.target.value)}
+                  disabled={loadingSuggestion}
                 >
+                 {loadingSuggestion && <option>Calculando recomendación…</option>}
                   {importanceOptions.map(opt => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
