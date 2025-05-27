@@ -11,7 +11,8 @@ const {
   getTasksByColumn,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  suggestImportance  // stub para sugerencia IA
 } = require('../controllers/taskController');
 
 // GET /api/tasks/columns/:columnId - Obtener tareas de una columna específica
@@ -23,5 +24,8 @@ router.post('/columns/:columnId', verifyToken, verifyColumnOwnership, createTask
 router.put('/:id', verifyToken, verifyTaskOwnership, updateTask);
 // DELETE /api/tasks/:id - Eliminar tarea por ID
 router.delete('/:id', verifyToken, verifyTaskOwnership, deleteTask);
+
+// POST /api/tasks/:id/suggest-importance - Sugerir importancia vía IA (stub)
+router.post('/:id/suggest-importance', verifyToken, verifyTaskOwnership, suggestImportance);
 
 module.exports = router;

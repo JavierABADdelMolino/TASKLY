@@ -87,3 +87,13 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar tarea', error: err.message });
   }
 };
+
+// POST /api/tasks/:id/suggest-importance - Sugerencia de importancia (stub)
+exports.suggestImportance = async (req, res) => {
+  try {
+    const suggestion = 'medium'; // valor por defecto hasta integrar IA
+    res.json({ suggestedImportance: suggestion });
+  } catch (err) {
+    res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
+  }
+};

@@ -6,7 +6,8 @@ const taskSchema = new Schema({
   description: { type: String, trim: true, default: '' },
   importance: { type: String, enum: ['high', 'medium', 'low'], default: 'medium' },
   column: { type: Schema.Types.ObjectId, ref: 'Column', required: true },
-  order: { type: Number, default: 0 }
+  order: { type: Number, default: 0 },
+  suggestedImportance: { type: String, enum: ['high', 'medium', 'low'], default: null } // campo para sugerencia de importancia vía IA (stub)
 }, { timestamps: true });
 
 module.exports = mongoose.model('Task', taskSchema);
