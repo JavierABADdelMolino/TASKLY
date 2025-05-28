@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLoader } from '../../../context/LoaderContext';
 import { useAuth } from '../../../context/AuthContext';
+import { deleteUserAccount } from '../../../services/userService';
 
 export default function ConfirmDeleteModal({ onClose }) {
   const { setShowLoader } = useLoader();
@@ -18,30 +19,10 @@ export default function ConfirmDeleteModal({ onClose }) {
 
     try {
       setShowLoader(true);
-      const token = sessionStorage.getItem('token');
-      if (!token) {
-        setError('Sesión expirada. Inicia sesión de nuevo.');
-        return;
-      }
-
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/me`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (!res.ok) {
-        let message = 'Error al eliminar cuenta';
-        try {
-          const data = await res.json();
-          message = data.message || message;
-        } catch (err) {
-          // La respuesta no tenía cuerpo
-        }
-        setError(message);
-      } else {
-        logout();
-        window.location.href = '/';
-      }
+      // use userService to delete account
+      await deleteUserAccount();
+      logout();
+      window.location.href = '/';
     } catch (err) {
       console.error('Error de red DELETE /users/me:', err);
       setError('Error de conexión con el servidor');

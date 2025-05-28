@@ -1,6 +1,7 @@
 // src/components/profile/ChangePasswordModal.jsx
 import { useState } from 'react';
 import { useLoader } from '../../../context/LoaderContext';
+import { changePassword } from '../../../services/userService';
 
 export default function ChangePasswordModal({ onClose }) {
   const { setShowLoader } = useLoader();
@@ -45,37 +46,20 @@ export default function ChangePasswordModal({ onClose }) {
 
     try {
       setShowLoader(true);
-      const token = sessionStorage.getItem('token');
-
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/change-password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          currentPassword: passwords.currentPassword,
-          newPassword: passwords.newPassword
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.message?.includes('actual no es correcta')) {
-          setErrors({ currentPassword: 'Contraseña actual incorrecta' });
-        } else {
-          setSubmitError(data.message || 'Error al cambiar la contraseña');
-        }
-      } else {
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          onClose();
-        }, 1000);
-      }
+      // use userService to change password
+      await changePassword(passwords.currentPassword, passwords.newPassword);
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        onClose();
+      }, 1000);
     } catch (err) {
-      setSubmitError('Error de conexión con el servidor');
+      const msg = err.message || '';
+      if (msg.includes('actual no es correcta') || msg.includes('Contraseña actual incorrecta')) {
+        setErrors({ currentPassword: 'Contraseña actual incorrecta' });
+      } else {
+        setSubmitError(msg || 'Error al cambiar la contraseña');
+      }
     } finally {
       setShowLoader(false);
     }

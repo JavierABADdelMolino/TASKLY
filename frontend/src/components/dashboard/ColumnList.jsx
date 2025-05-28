@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import Column from './Column';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+import { getColumnsByBoard, updateColumn, deleteColumn } from '../../services/columnService';
 
 const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [columns, setColumns] = useState([]);
@@ -11,15 +10,10 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   // función para obtener y ordenar columnas
   const fetchColumns = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
-        headers: { Authorization: 'Bearer ' + sessionStorage.getItem('token') }
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Error al obtener columnas');
-
+      const data = await getColumnsByBoard(boardId);
       const sorted = data.sort((a, b) => a.order - b.order);
       setColumns(sorted);
-      if (onColumnCountChange) onColumnCountChange(sorted.length);
+      onColumnCountChange?.(sorted.length);
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -33,21 +27,8 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
     if (targetIdx < 0 || targetIdx >= columns.length) return;
     const target = columns[targetIdx];
     try {
-      const token = sessionStorage.getItem('token');
-      // intercambiar order en backend
-      await Promise.all([
-        fetch(`${API_BASE_URL}/columns/${column._id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ order: target.order })
-        }),
-        fetch(`${API_BASE_URL}/columns/${target._id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ order: column.order })
-        })
-      ]);
-      // recargar
+      await updateColumn(column._id, { order: target.order });
+      await updateColumn(target._id, { order: column.order });
       fetchColumns();
     } catch (err) {
       console.error('Error al mover columna', err);
@@ -56,13 +37,8 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
 
   // eliminar columna y recargar
   const handleColumnDeleted = useCallback(async (id) => {
-    const token = sessionStorage.getItem('token');
     try {
-      const res = await fetch(`${API_BASE_URL}/columns/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) throw new Error('Error al eliminar columna');
+      await deleteColumn(id);
       fetchColumns();
     } catch (err) {
       console.error(err);

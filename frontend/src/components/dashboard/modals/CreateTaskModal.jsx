@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { suggestImportanceForNewTask, createTask } from '../../../services/taskService';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -15,24 +16,16 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   const [suggestedImportance, setSuggestedImportance] = useState(null);
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
-
   if (!show) return null;
 
   // Función para obtener sugerencia IA tras terminar de escribir título
   const fetchSuggestion = async () => {
-    if (!title.trim()) return;
     setLoadingSuggestion(true);
-    try {
-      // Llamada al stub o endpoint real
-      // Como aún no existe ID de tarea, usamos un stub local
-      await new Promise(r => setTimeout(r, 200)); // simula retardo
-      setSuggestedImportance('medium');
-    } catch {
-      setSuggestedImportance(null);
-    } finally {
-      setLoadingSuggestion(false);
-    }
+    const suggestion = await suggestImportanceForNewTask(columnId, title, description);
+    setSuggestedImportance(suggestion);
+    // Preseleccionar la recomendación IA
+    if (suggestion) setImportance(suggestion);
+    setLoadingSuggestion(false);
   };
 
   const handleSubmit = async (e) => {
@@ -44,16 +37,8 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/tasks/columns/${columnId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + sessionStorage.getItem('token')
-        },
-        body: JSON.stringify({ title, description, importance })
-      });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await createTask(columnId, { title, description, importance });
+      if (!data._id) {
         setError(data.message || 'Error al crear la tarea');
       } else {
         onTaskCreated && onTaskCreated(data);

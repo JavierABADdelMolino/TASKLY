@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { updateColumn, deleteColumn } from '../../../services/columnService';
 
 const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDeleted }) => {
   const [title, setTitle] = useState(column.title);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   if (!show) return null;
 
@@ -14,14 +14,8 @@ const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDelet
     if (!title.trim()) return setError('El título es obligatorio');
     setLoading(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/columns/${column._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ title })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+      const data = await updateColumn(column._id, { title });
+      if (data.message) throw new Error(data.message);
       onColumnUpdated(data);
       onClose();
     } catch (err) {
@@ -34,15 +28,7 @@ const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDelet
   const handleDelete = async () => {
     if (!window.confirm('¿Eliminar esta columna?')) return;
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/columns/${column._id}`, {
-        method: 'DELETE',
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message);
-      }
+      await deleteColumn(column._id);
       onColumnDeleted(column._id);
       onClose();
     } catch (err) {

@@ -1,11 +1,10 @@
 import { useState } from 'react';
+import { createColumn } from '../../../services/columnService';
 
 const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   if (!show) return null;
 
@@ -21,18 +20,8 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/columns/board/${boardId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + sessionStorage.getItem('token')
-        },
-        body: JSON.stringify({ title })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
+      const data = await createColumn(boardId, { title });
+      if (!data._id) {
         setError(data.message || 'Error al crear la columna');
       } else {
         onColumnCreated(data);

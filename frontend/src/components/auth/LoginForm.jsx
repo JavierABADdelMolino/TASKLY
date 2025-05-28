@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+import { login, getCurrentUser } from '../../services/authService';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -34,31 +33,10 @@ const LoginForm = () => {
     if (!validate()) return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setServerError(data.message || 'Error al iniciar sesión');
-        return;
-      }
-
+      const data = await login(email, password);
       sessionStorage.setItem('token', data.token);
 
-      const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${data.token}` },
-      });
-
-      const userData = await userRes.json();
-
-      if (!userRes.ok) {
-        setServerError(userData.message || 'No se pudo obtener el usuario');
-        return;
-      }
+      const userData = await getCurrentUser();
 
       setUser(userData);
       navigate('/dashboard');
