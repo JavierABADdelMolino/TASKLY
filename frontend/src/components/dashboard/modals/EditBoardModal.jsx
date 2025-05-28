@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ConfirmDeleteBoardModal from './ConfirmDeleteBoardModal';
-import { updateBoard } from '../../../services/boardService';
+import { updateBoard, deleteBoard } from '../../../services/boardService';
 
 const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }) => {
   const [title, setTitle] = useState(board.title);
@@ -32,6 +32,7 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
     setError('');
     setLoading(true);
     try {
+      await deleteBoard(board._id);
       onBoardDeleted(board._id);
       setShowConfirm(false);
       onClose();

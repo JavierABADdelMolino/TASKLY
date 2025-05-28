@@ -4,7 +4,7 @@ import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
 import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
 import { getTasksByColumn } from '../../services/taskService';
-import { updateColumn } from '../../services/columnService';
+import { updateColumn, deleteColumn } from '../../services/columnService';
 
 const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -140,7 +140,14 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
       <ConfirmDeleteColumnModal
         show={showDelete}
         onClose={() => setShowDelete(false)}
-        onConfirm={() => onColumnDeleted(column._id)}
+        onConfirm={async () => {
+          try {
+            await deleteColumn(column._id);
+            onColumnDeleted(column._id);
+          } catch (err) {
+            console.error('Error al eliminar columna:', err);
+          }
+        }}
       />
     </div>
   );
