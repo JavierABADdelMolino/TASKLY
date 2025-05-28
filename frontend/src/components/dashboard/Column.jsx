@@ -3,8 +3,8 @@ import { FiChevronLeft, FiChevronRight, FiTrash2 } from 'react-icons/fi';
 import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
 import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+import { getTasksByColumn } from '../../services/taskService';
+import { updateColumn } from '../../services/columnService';
 
 const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -21,15 +21,11 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
 
   // Fetch tasks for this column
   useEffect(() => {
-    const fetchTasks = async () => {
+    const loadTasks = async () => {
       setLoadingTasks(true);
       setTaskError('');
       try {
-        const res = await fetch(`${API_BASE_URL}/tasks/columns/${column._id}`, {
-          headers: { Authorization: 'Bearer ' + sessionStorage.getItem('token') }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Error al obtener tareas');
+        const data = await getTasksByColumn(column._id);
         setTasks(data);
       } catch (err) {
         setTaskError(err.message);
@@ -37,8 +33,8 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
         setLoadingTasks(false);
       }
     };
-    fetchTasks();
-  }, [column._id, refreshTasks, refreshKey]); // Añade refreshKey como dependencia
+    loadTasks();
+  }, [column._id, refreshTasks, refreshKey]);
 
   return (
     <div className="card shadow-sm" style={{ width: '280px', position: 'relative' }}>
@@ -63,7 +59,6 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           </div>
           {/* Title centered with edit */}
           <div className="flex-grow-1 text-center">
-            <div className="pt-3"></div>
             {isEditing ? (
               <input
                 type="text"
@@ -73,11 +68,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
                 onChange={(e) => setNewTitle(e.target.value)}
                 onBlur={async () => {
                   if (newTitle.trim() && newTitle !== column.title) {
-                    const token = sessionStorage.getItem('token');
-                    await fetch(`${API_BASE_URL}/columns/${column._id}`, {
-                      method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-                      body: JSON.stringify({ title: newTitle })
-                    });
+                    await updateColumn(column._id, { title: newTitle });
                     onColumnUpdated();
                   }
                   setIsEditing(false);

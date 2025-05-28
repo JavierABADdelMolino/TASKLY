@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout';
 import BoardHeader from '../components/dashboard/BoardHeader';
 import Board from '../components/dashboard/Board';
 import CreateBoardModal from '../components/dashboard/modals/CreateBoardModal';
+import { getBoards, toggleFavoriteBoard } from '../services/boardService';
 
 const Dashboard = () => {
   const { user, setUser } = useAuth();
@@ -23,14 +24,9 @@ const Dashboard = () => {
 
   /* Marca una board como favorita exclusiva */
   const handleToggleFavorite = async (boardId) => {
-    const token = sessionStorage.getItem('token');
     try {
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/boards/${boardId}/favorite`,
-        { method: 'PUT', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
-      );
-      const updated = await res.json();
-      if (!res.ok) throw new Error(updated.message);
+      const updated = await toggleFavoriteBoard(boardId);
+      if (updated.message) throw new Error(updated.message);
       // actualizar lista: conservar orden original, solo marcar/desmarcar favorito
       setBoards((prev) =>
         prev.map((b) => {
@@ -77,11 +73,8 @@ const Dashboard = () => {
         if (!resUser.ok) throw new Error(userData.message);
         setUser(userData);
 
-        const resBoards = await fetch(`${process.env.REACT_APP_API_URL}/boards`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const boardsData = await resBoards.json();
-        if (!resBoards.ok) throw new Error(boardsData.message);
+        const boardsData = await getBoards();
+        if (boardsData.message) throw new Error(boardsData.message);
 
         setBoards(boardsData);
         // cargar por defecto la board favorita si existe

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import RegisterStep1 from './RegisterStep1';
 import RegisterStep2 from './RegisterStep2';
 import { useAuth } from '../../context/AuthContext';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+import { register, getCurrentUser } from '../../services/authService';
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -45,30 +44,10 @@ const RegisterForm = () => {
     });
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        body: form,
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        setServerErrors({ general: result.message });
-        return;
-      }
-
+      const result = await register(form);
       sessionStorage.setItem('token', result.token);
 
-      const userRes = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${result.token}` },
-      });
-
-      const userData = await userRes.json();
-
-      if (!userRes.ok) {
-        setServerErrors({ general: userData.message || 'No se pudo obtener el usuario' });
-        return;
-      }
+      const userData = await getCurrentUser();
 
       setUser(userData);
       navigate('/dashboard');

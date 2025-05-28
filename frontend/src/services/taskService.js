@@ -61,15 +61,15 @@ export async function createTask(columnId, { title, description, importance }) {
   return res.json();
 }
 
-// Actualizar tarea
-export async function updateTask(taskId, { title, description, importance }) {
+// Actualizar tarea (permite campos dinámicos como column, title, description, importance)
+export async function updateTask(taskId, data) {
   const headers = await getAuthHeaders();
   const res = await fetch(
     `${API_BASE_URL}/tasks/${taskId}`,
     {
       method: 'PUT',
       headers,
-      body: JSON.stringify({ title, description, importance })
+      body: JSON.stringify(data)
     }
   );
   return res.json();
@@ -83,4 +83,16 @@ export async function deleteTask(taskId) {
     { method: 'DELETE', headers }
   );
   return res.json();
+}
+
+// Obtener tareas por columna
+export async function getTasksByColumn(columnId) {
+  const headers = await getAuthHeaders();
+  const res = await fetch(
+    `${API_BASE_URL}/tasks/columns/${columnId}`,
+    { headers }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al obtener tareas');
+  return data;
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ConfirmDeleteBoardModal from './ConfirmDeleteBoardModal';
+import { updateBoard } from '../../../services/boardService';
 
 const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }) => {
   const [title, setTitle] = useState(board.title);
@@ -7,7 +8,6 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   if (!show) return null;
 
@@ -17,14 +17,8 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
     if (!title.trim()) return setError('El título es obligatorio');
     setLoading(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/boards/${board._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ title, description })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+      const data = await updateBoard(board._id, { title, description });
+      if (data.message) throw new Error(data.message);
       onBoardUpdated(data);
       onClose();
     } catch (err) {
@@ -38,15 +32,6 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
     setError('');
     setLoading(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/boards/${board._id}`, {
-        method: 'DELETE',
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message);
-      }
       onBoardDeleted(board._id);
       setShowConfirm(false);
       onClose();

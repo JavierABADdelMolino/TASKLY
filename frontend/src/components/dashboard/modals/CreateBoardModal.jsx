@@ -1,12 +1,11 @@
 import { useState } from 'react';
+import { createBoard } from '../../../services/boardService';
 
 const CreateBoardModal = ({ show, onClose, onBoardCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   if (!show) return null;
 
@@ -22,18 +21,8 @@ const CreateBoardModal = ({ show, onClose, onBoardCreated }) => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/boards`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + sessionStorage.getItem('token')
-        },
-        body: JSON.stringify({ title, description })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
+      const data = await createBoard({ title, description });
+      if (!data._id) {
         setError(data.message || 'Error al crear la pizarra');
       } else {
         onBoardCreated(data);

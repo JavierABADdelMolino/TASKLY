@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2 } from 'react-icons/fi';
 import EditTaskModal from './modals/EditTaskModal';
 import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+import { updateTask, deleteTask } from '../../services/taskService';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -21,14 +20,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
     setLoadingMove(true);
     setErrorMove('');
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/tasks/${task._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ column: targetColumn._id })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Error al mover tarea');
+      const data = await updateTask(task._id, { column: targetColumn._id });
       onTaskMoved && onTaskMoved(data);
     } catch (err) {
       setErrorMove(err.message);
@@ -82,9 +74,12 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           show={showDelete}
           onClose={() => setShowDelete(false)}
           onConfirm={async () => {
-            const token = sessionStorage.getItem('token');
-            await fetch(`${API_BASE_URL}/tasks/${task._id}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
-            onTaskDeleted && onTaskDeleted(task._id);
+            try {
+              await deleteTask(task._id);
+              onTaskDeleted && onTaskDeleted(task._id);
+            } catch (err) {
+              console.error(err);
+            }
           }}
         />
       </div>
