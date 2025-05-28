@@ -24,6 +24,8 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
     setLoadingSuggestion(true);
     const suggestion = await suggestImportanceForExistingTask(task._id, title, description);
     setSuggestedImportance(suggestion);
+    // Preseleccionar la recomendación IA
+    if (suggestion) setImportance(suggestion);
     setLoadingSuggestion(false);
   };
 
@@ -88,6 +90,7 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                   rows={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  onBlur={fetchSuggestion}
                 />
               </div>
               <div className="mb-3">

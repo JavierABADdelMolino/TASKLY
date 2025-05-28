@@ -96,7 +96,7 @@ exports.deleteTask = async (req, res) => {
 exports.suggestImportanceByData = async (req, res) => {
   const { title = '', description = '' } = req.body;
   try {
-    const prompt = `Eres un asistente que sugiere la importancia de una tarea: high, medium o low.\nTarea: "${title}". Descripción: "${description}". Responde solo "high", "medium" o "low".`;
+    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título y descripción. Título: "${title}". Descripción: "${description}". Responde únicamente con "high", "medium" o "low".`;
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
@@ -124,7 +124,7 @@ exports.suggestImportance = async (req, res) => {
     if (!board || board.user.toString() !== req.user.id) {
       return res.status(403).json({ message: 'No tienes permiso para acceder a esta tarea' });
     }
-    const prompt = `Eres un asistente que sugiere la importancia de una tarea: high, medium o low.\nTarea: "${task.title}". Descripción: "${task.description}". Responde solo "high", "medium" o "low".`;
+    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título y descripción. Título: "${task.title}". Descripción: "${task.description}". Responde únicamente con "high", "medium" o "low".`;
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],

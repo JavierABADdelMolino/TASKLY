@@ -23,6 +23,8 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
     setLoadingSuggestion(true);
     const suggestion = await suggestImportanceForNewTask(columnId, title, description);
     setSuggestedImportance(suggestion);
+    // Preseleccionar la recomendación IA
+    if (suggestion) setImportance(suggestion);
     setLoadingSuggestion(false);
   };
 

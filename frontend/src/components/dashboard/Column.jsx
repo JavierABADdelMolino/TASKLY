@@ -58,7 +58,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
             )}
           </div>
           {/* Title centered with edit */}
-          <div className="flex-grow-1 text-center">
+          <div className="flex-grow-1 text-center overflow-hidden">
             {isEditing ? (
               <input
                 type="text"
