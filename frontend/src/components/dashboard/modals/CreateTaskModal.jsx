@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { suggestImportanceForNewTask, createTask } from '../../../services/taskService';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -15,38 +16,14 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   const [suggestedImportance, setSuggestedImportance] = useState(null);
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
-
   if (!show) return null;
 
   // Función para obtener sugerencia IA tras terminar de escribir título
   const fetchSuggestion = async () => {
-    if (!title.trim()) return;
     setLoadingSuggestion(true);
-    try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(
-        `${API_BASE_URL}/tasks/columns/${columnId}/suggest-importance`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token
-          },
-          body: JSON.stringify({ title, description })
-        }
-      );
-      const data = await res.json();
-      if (res.ok && data.suggestedImportance) {
-        setSuggestedImportance(data.suggestedImportance);
-      } else {
-        setSuggestedImportance(null);
-      }
-    } catch {
-      setSuggestedImportance(null);
-    } finally {
-      setLoadingSuggestion(false);
-    }
+    const suggestion = await suggestImportanceForNewTask(columnId, title, description);
+    setSuggestedImportance(suggestion);
+    setLoadingSuggestion(false);
   };
 
   const handleSubmit = async (e) => {
@@ -58,16 +35,8 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/tasks/columns/${columnId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + sessionStorage.getItem('token')
-        },
-        body: JSON.stringify({ title, description, importance })
-      });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await createTask(columnId, { title, description, importance });
+      if (!data._id) {
         setError(data.message || 'Error al crear la tarea');
       } else {
         onTaskCreated && onTaskCreated(data);

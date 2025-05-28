@@ -1,12 +1,11 @@
 import { useState } from 'react';
+import { suggestImportanceForExistingTask, updateTask, deleteTask } from '../../../services/taskService';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
   { value: 'medium', label: 'Media' },
   { value: 'low', label: 'Baja' }
 ];
-
-const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   const [title, setTitle] = useState(task.title);
@@ -22,22 +21,10 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
 
   // Fetch IA suggestion for importance
   const fetchSuggestion = async () => {
-    if (!title.trim()) return;
     setLoadingSuggestion(true);
-    try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/tasks/${task._id}/suggest-importance`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ title, description })
-      });
-      const data = await res.json();
-      if (res.ok && data.suggestedImportance) setSuggestedImportance(data.suggestedImportance);
-    } catch {
-      // ignore
-    } finally {
-      setLoadingSuggestion(false);
-    }
+    const suggestion = await suggestImportanceForExistingTask(task._id, title, description);
+    setSuggestedImportance(suggestion);
+    setLoadingSuggestion(false);
   };
 
   const handleUpdate = async (e) => {
@@ -49,17 +36,8 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
     }
     setLoading(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/tasks/${task._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token
-        },
-        body: JSON.stringify({ title, description, importance })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Error al actualizar tarea');
+      const data = await updateTask(task._id, { title, description, importance });
+      if (data.message) throw new Error(data.message);
       onTaskUpdated && onTaskUpdated(data);
       onClose();
     } catch (err) {
@@ -72,15 +50,8 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   const handleDelete = async () => {
     if (!window.confirm('¿Eliminar esta tarea?')) return;
     try {
-      const token = sessionStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/tasks/${task._id}`, {
-        method: 'DELETE',
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message);
-      }
+      const data = await deleteTask(task._id);
+      if (data.message && !data.suggestedImportance) { /* assuming deletions return only message */ }
       onTaskUpdated && onTaskUpdated(null, true);
       onClose();
     } catch (err) {
