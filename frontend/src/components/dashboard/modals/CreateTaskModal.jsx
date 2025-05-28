@@ -24,10 +24,24 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
     if (!title.trim()) return;
     setLoadingSuggestion(true);
     try {
-      // Llamada al stub o endpoint real
-      // Como aún no existe ID de tarea, usamos un stub local
-      await new Promise(r => setTimeout(r, 200)); // simula retardo
-      setSuggestedImportance('medium');
+      const token = sessionStorage.getItem('token');
+      const res = await fetch(
+        `${API_BASE_URL}/tasks/columns/${columnId}/suggest-importance`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token
+          },
+          body: JSON.stringify({ title, description })
+        }
+      );
+      const data = await res.json();
+      if (res.ok && data.suggestedImportance) {
+        setSuggestedImportance(data.suggestedImportance);
+      } else {
+        setSuggestedImportance(null);
+      }
     } catch {
       setSuggestedImportance(null);
     } finally {
