@@ -40,21 +40,21 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
   return (
     <div className="card" style={{ background: '#f8f9fa' }}>
       <div className="card-body p-2">
-        <div className="d-flex justify-content-between align-items-start">
-          <div>
+        {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
+        <div className="d-flex align-items-center mb-2">
+          <button className="btn btn-link btn-sm p-0 text-secondary" onClick={() => setShowEdit(true)} title="Editar tarea">
+            <FiEdit size={14} />
+          </button>
+          <div className="flex-grow-1 text-center mx-2">
             <h6 className="mb-1" title={task.title} style={{ fontSize: '0.9rem' }}>{task.title}</h6>
-            {task.description && <p className="mb-1 small text-muted" title={task.description}>{task.description}</p>}
-            <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
           </div>
-          <div className="d-flex flex-column align-items-end gap-1">
-            <button className="btn btn-link btn-sm p-0 text-secondary" onClick={() => setShowEdit(true)} title="Editar tarea">
-              <FiEdit size={14} />
-            </button>
-            <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => setShowDelete(true)} title="Eliminar tarea">
-              <FiTrash2 size={14} />
-            </button>
-          </div>
+          <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => setShowDelete(true)} title="Eliminar tarea">
+            <FiTrash2 size={14} />
+          </button>
         </div>
+        {/* Descripción e importancia alineadas a la izquierda */}
+        {task.description && <p className="mb-1 small text-muted" title={task.description}>{task.description}</p>}
+        <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
         <div className="d-flex justify-content-between align-items-center mt-2">
           {/* Flecha izquierda */}
           <div>

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FiX } from 'react-icons/fi';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -15,8 +14,31 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   const [importance, setImportance] = useState(task.importance);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // IA suggestion states
+  const [suggestedImportance, setSuggestedImportance] = useState(task.importance);
+  const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
   if (!show) return null;
+
+  // Fetch IA suggestion for importance
+  const fetchSuggestion = async () => {
+    if (!title.trim()) return;
+    setLoadingSuggestion(true);
+    try {
+      const token = sessionStorage.getItem('token');
+      const res = await fetch(`${API_BASE_URL}/tasks/${task._id}/suggest-importance`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ title, description })
+      });
+      const data = await res.json();
+      if (res.ok && data.suggestedImportance) setSuggestedImportance(data.suggestedImportance);
+    } catch {
+      // ignore
+    } finally {
+      setLoadingSuggestion(false);
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -67,11 +89,11 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   };
 
   return (
-    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Editar tarea</h5>
+            <h5 className="modal-title text-center w-100">Editar tarea</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <form onSubmit={handleUpdate}>
@@ -83,7 +105,8 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                   id="title"
                   className="form-control"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => { setTitle(e.target.value); setSuggestedImportance(null); }}
+                  onBlur={fetchSuggestion}
                 />
               </div>
               <div className="mb-3">
@@ -103,9 +126,14 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                   className="form-select"
                   value={importance}
                   onChange={(e) => setImportance(e.target.value)}
+                  disabled={loadingSuggestion}
                 >
+                  {loadingSuggestion && <option>Calculando recomendación…</option>}
                   {importanceOptions.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                      {opt.value === suggestedImportance && ' (Recomendado IA)'}
+                    </option>
                   ))}
                 </select>
               </div>

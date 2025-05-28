@@ -56,7 +56,7 @@ const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDelet
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Editar columna</h5>
+            <h5 className="modal-title text-center w-100">Editar columna</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <form onSubmit={handleUpdate}>

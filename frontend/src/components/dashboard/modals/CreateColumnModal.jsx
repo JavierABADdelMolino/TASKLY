@@ -51,7 +51,7 @@ const CreateColumnModal = ({ show, onClose, boardId, onColumnCreated }) => {
         <div className="modal-content">
 
           <div className="modal-header">
-            <h5 className="modal-title">Crear nueva columna</h5>
+            <h5 className="modal-title text-center w-100">Crear nueva columna</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
 

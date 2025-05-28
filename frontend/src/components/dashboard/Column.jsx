@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiTrash2 } from 'react-icons/fi';
 import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
 import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
@@ -49,12 +49,12 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
         onClick={() => setShowDelete(true)}
         title="Eliminar columna"
       >
-        <FiX size={16} />
+        <FiTrash2 size={16} />
       </button>
       <div className="card-body">
         <div className="d-flex align-items-center mb-2">
           {/* Left arrow container */}
-          <div style={{ width: '32px', textAlign: 'left' }}>
+          <div style={{ width: '40px', textAlign: 'left' }}>
             {index > 0 && (
               <button className="btn btn-link p-1 text-secondary" onClick={() => onMove(column, -1)}>
                 <FiChevronLeft size={16} />
@@ -63,6 +63,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           </div>
           {/* Title centered with edit */}
           <div className="flex-grow-1 text-center">
+            <div className="pt-3"></div>
             {isEditing ? (
               <input
                 type="text"
@@ -98,7 +99,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
             )}
           </div>
           {/* Right arrow container */}
-          <div style={{ width: '32px', textAlign: 'right' }}>
+          <div style={{ width: '40px', textAlign: 'right' }}>
             {index < total - 1 && (
               <button className="btn btn-link p-1 text-secondary" onClick={() => onMove(column, 1)}>
                 <FiChevronRight size={16} />
@@ -118,7 +119,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
         ) : taskError ? (
           <div className="text-danger small">{taskError}</div>
         ) : tasks.length === 0 ? (
-          <div className="text-muted small">No hay tareas en esta columna.</div>
+          <div className="text-muted small text-center">No hay tareas en esta columna.</div>
         ) : (
           <div className="d-flex flex-column gap-2">
             {tasks.map((task) => (

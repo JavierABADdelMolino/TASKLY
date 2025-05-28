@@ -7,7 +7,7 @@ const ConfirmDeleteColumnModal = ({ show, onClose, onConfirm }) => {
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title text-danger">Eliminar columna</h5>
+            <h5 className="modal-title text-danger text-center w-100">Eliminar columna</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
