@@ -6,66 +6,52 @@
 
 ## 📁 Estructura del Proyecto
 
+### Backend
+
 ```bash
-TFG-DAM-JavierABAD/
-├── backend/
-│   ├── public/   
-│   │   └── avatars/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middlewares/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   └── index.js
-│   ├── uploads/   
-│   │   └── avatars/
-│   └── .env
+TFG-DAM-JavierABAD/backend/
+├── public/   
+│   └── avatars/
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   └── index.js
+├── uploads/   
+│   └── avatars/
+└── .env
+```
+
+### Frontend
+
 ```bash
-TFG-DAM-JavierABAD/
-├── backend/
-│   ├── public/   
-│   │   └── avatars/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middlewares/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   └── index.js
-│   ├── uploads/   
-│   │   └── avatars/
-│   └── .env
-├── frontend/
-│   ├── public/                         # Archivos estáticos públicos (favicon, index.html)
-│   ├── src/
-│   │   ├── assets/                     # Logos, iconos, imágenes, fuentes personalizadas
-│   │   ├── components/
-│   │   │   ├── dashboard/              # Componentes específicos del panel de tareas (board, columnas, selector)
-│   │   │   │   └── modals/             # Modales relacionados con las pizarras y columnas
-│   │   │   ├── layout/                 # Componentes generales de estructura como Navbar, Footer, Layout
-│   │   │   ├── profile/                # Componentes para la gestión del perfil de usuario
-│   │   │   │   └── modals/             # Modales del perfil: editar, cambiar contraseña, eliminar cuenta
-│   │   │   ├── auth/                   # Formularios de autenticación (login, registro)
-│   │   │   ├── ui/                     # Componentes visuales reutilizables (Loader, ThemeSwitcher, etc.)
-│   │   ├── context/                    # Contextos globales de la aplicación (Auth, Theme, Loader)
-│   │   ├── hooks/                      # Custom Hooks reutilizables
-│   │   ├── pages/                      # Vistas principales de la app (Home, Dashboard, Profile, etc.)
-│   │   ├── services/                   # Lógica de conexión con la API (fetch abstraído)
-│   │   ├── styles/                     # Estilos globales organizados con SCSS y Bootstrap
-│   │   │   ├── base/                   # Estilos base: reset, formularios, tipografía
-│   │   │   ├── config/                 # Variables SCSS y configuración de temas
-│   │   │   ├── components/             # Estilos específicos de componentes individuales
-│   │   │   └── themes/                 # Estilos de tema claro y oscuro con variables CSS
-│   │   ├── App.js                      # Componente principal de rutas y layout
-│   │   └── index.js                    # Punto de entrada de la app React
-│   ├── .env                            # Variables de entorno del frontend
-│   └── package.json                    # Dependencias y scripts del proyecto frontend
-├── DIARIO.md
-├── INSTALL.md
-├── .gitignore
-├── README.md
-└── THEME.md
+TFG-DAM-JavierABAD/frontend/
+├── public/                         # Archivos estáticos públicos (favicon, index.html)
+├── src/
+│   ├── assets/                     # Logos, iconos, imágenes, fuentes personalizadas
+│   ├── components/
+│   │   ├── dashboard/              # Componentes específicos del panel de tareas (board, columnas, selector)
+│   │   │   └── modals/             # Modales relacionados con las pizarras y columnas
+│   │   ├── layout/                 # Componentes generales de estructura como Navbar, Footer, Layout
+│   │   ├── profile/                # Componentes para la gestión del perfil de usuario
+│   │   │   └── modals/             # Modales del perfil: editar, cambiar contraseña, eliminar cuenta
+│   │   ├── auth/                   # Formularios de autenticación (login, registro)
+│   │   ├── ui/                     # Componentes visuales reutilizables (Loader, ThemeSwitcher, etc.)
+│   ├── context/                    # Contextos globales de la aplicación (Auth, Theme, Loader)
+│   ├── hooks/                      # Custom Hooks reutilizables
+│   ├── pages/                      # Vistas principales de la app (Home, Dashboard, Profile, etc.)
+│   ├── services/                   # Lógica de conexión con la API (fetch abstraído)
+│   ├── styles/                     # Estilos globales organizados con SCSS y Bootstrap
+│   │   ├── base/                   # Estilos base: reset, formularios, tipografía
+│   │   ├── config/                 # Variables SCSS y configuración de temas
+│   │   ├── components/             # Estilos específicos de componentes individuales
+│   │   └── themes/                 # Estilos de tema claro y oscuro con variables CSS
+│   ├── App.js                      # Componente principal de rutas y layout
+│   └── index.js                    # Punto de entrada de la app React
+├── .env                            # Variables de entorno del frontend
+└── package.json                    # Dependencias y scripts del proyecto frontend
 ```
 
 ---
@@ -80,6 +66,20 @@ TFG-DAM-JavierABAD/
 
 ## 📚 Documentación
 
+* [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
+* [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
+
+---
+
+## 🛠️ Instalación y configuración adicional
+
+- Se añadió la librería `react-icons` para iconos de flecha, estrella e información.
+
+---
+
+## 💡 Funcionalidades recientes
+
+- CRUD de pizarras, columnas
 * [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
 * [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
 

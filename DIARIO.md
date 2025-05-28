@@ -485,4 +485,19 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * El stub de IA ofrece recomendación instantánea y el prefetch onBlur garantiza que la sugerencia esté disponible al abrir el desplegable.
 * Próximos pasos: implementar drag&drop y conectar la IA real para sugerencias dinámicas.
 
+---
+
+## 🗓️ Día 17 - Miércoles 29 de mayo de 2025
+
+### ✅ Tareas realizadas
+
+* Refactorización del frontend para centralizar las llamadas API en servicios (`boardService`, `columnService`, `taskService`, `userService`, `authService`).
+* Integración de la API de OpenAI en el backend para sugerencias de importancia de tareas.
+* Implementación de lógica de eliminación en cascada en el backend para tableros y columnas.
+* Actualización de los modales de creación y edición de tareas para preseleccionar las recomendaciones de importancia de OpenAI.
+* Corrección de problemas de truncamiento en títulos de columnas y tareas.
+* Actualización de la documentación (`README.md`, `INSTALL.md`, `DIARIO.md`) para reflejar los cambios recientes.
+
+---
+
 *(continúa actualizando este documento día a día...)*
