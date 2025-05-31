@@ -8,8 +8,59 @@
 @import './themes/_light';
 @import './themes/_dark';
 
+// Apply background and text colors based on CSS variables
+body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+footer {
+  background-color: var(--bs-body-tertiary-bg);
+  color: var(--bs-body-color);
+}
+
 // 4. Base o utilidades extra
 @import './base/_reset';
 @import './base/forms';
 
 // 5. Componentes visuales
+
+// 6. Estilo personalizado para switch de tema
+.form-check.form-switch {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--bs-body-tertiary-bg);
+  border-radius: 1.5rem;
+  width: 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form-check.form-switch .form-check-input {
+  width: 2rem;
+  height: 1rem;
+  margin: 0;
+  background-color: #ccc;
+  border-radius: 1rem;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+.form-check.form-switch .form-check-input:focus {
+  box-shadow: none;
+}
+.form-check.form-switch .form-check-input:checked {
+  background-color: var(--bs-primary);
+}
+.form-check.form-switch .form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.form-check.form-switch .form-check-input:checked::before {
+  transform: translateX(1.5rem);
+}

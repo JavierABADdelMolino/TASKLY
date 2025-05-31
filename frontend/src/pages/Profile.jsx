@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLoader } from '../context/LoaderContext';
+import { useTheme } from '../context/ThemeContext';
 import Layout from '../components/layout/Layout';
 import ChangePasswordModal from '../components/profile/modals/ChangePasswordModal';
 import ConfirmDeleteModal from '../components/profile/modals/ConfirmDeleteModal';
@@ -9,6 +10,7 @@ import AvatarUploader from '../components/profile/AvatarUploader';
 const Profile = () => {
   const { setShowLoader } = useLoader();
   const { setUser } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -28,6 +30,7 @@ const Profile = () => {
   const [errors, setErrors] = useState({});
   const [showPwdModal, setShowPwdModal] = useState(false);
   const [showDelModal, setShowDelModal] = useState(false);
+  const [originalTheme, setOriginalTheme] = useState(theme);
 
   const isDefaultAvatar = (url) =>
     url?.includes('/public/avatars/default-avatar-');
@@ -78,6 +81,20 @@ const Profile = () => {
     }
   }, [formData.gender, formData.avatarUrl, newAvatarFile]);
 
+  // When entering edit mode, store the original theme
+  useEffect(() => {
+    if (editMode) {
+      setOriginalTheme(theme);
+    }
+  }, [editMode, theme]);
+
+  // Apply theme live when formData.theme changes in edit mode
+  useEffect(() => {
+    if (editMode && formData.theme) {
+      setTheme(formData.theme);
+    }
+  }, [formData.theme, editMode, setTheme]);
+
   const formatJoinDate = (iso) =>
     iso
       ? `Miembro desde ${new Date(iso).toLocaleDateString('es-ES', {
@@ -95,6 +112,8 @@ const Profile = () => {
     setAvatarDeleted(false);
     setErrors({});
     fetchUser();
+    // Revert to original theme
+    setTheme(originalTheme);
   };
 
   const handleInputChange = (e) =>

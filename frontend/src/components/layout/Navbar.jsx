@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { FiSun, FiMoon } from 'react-icons/fi';
 import CreateBoardModal from '../../components/dashboard/modals/CreateBoardModal';
 
 const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -109,7 +112,26 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                   <span className="d-none d-md-inline">{user.firstName}</span>
                 </button>
 
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" data-bs-auto-close="outside">
+                  {/* Theme switch: moon/sun icons with Bootstrap switch */}
+                  <li>
+                    <div className="dropdown-item py-2">
+                      <div className="form-check form-switch d-flex align-items-center justify-content-between m-0">
+                        <FiMoon className="me-2" />
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="themeSwitch"
+                          checked={theme === 'dark'}
+                          onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        />
+                        <FiSun className="ms-2" />
+                      </div>
+                    </div>
+                  </li>
+
+                  <li><hr className="dropdown-divider" /></li>
+
                   <li>
                     <button className="dropdown-item" onClick={() => navigate('/profile')}>
                       Mi perfil

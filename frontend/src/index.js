@@ -10,18 +10,21 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LoaderProvider } from './context/LoaderContext';
 import Loader from './components/ui/Loader';
+import { ThemeProvider } from './context/ThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <LoaderProvider>
-        <AuthProvider>
-          <BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <ThemeProvider>
             <Loader />
             <RouteChangeLoader /> {/* 👈 Loader al navegar entre páginas */}
             <App />
-          </BrowserRouter>
-        </AuthProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </AuthProvider>
     </LoaderProvider>
   </React.StrictMode>
 );
