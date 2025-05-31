@@ -147,10 +147,29 @@ exports.changePassword = async (req, res) => {
 // DELETE /api/users/me
 exports.deleteUserAccount = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.user.id);
+    const userId = req.user.id;
+    // Obtener usuario para avatar
+    const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-    // Solo eliminar avatares personalizados (ubicados en uploads/avatars)
+    // Cascada de datos: boards, columns y tasks
+    const Board = require('../models/Board');
+    const Column = require('../models/Column');
+    const Task = require('../models/Task');
+
+    const boards = await Board.find({ user: userId }).select('_id');
+    const boardIds = boards.map(b => b._id);
+    const columns = await Column.find({ board: { $in: boardIds } }).select('_id');
+    const columnIds = columns.map(c => c._id);
+
+    // Eliminar tareas asociadas
+    await Task.deleteMany({ column: { $in: columnIds } });
+    // Eliminar columnas asociadas
+    await Column.deleteMany({ board: { $in: boardIds } });
+    // Eliminar pizarras del usuario
+    await Board.deleteMany({ user: userId });
+
+    // Eliminar avatar personalizado si existe
     if (user.avatarUrl && user.avatarUrl.includes('/uploads/avatars/')) {
       const fullPath = path.join(__dirname, '..', '..', user.avatarUrl.replace(/^\/+/, ''));
       fs.unlink(fullPath, err => {
@@ -158,7 +177,9 @@ exports.deleteUserAccount = async (req, res) => {
       });
     }
 
-    res.json({ message: 'Cuenta eliminada correctamente' });
+    // Eliminar usuario
+    await User.findByIdAndDelete(userId);
+    res.json({ message: 'Cuenta y datos relacionados eliminados correctamente' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar cuenta', error: err.message });
   }
