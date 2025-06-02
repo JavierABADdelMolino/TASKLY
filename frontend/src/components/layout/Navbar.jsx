@@ -115,17 +115,24 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" data-bs-auto-close="outside">
                   {/* Theme switch: moon/sun icons with Bootstrap switch */}
                   <li>
-                    <div className="dropdown-item py-2">
-                      <div className="form-check form-switch d-flex align-items-center justify-content-between m-0">
-                        <FiMoon className="me-2" />
+                    <div className="dropdown-item py-0">
+                      <div
+                        className="theme-toggle m-0"
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
                         <input
-                          className="form-check-input"
+                          className="theme-toggle-input"
                           type="checkbox"
                           id="themeSwitch"
                           checked={theme === 'dark'}
                           onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                         />
-                        <FiSun className="ms-2" />
+                        <label htmlFor="themeSwitch" className="theme-toggle-label">
+                          <span className="theme-toggle-slider">
+                            {theme === 'dark' ? <FiMoon /> : <FiSun />}
+                          </span>
+                        </label>
                       </div>
                     </div>
                   </li>

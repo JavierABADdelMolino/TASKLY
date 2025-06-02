@@ -30,6 +30,27 @@
     box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
   }
 
+  /* Select components in dark mode */
+  .form-select {
+    background-color: var(--bs-card-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-body-color);
+
+    /* Custom white arrow */
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e0e0e0'%3E%3Cpath fill-rule='evenodd' d='M3.204 5.795a.5.5 0 0 1 .708-.146L8 8.293l4.088-2.644a.5.5 0 1 1 .52.852l-4.25 2.75a.5.5 0 0 1-.52 0l-4.25-2.75a.5.5 0 0 1-.146-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+    padding-right: 1.75rem;
+  }
+  .form-select:focus {
+    background-color: var(--bs-card-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  }
+
   /* Outline primary buttons */
   .btn-outline-primary {
     color: var(--bs-primary);
@@ -39,6 +60,67 @@
   .btn-outline-primary:focus {
     background-color: var(--bs-primary);
     color: #ffffff;
+  }
+
+  /* Outline danger button (delete account) */
+  .btn-outline-danger {
+    color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-outline-danger:hover,
+  .btn-outline-danger:focus {
+    background-color: var(--bs-secondary);
+    color: #ffffff !important;
+  }
+
+  /* Solid and outline danger */
+  .btn-danger {
+    background-color: var(--bs-secondary);
+    color: #ffffff;
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    background-color: rgba(var(--bs-secondary-rgb), 0.85);
+    color: #ffffff;
+  }
+
+  /* Solid primary and danger buttons: white text always */
+  .btn-primary {
+    color: #ffffff !important;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    color: #ffffff !important;
+  }
+  .btn-danger {
+    color: #ffffff !important;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    color: #ffffff !important;
+  }
+
+  /* Solid primary already white text, ensure outline primary hover also white */
+  .btn-outline-primary:hover,
+  .btn-outline-primary:focus {
+    background-color: var(--bs-primary);
+    color: #ffffff;
+  }
+
+  /* Warning outline button for change password */
+  .btn-outline-warning {
+    color: #ffc107;
+    border-color: #ffc107;
+  }
+  .btn-outline-warning:hover,
+  .btn-outline-warning:focus {
+    background-color: #ffc107;
+    color: #ffffff !important;
   }
 
   /* Cards */
@@ -68,7 +150,7 @@
   }
   .dropdown-toggle:hover,
   .dropdown-toggle:focus {
-    color: var(--bs-primary) !important;
+    color: var(--bs-body-color) !important;
   }
 
   /* Keep dropdown toggle text white on active / when menu is shown */
@@ -87,7 +169,7 @@
   .dropdown-item:hover,
   .dropdown-item:focus {
     background-color: var(--bs-hover-bg);
-    color: var(--bs-primary);
+    color: var(--bs-body-color) !important;
   }
 
   /* Links styling */
@@ -95,7 +177,7 @@
     color: var(--bs-link-color);
   }
   a:hover, .link:hover {
-    color: var(--bs-link-hover-color);
+    color: var(--bs-body-color) !important;
   }
 
   /* Override background for .bg-body-tertiary */
@@ -115,7 +197,8 @@
   }
   .btn-link:hover,
   .btn-link:focus {
-    color: var(--bs-primary) !important;
+    color: var(--bs-body-color) !important;
+    text-decoration: none;
   }
 
   /* Footer: use body background and border */
@@ -131,5 +214,40 @@
   footer small,
   .bg-body-tertiary.text-body.footer {
     color: var(--bs-body-color) !important;
+  }
+
+  /* Secondary buttons text */
+  .btn-secondary {
+    color: #ffffff !important;
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus {
+    color: #ffffff !important;
+  }
+
+  /* Modals: make them stand out from page background */
+  .modal-content {
+    background-color: var(--bs-card-bg) !important;
+    border: 1px solid var(--bs-card-border-color) !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7) !important;
+    color: var(--bs-body-color) !important;
+  }
+  .modal-header,
+  .modal-footer {
+    border-color: var(--bs-card-border-color) !important;
+  }
+  .modal-title {
+    color: var(--bs-body-color) !important;
+  }
+  .modal-body {
+    color: var(--bs-body-color) !important;
+  }
+  .modal-footer .btn {
+    color: #ffffff !important;
+  }
+
+  /* Close button color */
+  .modal-header .btn-close {
+    filter: invert(1) brightness(2) !important;
   }
 }

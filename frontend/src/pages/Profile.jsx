@@ -287,7 +287,7 @@ const Profile = () => {
             {!editMode ? (
               <>
                 <button type="button" className="btn btn-outline-primary" onClick={handleEdit}>Editar</button>
-                <button type="button" className="btn btn-outline-secondary" onClick={() => setShowPwdModal(true)}>Cambiar contraseña</button>
+                <button type="button" className="btn btn-outline-warning" onClick={() => setShowPwdModal(true)}>Cambiar contraseña</button>
                 <button type="button" className="btn btn-outline-danger" onClick={() => setShowDelModal(true)}>Eliminar cuenta</button>
               </>
             ) : (

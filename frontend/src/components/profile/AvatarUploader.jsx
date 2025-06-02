@@ -84,7 +84,7 @@ export default function AvatarUploader({
           />
           <label
             htmlFor="avatarInput"
-            className="btn btn-sm btn-outline-secondary mt-2"
+            className="btn btn-sm btn-outline-light mt-2"
           >
             Seleccionar
           </label>

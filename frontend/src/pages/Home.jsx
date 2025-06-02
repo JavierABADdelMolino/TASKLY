@@ -40,13 +40,34 @@ const Home = () => {
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}
         >
-          <div className="bg-white rounded-3 shadow p-4" style={{ width: '100%', maxWidth: '460px' }}>
-            {/* LoginForm y RegisterForm gestionan su propio estado y redirección */}
+          <div className="bg-white rounded-3 shadow p-4 position-relative" style={{ width: '100%', maxWidth: '460px' }}>
+            {/* Close button in top-right */}
+            <button
+              type="button"
+              className="btn-close position-absolute top-0 end-0 m-3"
+              aria-label="Cerrar"
+              onClick={handleCloseAuth}
+            />
+            {/* Login or Register form */}
             {authMode === 'login' ? <LoginForm /> : <RegisterForm />}
-            <div className="d-grid mt-3">
-              <button className="btn btn-secondary" onClick={handleCloseAuth}>
-                Cancelar
-              </button>
+            {/* Switch between modes */}
+            <div className="mt-3 text-center">
+              {authMode === 'login' && (
+                <span>
+                  ¿No tienes cuenta?{' '}
+                  <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('register')}>
+                    Registrarse
+                  </button>
+                </span>
+              )}
+              {authMode === 'register' && (
+                <span>
+                  ¿Ya tienes cuenta?{' '}
+                  <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('login')}>
+                    Iniciar sesión
+                  </button>
+                </span>
+              )}
             </div>
           </div>
         </div>

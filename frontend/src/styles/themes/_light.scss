@@ -31,6 +31,48 @@
     box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
   }
 
+  /* Select components */
+  .form-select {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+  }
+  .form-select:focus {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  }
+
+  /* Solid primary and danger buttons: white text for better contrast */
+  .btn-primary {
+    color: #ffffff !important;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    color: #ffffff !important;
+  }
+  .btn-danger {
+    color: #ffffff !important;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    color: #ffffff !important;
+  }
+
+  /* Secondary buttons text */
+  .btn-secondary {
+    color: #ffffff !important;
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus {
+    color: #ffffff !important;
+  }
+
   /* Buttons outline-primary */
   .btn-outline-primary {
     color: var(--bs-primary);
@@ -39,6 +81,27 @@
   .btn-outline-primary:hover,
   .btn-outline-primary:focus {
     background-color: var(--bs-primary);
+    color: #ffffff;
+  }
+
+  /* Buttons danger */
+  .btn-outline-danger {
+    color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-outline-danger:hover,
+  .btn-outline-danger:focus {
+    background-color: var(--bs-secondary);
+    color: #ffffff;
+  }
+  .btn-danger {
+    background-color: var(--bs-secondary);
+    color: #ffffff;
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    background-color: #c0392b; /* darker red */
     color: #ffffff;
   }
 
@@ -73,5 +136,10 @@
     color: var(--bs-body-color) !important;
     text-decoration: none;
     background-color: transparent !important;
+  }
+
+  /* Close button color light mode */
+  .modal-header .btn-close {
+    filter: none !important;
   }
 }
