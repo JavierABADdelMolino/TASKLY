@@ -115,6 +115,32 @@ npm install openai
 
 ---
 
+## 💻 Instalación del Proyecto
+
+1. Clona el repositorio y entra en la carpeta del proyecto:
+   ```bash
+   git clone <url-del-repo>
+   cd TFG-DAM-JavierABAD
+   ```
+2. Instala dependencias del backend:
+   ```bash
+   cd backend
+   npm install
+   ```
+3. Instala dependencias del frontend (incluye SCSS y react-icons):
+   ```bash
+   cd ../frontend
+   npm install
+   npm install sass react-icons
+   ```
+4. Duplica y configura variables de entorno:
+   ```bash
+   cp backend/.env.example backend/.env
+   cp frontend/.env.example frontend/.env
+   ```
+
+---
+
 ## ✅ Verificación Final
 
 Ejecuta:

@@ -1,0 +1,145 @@
+[data-theme='light'] {
+  /* Backgrounds and text */
+  --bs-body-bg: #f5f7fa;
+  --bs-body-color: #333333;
+  /* Card styling */
+  --bs-card-bg: #ffffff;
+  --bs-card-border-color: #e1e8f0;
+  /* Navbar styling */
+  --bs-navbar-bg: #ffffff;
+  --bs-navbar-color: #333333;
+  --bs-navbar-border-color: #dee2e6;
+  /* Buttons primary */
+  --bs-btn-primary-bg: var(--bs-primary);
+  --bs-btn-primary-color: #ffffff;
+  --bs-btn-primary-border-color: var(--bs-primary);
+  --bs-btn-primary-hover-bg: #16a085;
+  /* Links */
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #16a085;
+
+  /* Forms */
+  .form-control {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+  }
+  .form-control:focus {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  }
+
+  /* Select components */
+  .form-select {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+  }
+  .form-select:focus {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  }
+
+  /* Solid primary and danger buttons: white text for better contrast */
+  .btn-primary {
+    color: #ffffff !important;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    color: #ffffff !important;
+  }
+  .btn-danger {
+    color: #ffffff !important;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    color: #ffffff !important;
+  }
+
+  /* Secondary buttons text */
+  .btn-secondary {
+    color: #ffffff !important;
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus {
+    color: #ffffff !important;
+  }
+
+  /* Buttons outline-primary */
+  .btn-outline-primary {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+  .btn-outline-primary:hover,
+  .btn-outline-primary:focus {
+    background-color: var(--bs-primary);
+    color: #ffffff;
+  }
+
+  /* Buttons danger */
+  .btn-outline-danger {
+    color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+  }
+  .btn-outline-danger:hover,
+  .btn-outline-danger:focus {
+    background-color: var(--bs-secondary);
+    color: #ffffff;
+  }
+  .btn-danger {
+    background-color: var(--bs-secondary);
+    color: #ffffff;
+    border-color: var(--bs-secondary);
+  }
+  .btn-danger:hover,
+  .btn-danger:focus {
+    background-color: #c0392b; /* darker red */
+    color: #ffffff;
+  }
+
+  /* Cards */
+  .card {
+    background-color: var(--bs-card-bg);
+    border-color: var(--bs-card-border-color);
+  }
+
+  /* Navbar */
+  .navbar {
+    background-color: var(--bs-navbar-bg) !important;
+    color: var(--bs-navbar-color);
+    border-bottom: 1px solid var(--bs-navbar-border-color);
+  }
+
+  /* Dropdown menus */
+  .dropdown-menu {
+    background-color: var(--bs-body-bg);
+    border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+  }
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: var(--bs-hover-bg);
+    color: var(--bs-primary);
+  }
+
+  /* Keep dropdown toggle (username) default color on hover */
+  .dropdown-toggle:hover,
+  .dropdown-toggle:focus {
+    color: var(--bs-body-color) !important;
+    text-decoration: none;
+    background-color: transparent !important;
+  }
+
+  /* Close button color light mode */
+  .modal-header .btn-close {
+    filter: none !important;
+  }
+}

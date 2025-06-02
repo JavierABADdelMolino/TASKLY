@@ -1,0 +1,45 @@
+// Bootstrap SCSS variable overrides (must be before importing Bootstrap)
+$body-bg: #f5f7fa;
+$body-color: #333333;
+$primary: #1abc9c;
+$secondary: #e74c3c;
+$gray-100: #f8f9fa;
+$gray-900: #212529;
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": #198754,
+  "info": #17a2b8,
+  "warning": #ffc107,
+  "danger": $secondary,
+  "light": $gray-100,
+  "dark": $gray-900
+);
+
+/* ! Remove !default flags to enforce our values */
+
+/* Base variables for Taskly using CSS custom properties */
+:root {
+  --font-family-sans: 'Nunito', 'Segoe UI', sans-serif;
+  --bs-body-font-family: var(--font-family-sans);
+  --bs-body-font-size: 1rem;
+  --bs-body-bg: #f5f7fa;
+  --bs-body-color: #333333;
+
+  /* Brand palette as CSS vars */
+  --bs-primary: #1abc9c;
+  --bs-primary-rgb: 26, 188, 156;
+  --bs-secondary: #e74c3c;
+  --bs-secondary-rgb: 231, 76, 60;
+
+  /* Link colors */
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #16a085;
+
+  /* Other globals */
+  --bs-border-color: #dee2e6;
+  --bs-hover-bg: rgba(var(--bs-primary-rgb), 0.1);
+
+  /* Border radius */
+  --bs-border-radius: 0.25rem;
+}

@@ -500,4 +500,22 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 18 - Lunes 3 de junio de 2025
+
+### ✅ Tareas realizadas
+
+* Refactor del `Navbar` y `Layout` para extraer el switch de tema del dropdown de perfil y situarlo siempre visible en la barra de navegación.
+* Actualización de `ThemeContext` para inicializar el tema desde el perfil de usuario o el valor en `localStorage`, y mantener el tema tras cerrar sesión.
+* Implementación del toggle global en `Navbar` (identificador `themeSwitchNav`), disponible en Home, Dashboard y Profile.
+* Ajuste de los estilos en `theme.scss`, `_dark.scss` y `_light.scss`: borde blanco en selects, flechas personalizadas en modo oscuro, contraste de botones hover y enlaces.
+* Adaptación del modal de autenticación en `Home.jsx` para aplicar el tema actual en overlay y contenedor interno.
+* Cambio del botón de selección de avatar a `btn-outline-light` en modo oscuro y ajuste de contrastes en Profile (`Cambiar contraseña`, `Eliminar cuenta`).
+* Actualización de la documentación (`INSTALL.md`, `README.md`, `THEME.md`) con detalles del nuevo sistema de temas.
+
+### 📝 Observaciones
+
+* El tema se aplica y persiste correctamente al iniciar y cerrar sesión, así como al navegar entre vistas.
+* Se garantiza coherencia visual en todos los modales, formularios y dropdowns.
+* Próximos pasos: implementar drag-and-drop de tareas con `react-beautiful-dnd` y añadir pruebas unitarias/E2E para el sistema de temas.
+
 *(continúa actualizando este documento día a día...)*
