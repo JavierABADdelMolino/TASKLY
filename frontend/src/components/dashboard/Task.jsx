@@ -3,12 +3,14 @@ import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2 } from 'react-icons/fi'
 import EditTaskModal from './modals/EditTaskModal';
 import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
 import { updateTask, deleteTask } from '../../services/taskService';
+import { useTheme } from '../../context/ThemeContext';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [loadingMove, setLoadingMove] = useState(false);
   const [errorMove, setErrorMove] = useState('');
+  const { theme } = useTheme();
 
   // Find current column index in columns array
   const colIdx = columns.findIndex(c => c._id === column._id);
@@ -34,7 +36,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
-          <button className="btn btn-link btn-sm p-0 text-secondary" onClick={() => setShowEdit(true)} title="Editar tarea">
+          <button className="btn btn-link btn-sm p-0 text-warning" onClick={() => setShowEdit(true)} title="Editar tarea">
             <FiEdit size={14} />
           </button>
           <div className="flex-grow-1 text-center mx-2">
@@ -51,7 +53,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           {/* Flecha izquierda */}
           <div>
             {colIdx > 0 && (
-              <button className="btn btn-link btn-sm p-0" onClick={() => handleMove(-1)} disabled={loadingMove} title="Mover a la columna anterior">
+              <button className={`btn btn-link btn-sm p-0 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => handleMove(-1)} disabled={loadingMove} title="Mover a la columna anterior">
                 <FiChevronLeft size={16} />
               </button>
             )}
@@ -61,7 +63,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           {/* Flecha derecha */}
           <div>
             {colIdx < columns.length - 1 && (
-              <button className="btn btn-link btn-sm p-0" onClick={() => handleMove(1)} disabled={loadingMove} title="Mover a la columna siguiente">
+              <button className={`btn btn-link btn-sm p-0 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => handleMove(1)} disabled={loadingMove} title="Mover a la columna siguiente">
                 <FiChevronRight size={16} />
               </button>
             )}

@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaInfoCircle } from 'react-icons/fa';
 import InfoModal from './modals/InfoModal';
+import { useTheme } from '../../context/ThemeContext';
 
 const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
   const [idx, setIdx] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
+  const { theme } = useTheme();
 
   /* Sincroniza índice cuando cambia activeBoard desde fuera */
   useEffect(() => {
@@ -30,7 +32,7 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
         {/* ← Flecha izquierda */}
         {prev && (
           <button
-            className="btn btn-link p-1 text-secondary"
+            className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
             onClick={() => go(-1)}
           >
             <FiChevronLeft size={16} />
@@ -71,7 +73,7 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
         {/* Flecha derecha → */}
         {next && (
           <button
-            className="btn btn-link p-1 text-secondary"
+            className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
             onClick={() => go(1)}
           >
             <FiChevronRight size={16} />

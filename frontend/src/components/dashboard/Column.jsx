@@ -5,6 +5,7 @@ import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
 import { getTasksByColumn } from '../../services/taskService';
 import { updateColumn, deleteColumn } from '../../services/columnService';
+import { useTheme } from '../../context/ThemeContext';
 
 const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -15,6 +16,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [taskError, setTaskError] = useState('');
   const [refreshTasks, setRefreshTasks] = useState(false);
+  const { theme } = useTheme();
 
   // keep title in sync
   useEffect(() => { setNewTitle(column.title); }, [column.title]);
@@ -52,7 +54,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           {/* Left arrow container */}
           <div style={{ width: '40px', textAlign: 'left' }}>
             {index > 0 && (
-              <button className="btn btn-link p-1 text-secondary" onClick={() => onMove(column, -1)}>
+              <button className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => onMove(column, -1)}>
                 <FiChevronLeft size={16} />
               </button>
             )}
@@ -92,7 +94,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           {/* Right arrow container */}
           <div style={{ width: '40px', textAlign: 'right' }}>
             {index < total - 1 && (
-              <button className="btn btn-link p-1 text-secondary" onClick={() => onMove(column, 1)}>
+              <button className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => onMove(column, 1)}>
                 <FiChevronRight size={16} />
               </button>
             )}

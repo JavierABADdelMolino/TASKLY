@@ -15,6 +15,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
   const path = currentPath || location.pathname;
 
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -96,12 +97,18 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
 
             {/* Menú usuario (avatar) */}
             {user && (
-              <div className="dropdown ms-3">
+              <div
+                className={`dropdown ms-3 ${showUserMenu ? 'show' : ''}`}
+                onMouseEnter={() => setShowUserMenu(true)}
+                onMouseLeave={() => setShowUserMenu(false)}
+              >
                 <button
+                  type="button"
                   className="btn d-flex align-items-center dropdown-toggle"
                   id="userMenu"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  aria-expanded={showUserMenu}
+                  onMouseDown={(e) => e.preventDefault()}
+                  style={{ color: theme === 'dark' ? '#fff' : '#000' }}
                 >
                   <img
                     src={`${process.env.REACT_APP_URL}${user.avatarUrl}`}
@@ -112,7 +119,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                   <span className="d-none d-md-inline">{user.firstName}</span>
                 </button>
 
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" data-bs-auto-close="outside">
+                <ul className={`dropdown-menu dropdown-menu-end ${showUserMenu ? 'show' : ''}`} aria-labelledby="userMenu" data-bs-auto-close="outside">
                   <li>
                     <button className="dropdown-item" onClick={() => navigate('/profile')}>
                       Mi perfil
