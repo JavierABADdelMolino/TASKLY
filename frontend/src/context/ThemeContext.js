@@ -7,20 +7,23 @@ export const ThemeProvider = ({ children }) => {
   const { user } = useAuth();
   const [theme, setTheme] = useState('light');
 
-  // Initialize theme from user profile or localStorage
+  // Initialize theme: prefer session override, otherwise apply user preference on login
   useEffect(() => {
-    if (user?.theme) {
+    const session = sessionStorage.getItem('theme');
+    if (session) {
+      // Manual override present, respect session choice on reload
+      setTheme(session);
+    } else if (user?.theme) {
+      // No manual override: apply user's saved theme
       setTheme(user.theme);
-    } else {
-      const saved = localStorage.getItem('theme');
-      if (saved) setTheme(saved);
+      // sessionStorage will be updated in the theme effect
     }
   }, [user]);
 
-  // Apply theme to document and persist
+  // Apply theme to document and persist in session
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    sessionStorage.setItem('theme', theme);
   }, [theme]);
 
   return (
