@@ -84,6 +84,20 @@
     color: #ffffff;
   }
 
+  /* Outline secondary and warning hover state: white text */
+  .btn-outline-secondary:hover,
+  .btn-outline-secondary:focus {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: #ffffff !important;
+  }
+  .btn-outline-warning:hover,
+  .btn-outline-warning:focus {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #ffffff !important;
+  }
+
   /* Buttons danger */
   .btn-outline-danger {
     color: var(--bs-secondary);
@@ -129,6 +143,12 @@
     background-color: var(--bs-hover-bg);
     color: var(--bs-primary);
   }
+  /* Danger icons/buttons (delete) white text on hover */
+  .btn-link.text-danger:hover,
+  .btn-link.text-danger:focus {
+    color: var(--bs-secondary) !important;
+    background-color: var(--bs-secondary);
+  }
 
   /* Keep dropdown toggle (username) default color on hover */
   .dropdown-toggle:hover,
@@ -141,5 +161,28 @@
   /* Close button color light mode */
   .modal-header .btn-close {
     filter: none !important;
+  }
+
+  /* Links styling */
+  a, .link {
+    color: var(--bs-link-color);
+  }
+  a:hover, .link:hover {
+    color: var(--bs-link-hover-color);
+  }
+  /* Info icons stay Bootstrap info color */
+  .text-info,
+  .btn-link.text-info {
+    color: var(--bs-info) !important;
+  }
+  .btn-link.text-info:hover,
+  .btn-link.text-info:focus {
+    color: var(--bs-info) !important;
+  }
+  /* Danger icons/buttons remain secondary red on hover */
+  .btn-link.text-danger,
+  .btn-link.text-danger:hover,
+  .btn-link.text-danger:focus {
+    color: var(--bs-secondary) !important;
   }
 }

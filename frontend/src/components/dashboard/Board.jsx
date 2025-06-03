@@ -16,7 +16,7 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   };
 
   return (
-    <div className="border rounded shadow-sm p-4 bg-white">
+    <div className="card shadow-sm p-4">
       {/* Favorito & Añadir columna */}
       <div className="d-flex align-items-center mb-3">
         {/* Botón favorito */}

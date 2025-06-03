@@ -50,7 +50,7 @@ const BoardHeader = ({ boards, activeBoard, setActiveBoard }) => {
               onMouseLeave={() => setShowInfo(false)}
             >
               <button
-                className="btn btn-link p-1 text-secondary"
+                className="btn btn-link p-1 text-info"
                 title="Ver descripción"
               >
                 <FaInfoCircle size={20} />

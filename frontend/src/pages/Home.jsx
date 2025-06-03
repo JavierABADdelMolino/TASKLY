@@ -4,10 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
 import Layout from '../components/layout/Layout';
+import { useTheme } from '../context/ThemeContext';
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null);
   const { user } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,11 +42,14 @@ const Home = () => {
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}
         >
-          <div className="bg-white rounded-3 shadow p-4 position-relative" style={{ width: '100%', maxWidth: '460px' }}>
+          <div
+            className={`card shadow p-4 position-relative ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
+            style={{ width: '100%', maxWidth: '460px' }}
+          >
             {/* Close button in top-right */}
             <button
               type="button"
-              className="btn-close position-absolute top-0 end-0 m-3"
+              className={`btn-close position-absolute top-0 end-0 m-3 ${theme === 'dark' ? 'btn-close-white' : ''}`}
               aria-label="Cerrar"
               onClick={handleCloseAuth}
             />

@@ -2,7 +2,7 @@ import React from 'react';
 
 const InfoModal = ({ description }) => (
   <div
-    className="position-absolute bg-white border rounded shadow-sm p-3"
+    className="card border rounded shadow-sm p-3 position-absolute"
     style={{ top: '100%', left: '100%', marginTop: '2px', marginLeft: '2px', width: '240px', zIndex: 2000 }}
   >
     <h6 className="mb-2">Descripción</h6>

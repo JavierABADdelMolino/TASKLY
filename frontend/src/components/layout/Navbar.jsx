@@ -113,32 +113,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" data-bs-auto-close="outside">
-                  {/* Theme switch: moon/sun icons with Bootstrap switch */}
-                  <li>
-                    <div className="dropdown-item py-0">
-                      <div
-                        className="theme-toggle m-0"
-                        onClick={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
-                      >
-                        <input
-                          className="theme-toggle-input"
-                          type="checkbox"
-                          id="themeSwitch"
-                          checked={theme === 'dark'}
-                          onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        />
-                        <label htmlFor="themeSwitch" className="theme-toggle-label">
-                          <span className="theme-toggle-slider">
-                            {theme === 'dark' ? <FiMoon /> : <FiSun />}
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li><hr className="dropdown-divider" /></li>
-
                   <li>
                     <button className="dropdown-item" onClick={() => navigate('/profile')}>
                       Mi perfil
@@ -152,6 +126,26 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 </ul>
               </div>
             )}
+
+            {/* Theme switch (global) */}
+            <div
+              className="theme-toggle m-0 ms-3"
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              <input
+                className="theme-toggle-input"
+                type="checkbox"
+                id="themeSwitchGlobal"
+                checked={theme === 'dark'}
+                onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              />
+              <label htmlFor="themeSwitchGlobal" className="theme-toggle-label">
+                <span className="theme-toggle-slider">
+                  {theme === 'dark' ? <FiMoon /> : <FiSun />}
+                </span>
+              </label>
+            </div>
           </div>
         </div>
       </nav>

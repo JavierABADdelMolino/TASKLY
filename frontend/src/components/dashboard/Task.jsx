@@ -30,7 +30,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
   };
 
   return (
-    <div className="card" style={{ background: '#f8f9fa' }}>
+    <div className="card">
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
