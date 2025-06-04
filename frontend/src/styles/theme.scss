@@ -128,6 +128,64 @@ footer {
   color: var(--bs-primary);
 }
 
+// Carousel controls en modo claro
+.carousel-light-controls {
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: brightness(0) !important;
+  }
+  .carousel-indicators {
+    bottom: 15px;
+  }
+  .carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--bs-body-color) !important;
+    opacity: 0.6;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-body-color) !important;
+    opacity: 1;
+  }
+}
+
+// Carousel indicators como líneas para claro y oscuro
+.carousel-light-controls, .carousel-dark-controls {
+  .carousel-indicators {
+    display: flex;
+    bottom: 15px;
+    gap: 8px;
+  }
+  .carousel-indicators button {
+    width: 30px;
+    height: 4px;
+    border-radius: 2px;
+    margin: 0;
+    opacity: 0.5;
+  }
+}
+
+.carousel-light-controls {
+  .carousel-indicators button {
+    background-color: var(--bs-body-color) !important;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-body-color) !important;
+    opacity: 1;
+  }
+}
+
+.carousel-dark-controls {
+  .carousel-indicators button {
+    background-color: var(--bs-white) !important;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-white) !important;
+    opacity: 1;
+  }
+}
+
 /* Revert custom overrides: remove .modal.show.d-block rule */
 /* Revert .modal.show.d-block to Bootstrap defaults */
 .modal.show.d-block {

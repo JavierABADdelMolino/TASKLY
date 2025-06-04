@@ -43,11 +43,15 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
           {/* Izquierda: logo + título dinámico */}
           <div className="d-flex align-items-center gap-3">
             <button
-              className="btn btn-sm btn-link fw-bold p-0"
-              onClick={() => navigate('/dashboard')}
+              className="btn btn-sm btn-link p-0"
+              onClick={() => navigate('/')}
               style={{ textDecoration: 'none' }}
             >
-              Taskly
+              <img
+                src={`${process.env.PUBLIC_URL}/logo-color.svg`}
+                alt="Taskly Logo"
+                style={{ height: '40px' }}
+              />
             </button>
             <button
               className="btn btn-sm btn-link text-muted p-0"
