@@ -39,7 +39,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
   }, [column._id, refreshTasks, refreshKey]);
 
   return (
-    <div className="card shadow-sm" style={{ width: '280px', position: 'relative' }}>
+    <div className="card shadow-sm column-card" style={{ width: '280px', position: 'relative' }}>
       {/* Botón eliminar columna */}
       <button
         className="btn btn-link p-1 text-danger position-absolute"

@@ -127,3 +127,9 @@ footer {
 .theme-toggle-input:not(:checked) + .theme-toggle-label .theme-icon-moon {
   color: var(--bs-primary);
 }
+
+/* Revert custom overrides: remove .modal.show.d-block rule */
+/* Revert .modal.show.d-block to Bootstrap defaults */
+.modal.show.d-block {
+  position: fixed !important;
+}

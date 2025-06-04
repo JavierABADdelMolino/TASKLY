@@ -7,16 +7,20 @@ export const ThemeProvider = ({ children }) => {
   const { user } = useAuth();
   const [theme, setTheme] = useState('light');
 
-  // Initialize theme: prefer session override, otherwise apply user preference on login
+  // On mount, load manual override if exists
   useEffect(() => {
     const session = sessionStorage.getItem('theme');
     if (session) {
-      // Manual override present, respect session choice on reload
       setTheme(session);
-    } else if (user?.theme) {
-      // No manual override: apply user's saved theme
+    }
+  }, []);
+
+  // After user loads, apply user preference only if no manual override exists
+  useEffect(() => {
+    const session = sessionStorage.getItem('theme');
+    if (!session && user?.theme) {
       setTheme(user.theme);
-      // sessionStorage will be updated in the theme effect
+      sessionStorage.setItem('theme', user.theme);
     }
   }, [user]);
 

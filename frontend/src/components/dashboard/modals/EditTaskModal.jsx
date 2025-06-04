@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { suggestImportanceForExistingTask, updateTask, deleteTask } from '../../../services/taskService';
 
 const importanceOptions = [
@@ -61,69 +62,73 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
     }
   };
 
-  return (
-    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title text-center w-100">Editar tarea</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+  return ReactDOM.createPortal(
+    <>
+      <div className="modal-backdrop fade show"></div>
+      <div className="modal show d-block" tabIndex="-1" role="dialog">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title text-center w-100">Editar tarea</h5>
+              <button type="button" className="btn-close" onClick={onClose}></button>
+            </div>
+            <form onSubmit={handleUpdate}>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="title" className="form-label">Título</label>
+                  <input
+                    type="text"
+                    id="title"
+                    className="form-control"
+                    value={title}
+                    onChange={(e) => { setTitle(e.target.value); setSuggestedImportance(null); }}
+                    onBlur={fetchSuggestion}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="description" className="form-label">Descripción</label>
+                  <textarea
+                    id="description"
+                    className="form-control"
+                    rows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    onBlur={fetchSuggestion}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="importance" className="form-label">Importancia</label>
+                  <select
+                    id="importance"
+                    className="form-select"
+                    value={importance}
+                    onChange={(e) => setImportance(e.target.value)}
+                    disabled={loadingSuggestion}
+                  >
+                    {loadingSuggestion && <option>Calculando recomendación…</option>}
+                    {importanceOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                        {opt.value === suggestedImportance && ' (Recomendado IA)'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {error && <div className="alert alert-danger small">{error}</div>}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+                <button type="button" className="btn btn-danger me-auto" onClick={handleDelete}>Eliminar</button>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Guardando...' : 'Guardar'}
+                </button>
+              </div>
+            </form>
           </div>
-          <form onSubmit={handleUpdate}>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="title" className="form-label">Título</label>
-                <input
-                  type="text"
-                  id="title"
-                  className="form-control"
-                  value={title}
-                  onChange={(e) => { setTitle(e.target.value); setSuggestedImportance(null); }}
-                  onBlur={fetchSuggestion}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">Descripción</label>
-                <textarea
-                  id="description"
-                  className="form-control"
-                  rows={3}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  onBlur={fetchSuggestion}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="importance" className="form-label">Importancia</label>
-                <select
-                  id="importance"
-                  className="form-select"
-                  value={importance}
-                  onChange={(e) => setImportance(e.target.value)}
-                  disabled={loadingSuggestion}
-                >
-                  {loadingSuggestion && <option>Calculando recomendación…</option>}
-                  {importanceOptions.map(opt => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                      {opt.value === suggestedImportance && ' (Recomendado IA)'}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {error && <div className="alert alert-danger small">{error}</div>}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              <button type="button" className="btn btn-danger me-auto" onClick={handleDelete}>Eliminar</button>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Guardando...' : 'Guardar'}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
-    </div>
+    </>,
+    document.body
   );
 };
 

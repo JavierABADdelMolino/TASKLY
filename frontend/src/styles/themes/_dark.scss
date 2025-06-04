@@ -242,4 +242,37 @@
     color: var(--bs-info) !important;
     background-color: transparent !important;
   }
+
+  /* Board area styling */
+  .board-card {
+    background-color: #141414;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.8) !important;
+  }
+
+  /* Column styling */
+  .column-card {
+    background-color: #1e1e1e;
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.7) !important;
+    transition: transform 0.2s ease;
+  }
+  .column-card:hover {
+    transform: translateY(-4px) !important;
+  }
+
+  /* Task styling */
+  .task-card {
+    background-color: #1a1a1a;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--bs-primary) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5) !important;
+    margin-bottom: 0.75rem;
+    transition: box-shadow 0.2s;
+  }
+  .task-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+  }
 }
