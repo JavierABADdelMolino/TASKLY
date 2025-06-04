@@ -10,15 +10,17 @@ async function getAuthHeaders() {
 }
 
 // Sugerencia IA para nueva tarea en columna
-export async function suggestImportanceForNewTask(columnId, title, description) {
+export async function suggestImportanceForNewTask(columnId, title, description, dueDateTime) {
   try {
     const headers = await getAuthHeaders();
+    const payload = { title, description };
+    if (dueDateTime) payload.dueDateTime = dueDateTime;
     const res = await fetch(
       `${API_BASE_URL}/tasks/columns/${columnId}/suggest-importance`,
       {
         method: 'POST',
         headers,
-        body: JSON.stringify({ title, description })
+        body: JSON.stringify(payload)
       }
     );
     const data = await res.json();
@@ -29,15 +31,17 @@ export async function suggestImportanceForNewTask(columnId, title, description) 
 }
 
 // Sugerencia IA para tarea existente
-export async function suggestImportanceForExistingTask(taskId, title, description) {
+export async function suggestImportanceForExistingTask(taskId, title, description, dueDateTime) {
   try {
     const headers = await getAuthHeaders();
+    const payload = { title, description };
+    if (dueDateTime) payload.dueDateTime = dueDateTime;
     const res = await fetch(
       `${API_BASE_URL}/tasks/${taskId}/suggest-importance`,
       {
         method: 'POST',
         headers,
-        body: JSON.stringify({ title, description })
+        body: JSON.stringify(payload)
       }
     );
     const data = await res.json();
@@ -48,14 +52,16 @@ export async function suggestImportanceForExistingTask(taskId, title, descriptio
 }
 
 // Crear tarea
-export async function createTask(columnId, { title, description, importance }) {
+export async function createTask(columnId, { title, description, importance, dueDateTime }) {
   const headers = await getAuthHeaders();
+  const payload = { title, description, importance };
+  if (dueDateTime) payload.dueDateTime = dueDateTime;
   const res = await fetch(
     `${API_BASE_URL}/tasks/columns/${columnId}`,
     {
       method: 'POST',
       headers,
-      body: JSON.stringify({ title, description, importance })
+      body: JSON.stringify(payload)
     }
   );
   return res.json();
@@ -64,12 +70,14 @@ export async function createTask(columnId, { title, description, importance }) {
 // Actualizar tarea (permite campos dinámicos como column, title, description, importance)
 export async function updateTask(taskId, data) {
   const headers = await getAuthHeaders();
+  const payload = { ...data };
+  if (!payload.dueDateTime) delete payload.dueDateTime;
   const res = await fetch(
     `${API_BASE_URL}/tasks/${taskId}`,
     {
       method: 'PUT',
       headers,
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     }
   );
   return res.json();

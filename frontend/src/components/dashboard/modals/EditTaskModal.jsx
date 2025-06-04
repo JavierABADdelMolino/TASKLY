@@ -12,20 +12,22 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [importance, setImportance] = useState(task.importance);
+  const [dueDate, setDueDate] = useState(task.dueDateTime ? task.dueDateTime.split('T')[0] : '');
+  const [dueTime, setDueTime] = useState(task.dueDateTime && task.dueDateTime.includes('T') ? task.dueDateTime.split('T')[1] : '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  // IA suggestion states
   const [suggestedImportance, setSuggestedImportance] = useState(task.importance);
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
   if (!show) return null;
 
-  // Fetch IA suggestion for importance
   const fetchSuggestion = async () => {
     setLoadingSuggestion(true);
-    const suggestion = await suggestImportanceForExistingTask(task._id, title, description);
+    // Construir dueDateTime opcional
+    let dueDateTime = '';
+    if (dueDate) dueDateTime = dueTime ? `${dueDate}T${dueTime}` : dueDate;
+    const suggestion = await suggestImportanceForExistingTask(task._id, title, description, dueDateTime);
     setSuggestedImportance(suggestion);
-    // Preseleccionar la recomendación IA
     if (suggestion) setImportance(suggestion);
     setLoadingSuggestion(false);
   };
@@ -37,10 +39,22 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
       setError('El título es obligatorio');
       return;
     }
+    // Validar fecha y hora no anterior al momento actual
+    if (dueDate) {
+      const dt = dueTime ? new Date(`${dueDate}T${dueTime}`) : new Date(dueDate);
+      if (dt < new Date()) {
+        setError('La fecha de vencimiento no puede ser anterior a la actual');
+        return;
+      }
+    }
     setLoading(true);
     try {
-      const data = await updateTask(task._id, { title, description, importance });
-      if (data.message) throw new Error(data.message);
+      // Preparar payload con dueDateTime opcional
+      const payload = { title, description, importance };
+      if (dueDate) {
+        payload.dueDateTime = dueTime ? `${dueDate}T${dueTime}` : dueDate;
+      }
+      const data = await updateTask(task._id, payload);
       onTaskUpdated && onTaskUpdated(data);
       onClose();
     } catch (err) {
@@ -96,6 +110,30 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                     onBlur={fetchSuggestion}
                   />
                 </div>
+                {/* Fecha de vencimiento (opcional) */}
+                <div className="mb-3">
+                  <label htmlFor="dueDate" className="form-label">Fecha de vencimiento</label>
+                  <input
+                    type="date"
+                    id="dueDate"
+                    className="form-control"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                  />
+                </div>
+                {/* Hora de vencimiento (opcional, requiere fecha) */}
+                <div className="mb-3">
+                  <label htmlFor="dueTime" className="form-label">Hora de vencimiento</label>
+                  <input
+                    type="time"
+                    id="dueTime"
+                    className="form-control"
+                    value={dueTime}
+                    onChange={(e) => setDueTime(e.target.value)}
+                    disabled={!dueDate}
+                  />
+                </div>
+                {/* Importancia debe ir al final */}
                 <div className="mb-3">
                   <label htmlFor="importance" className="form-label">Importancia</label>
                   <select

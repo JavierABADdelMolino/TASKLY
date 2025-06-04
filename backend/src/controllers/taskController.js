@@ -27,7 +27,7 @@ exports.getTasksByColumn = async (req, res) => {
 exports.createTask = async (req, res) => {
   try {
     const { columnId } = req.params;
-    const { title, description, importance } = req.body;
+    const { title, description, importance, dueDateTime } = req.body;
     if (!title) return res.status(400).json({ message: 'Título es obligatorio' });
     const column = await Column.findById(columnId);
     if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
@@ -41,7 +41,8 @@ exports.createTask = async (req, res) => {
       description: description || '',
       importance: importance || 'medium',
       column: columnId,
-      order: count
+      order: count,
+      dueDateTime: dueDateTime ? new Date(dueDateTime) : null
     });
     await task.save();
     res.status(201).json(task);
@@ -54,7 +55,7 @@ exports.createTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, importance, column: newColumnId, order } = req.body;
+    const { title, description, importance, column: newColumnId, order, dueDateTime } = req.body;
     const task = await Task.findById(id);
     if (!task) return res.status(404).json({ message: 'Tarea no encontrada' });
     const column = await Column.findById(task.column);
@@ -67,6 +68,10 @@ exports.updateTask = async (req, res) => {
     if (importance) task.importance = importance;
     if (newColumnId) task.column = newColumnId;
     if (order !== undefined) task.order = order;
+    // Actualizar fecha y hora de vencimiento
+    if (dueDateTime !== undefined) {
+      task.dueDateTime = dueDateTime ? new Date(dueDateTime) : null;
+    }
     await task.save();
     res.json(task);
   } catch (err) {

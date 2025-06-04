@@ -11,6 +11,8 @@ const importanceOptions = [
 const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [dueTime, setDueTime] = useState('');
   const [importance, setImportance] = useState('medium');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,10 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
   // Función para obtener sugerencia IA tras terminar de escribir título
   const fetchSuggestion = async () => {
     setLoadingSuggestion(true);
-    const suggestion = await suggestImportanceForNewTask(columnId, title, description);
+    // Construir dueDateTime opcional para sugerencia
+    let dueDateTime = '';
+    if (dueDate) dueDateTime = dueTime ? `${dueDate}T${dueTime}` : dueDate;
+    const suggestion = await suggestImportanceForNewTask(columnId, title, description, dueDateTime);
     setSuggestedImportance(suggestion);
     // Preseleccionar la recomendación IA
     if (suggestion) setImportance(suggestion);
@@ -36,13 +41,27 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
       setError('El título es obligatorio');
       return;
     }
+    // Validar fecha y hora no anteriores
+    if (dueDate) {
+      const dt = dueTime ? new Date(`${dueDate}T${dueTime}`) : new Date(dueDate);
+      if (dt < new Date()) {
+        setError('La fecha de vencimiento no puede ser anterior a la actual');
+        return;
+      }
+    }
     setLoading(true);
     try {
-      const data = await createTask(columnId, { title, description, importance });
-      if (!data._id) {
-        setError(data.message || 'Error al crear la tarea');
+      // Preparar payload
+      const data = { title, description, importance };
+      if (dueDate) {
+        const dueDateTime = dueTime ? `${dueDate}T${dueTime}` : dueDate;
+        data.dueDateTime = dueDateTime;
+      }
+      const response = await createTask(columnId, data);
+      if (!response._id) {
+        setError(response.message || 'Error al crear la tarea');
       } else {
-        onTaskCreated && onTaskCreated(data);
+        onTaskCreated && onTaskCreated(response);
         onClose();
       }
     } catch (err) {
@@ -83,6 +102,27 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="dueDate" className="form-label">Fecha de vencimiento</label>
+                  <input
+                    type="date"
+                    id="dueDate"
+                    className="form-control"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="dueTime" className="form-label">Hora de vencimiento</label>
+                  <input
+                    type="time"
+                    id="dueTime"
+                    className="form-control"
+                    value={dueTime}
+                    onChange={(e) => setDueTime(e.target.value)}
+                    disabled={!dueDate}
                   />
                 </div>
                 <div className="mb-3">

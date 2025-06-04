@@ -186,6 +186,19 @@ footer {
   }
 }
 
+// Custom hover for task edit/delete buttons
+.task-card .btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.task-card .btn-link:hover {
+  background-color: var(--bs-body-tertiary-bg) !important;
+  color: var(--bs-body-color) !important;
+  border-radius: 0.25rem;
+}
+
 /* Revert custom overrides: remove .modal.show.d-block rule */
 /* Revert .modal.show.d-block to Bootstrap defaults */
 .modal.show.d-block {

@@ -1,15 +1,26 @@
 import { useState } from 'react';
-import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2, FiCalendar, FiClock } from 'react-icons/fi';
 import EditTaskModal from './modals/EditTaskModal';
 import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
 import { updateTask, deleteTask } from '../../services/taskService';
 import { useTheme } from '../../context/ThemeContext';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
-  const [showDelete, setShowDelete] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
+  // Estados para mover, editar y eliminar
   const [loadingMove, setLoadingMove] = useState(false);
   const [errorMove, setErrorMove] = useState('');
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  // Fecha y hora de vencimiento parseadas y formateadas
+  const dueDate = task.dueDateTime ? task.dueDateTime.split('T')[0] : null;
+  const rawTime = task.dueDateTime && task.dueDateTime.includes('T') ? task.dueDateTime.split('T')[1] : null;
+  // Mostrar hora sólo si no es default midnight
+  let dueTime = null;
+  if (rawTime) {
+    const hhmm = rawTime.split('.')[0].substring(0,5);
+    dueTime = hhmm !== '00:00' ? hhmm : null;
+  }
+
   const { theme } = useTheme();
 
   // Find current column index in columns array
@@ -48,6 +59,19 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
         </div>
         {/* Descripción e importancia alineadas a la izquierda */}
         {task.description && <p className="mb-1 small text-muted" title={task.description}>{task.description}</p>}
+        {/* Mostrar fecha y hora de vencimiento si existe */}
+        {dueDate && (
+          <p className="mb-1 small text-muted d-flex align-items-center">
+            <FiCalendar className="me-1" />
+            {dueDate}
+            {dueTime && (
+              <span className="d-flex align-items-center ms-3">
+                <FiClock className="me-1" />
+                {dueTime}
+              </span>
+            )}
+          </p>
+        )}
         <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
         <div className="d-flex justify-content-between align-items-center mt-2">
           {/* Flecha izquierda */}
