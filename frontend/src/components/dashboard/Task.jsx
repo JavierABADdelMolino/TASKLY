@@ -15,6 +15,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
     if (dueDateTimeObj < now) {
       statusClass = 'overdue';
     } else if (dueDateTimeObj - now <= 24 * 60 * 60 * 1000) {
+      // Highlight tasks due within 24h
       statusClass = 'urgent';
     }
   }
