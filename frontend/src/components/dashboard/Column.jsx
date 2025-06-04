@@ -115,7 +115,10 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           <div className="text-muted small text-center">No hay tareas en esta columna.</div>
         ) : (
           <div className="d-flex flex-column gap-2">
-            {tasks.map((task) => (
+            {tasks.slice().sort((a, b) => {
+              const order = { high: 2, medium: 1, low: 0 };
+              return order[b.importance] - order[a.importance];
+            }).map((task) => (
               <Task
                 key={task._id}
                 task={task}

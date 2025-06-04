@@ -90,7 +90,11 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                     id="title"
                     className="form-control"
                     value={title}
-                    onChange={(e) => { setTitle(e.target.value); setSuggestedImportance(null); }}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      setSuggestedImportance(null);
+                      fetchSuggestion();
+                    }}
                     onBlur={fetchSuggestion}
                   />
                 </div>
@@ -102,6 +106,7 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    onBlur={fetchSuggestion}
                   />
                 </div>
                 <div className="mb-3">
@@ -112,6 +117,7 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                     className="form-control"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
+                    onBlur={fetchSuggestion}
                   />
                 </div>
                 <div className="mb-3">
@@ -123,6 +129,7 @@ const CreateTaskModal = ({ show, onClose, columnId, onTaskCreated }) => {
                     value={dueTime}
                     onChange={(e) => setDueTime(e.target.value)}
                     disabled={!dueDate}
+                    onBlur={fetchSuggestion}
                   />
                 </div>
                 <div className="mb-3">

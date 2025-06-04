@@ -199,7 +199,14 @@ footer {
   border-radius: 0.25rem;
 }
 
-/* Revert custom overrides: remove .modal.show.d-block rule */
+// Custom hover for column delete button analogous to task delete
+.column-card .btn-link:hover {
+  background-color: var(--bs-body-tertiary-bg) !important;
+  color: var(--bs-body-color) !important;
+  border-radius: 0.25rem;
+}
+
+// Revert custom overrides: remove .modal.show.d-block rule
 /* Revert .modal.show.d-block to Bootstrap defaults */
 .modal.show.d-block {
   position: fixed !important;

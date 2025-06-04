@@ -6,6 +6,18 @@ import { updateTask, deleteTask } from '../../services/taskService';
 import { useTheme } from '../../context/ThemeContext';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
+  const { theme } = useTheme();
+  // Estado de vencimiento para resaltar según proximidad o retraso
+  const dueDateTimeObj = task.dueDateTime ? new Date(task.dueDateTime) : null;
+  const now = new Date();
+  let statusClass = '';
+  if (dueDateTimeObj) {
+    if (dueDateTimeObj < now) {
+      statusClass = 'overdue';
+    } else if (dueDateTimeObj - now <= 24 * 60 * 60 * 1000) {
+      statusClass = 'urgent';
+    }
+  }
   // Estados para mover, editar y eliminar
   const [loadingMove, setLoadingMove] = useState(false);
   const [errorMove, setErrorMove] = useState('');
@@ -20,8 +32,6 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
     const hhmm = rawTime.split('.')[0].substring(0,5);
     dueTime = hhmm !== '00:00' ? hhmm : null;
   }
-
-  const { theme } = useTheme();
 
   // Find current column index in columns array
   const colIdx = columns.findIndex(c => c._id === column._id);
@@ -43,7 +53,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
   };
 
   return (
-    <div className="card task-card">
+    <div className={`card task-card ${statusClass}`}>  
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">

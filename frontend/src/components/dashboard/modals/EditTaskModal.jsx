@@ -119,6 +119,7 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                     className="form-control"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
+                    onBlur={fetchSuggestion}
                   />
                 </div>
                 {/* Hora de vencimiento (opcional, requiere fecha) */}
@@ -131,6 +132,7 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                     value={dueTime}
                     onChange={(e) => setDueTime(e.target.value)}
                     disabled={!dueDate}
+                    onBlur={fetchSuggestion}
                   />
                 </div>
                 {/* Importancia debe ir al final */}

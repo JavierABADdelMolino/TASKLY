@@ -97,11 +97,11 @@ exports.deleteTask = async (req, res) => {
   }
 };
 
-// Sugerencia de importancia antes de crear una tarea (usa title y description del body)
+// Sugerencia de importancia antes de crear una tarea (usa title, description y dueDateTime del body)
 exports.suggestImportanceByData = async (req, res) => {
-  const { title = '', description = '' } = req.body;
+  const { title = '', description = '', dueDateTime = '' } = req.body;
   try {
-    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título y descripción. Título: "${title}". Descripción: "${description}". Responde únicamente con "high", "medium" o "low".`;
+    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título, descripción y fecha/hora de entrega. Título: "${title}". Descripción: "${description}". Fecha y hora de entrega: "${dueDateTime || 'No especificada'}". Responde únicamente con "high", "medium" o "low".`;
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
@@ -117,11 +117,11 @@ exports.suggestImportanceByData = async (req, res) => {
     return res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
   }
 };
-
 // POST /api/tasks/:id/suggest-importance - Sugerencia de importancia sobre tarea existente
 exports.suggestImportance = async (req, res) => {
   try {
     const { id } = req.params;
+    const { title: newTitle, description: newDesc, dueDateTime } = req.body;
     const task = await Task.findById(id);
     if (!task) return res.status(404).json({ message: 'Tarea no encontrada' });
     const column = await Column.findById(task.column);
@@ -129,7 +129,11 @@ exports.suggestImportance = async (req, res) => {
     if (!board || board.user.toString() !== req.user.id) {
       return res.status(403).json({ message: 'No tienes permiso para acceder a esta tarea' });
     }
-    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título y descripción. Título: "${task.title}". Descripción: "${task.description}". Responde únicamente con "high", "medium" o "low".`;
+    // Preferir datos enviados por cliente para recalcular sugerencia
+    const title = newTitle !== undefined ? newTitle : task.title;
+    const description = newDesc !== undefined ? newDesc : task.description;
+    const dueInfo = dueDateTime !== undefined ? dueDateTime : (task.dueDateTime ? task.dueDateTime.toISOString() : 'No especificada');
+    const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título, descripción y fecha/hora de entrega. Título: "${title}". Descripción: "${description}". Fecha y hora de entrega: "${dueInfo}". Responde únicamente con "high", "medium" o "low".`;
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
