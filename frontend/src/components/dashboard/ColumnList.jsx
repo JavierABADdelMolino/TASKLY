@@ -63,26 +63,28 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   }
 
   return (
-    <div className="d-flex gap-4 flex-nowrap overflow-auto">
-      {columns.length === 0 ? (
-        <p className="text-muted">No hay columnas aún en esta pizarra.</p>
-      ) : (
-        columns.map((col, idx) => (
-          <div key={col._id} className="flex-shrink-0">
-            <Column
-              column={col}
-              index={idx}
-              total={columns.length}
-              allColumns={columns}
-              onMove={moveColumn}
-              onColumnDeleted={handleColumnDeleted}
-              onColumnUpdated={handleColumnUpdated}
-              refreshKey={refreshKey}
-              onAnyTaskChange={handleGlobalRefresh}
-            />
-          </div>
-        ))
-      )}
+    <div className="overflow-auto" style={{ padding: '1rem 0' }}>
+      <div className="d-flex gap-4" style={{ width: 'max-content', margin: '0 auto' }}>
+        {columns.length === 0 ? (
+          <p className="text-muted">No hay columnas aún en esta pizarra.</p>
+        ) : (
+          columns.map((col, idx) => (
+            <div key={col._id} className="flex-shrink-0">
+              <Column
+                column={col}
+                index={idx}
+                total={columns.length}
+                allColumns={columns}
+                onMove={moveColumn}
+                onColumnDeleted={handleColumnDeleted}
+                onColumnUpdated={handleColumnUpdated}
+                refreshKey={refreshKey}
+                onAnyTaskChange={handleGlobalRefresh}
+              />
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
