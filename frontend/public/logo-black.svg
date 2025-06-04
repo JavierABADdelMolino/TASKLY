@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <rect x="5" y="5" width="40" height="40" rx="5" ry="5" fill="#000000" />
+  <circle cx="5" cy="17.5" r="3" fill="none" stroke="#000000" stroke-width="2"/>
+  <circle cx="5" cy="27.5" r="3" fill="none" stroke="#000000" stroke-width="2"/>
+  <circle cx="5" cy="37.5" r="3" fill="none" stroke="#000000" stroke-width="2"/>
+  <path d="M15 25 L22 32 L35 17" stroke="#000000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="60" y="32" font-family="sans-serif" font-size="24" fill="#000000">Taskly</text>
+</svg>
