@@ -133,6 +133,10 @@ npm install openai
    npm install
    npm install sass react-icons
    ```
+
+   - Estructura de estilos reorganizada: SCSS en `src/styles` con subcarpetas `base/`, `config/`, `components/`, `themes/`.
+   - Reorganización de assets de logos en `public/logos` y actualización de `manifest.json` e `index.html` con nuevos favicons e íconos PWA.
+
 4. Duplica y configura variables de entorno:
    ```bash
    cp backend/.env.example backend/.env

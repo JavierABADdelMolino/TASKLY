@@ -518,4 +518,23 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 * Se garantiza coherencia visual en todos los modales, formularios y dropdowns.
 * Próximos pasos: implementar drag-and-drop de tareas con `react-beautiful-dnd` y añadir pruebas unitarias/E2E para el sistema de temas.
 
+---
+
+## 🗓️ Día 19 - Miércoles 4 de junio de 2025
+
+### ✅ Tareas realizadas
+
+- Creación de la rama `feature/homepage-enhancements` para mejoras en la página de inicio.
+- Reorganización de los archivos de logos e íconos en `frontend/public`.
+- Eliminación de íconos React generados por defecto y actualización de `manifest.json` e `index.html` con nuevos favicons y PWA icons.
+- Diseño y maquetación de la nueva página Home con encabezado animado, descripción de la plataforma y logos.
+- Integración de nuevos assets en `Home.jsx` y aplicación de estilos con Bootstrap y SCSS.
+- Limpieza de código y actualización de la documentación: `README.md`, `INSTALL.md` y `THEME.md`.
+
+### 📝 Observaciones
+
+- La página de inicio presenta un diseño más visual y atractivo, coherente con la marca.
+- La reorganización de assets facilita el mantenimiento y futuras actualizaciones.
+---
+
 *(continúa actualizando este documento día a día...)*

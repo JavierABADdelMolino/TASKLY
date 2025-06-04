@@ -79,25 +79,11 @@ TFG-DAM-JavierABAD/frontend/
 
 ## 💡 Funcionalidades recientes
 
-- CRUD de pizarras, columnas
-* [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
-* [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
-
----
-
-## 🛠️ Instalación y configuración adicional
-
-- Se añadió la librería `react-icons` para iconos de flecha, estrella e información.
-
-## 💡 Funcionalidades recientes
-
-- CRUD de pizarras, columnas y tareas con modales de creación, edición y eliminación.
-- Añadir/quitar favorito en pizarras, con visualización por defecto al cargar el dashboard.
-- Reordenamiento de columnas y tareas con flechas de movimiento (próximamente drag&drop).
-- Edición y eliminación de pizarras/columnas/tareas directamente desde la UI.
-- Popover en hover para ver descripción de la pizarra.
-- Orden automático de columnas y tareas gestionado por el backend.
-- UX mejorada: cambios de favorito y nuevos elementos reflejados al instante sin recargar.
+- Implementación de sistema de temas claro/oscuro con variables CSS/SCSS y persistencia en sessionStorage.
+- Modales centrados a nivel global usando React Portal (Create/Edit/ConfirmDeleteTask/InfoModal).
+- UI modernizada para tableros, columnas y tareas: fondos diferenciados, bordes redondeados, sombras y efectos hover.
+- Dropdown de usuario en Navbar activado por hover y ThemeSwitcher siempre accesible.
+- Reorganización de assets de logos en `public` y actualización de `manifest.json` y `index.html` con nuevos iconos/favicons.
 
 ---
 
