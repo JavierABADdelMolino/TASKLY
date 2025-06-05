@@ -279,3 +279,11 @@ footer {
   border-left: 4px solid var(--bs-danger) !important;
   background-color: rgba(220, 53, 69, 0.1);
 }
+
+/* Date picker icon color based on theme */
+[data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) !important;
+}
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) !important;
+}

@@ -133,7 +133,15 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
                 return orderMap[b.importance] - orderMap[a.importance];
               })
               .map(task => (
-                <Task key={task._id} task={task} column={column} columns={allColumns} onTaskMoved={onAnyTaskChange} onTaskUpdated={onAnyTaskChange} onTaskDeleted={onAnyTaskChange} />
+                <Task
+                  key={task._id}
+                  task={task}
+                  column={column}
+                  columns={allColumns}
+                  onTaskMoved={onAnyTaskChange}
+                  onTaskUpdated={onAnyTaskChange}
+                  onTaskDeleted={onAnyTaskChange}
+                />
               ))
           )}
         </div>
