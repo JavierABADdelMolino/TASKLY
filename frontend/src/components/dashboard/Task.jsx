@@ -8,9 +8,10 @@ import { CSS } from '@dnd-kit/utilities';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
   // Hacer la tarea draggable para DnD
-  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
     id: task._id,
     activationConstraint: { distance: 10 },
+    data: { task, column },
   });
 
   // Estado de vencimiento para resaltar según proximidad o retraso
@@ -43,7 +44,14 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      style={{
+        position: 'relative', // allow z-index to take effect
+        willChange: 'transform',
+        transform: CSS.Translate.toString(transform),
+        transition: isDragging ? 'none' : transition,
+        zIndex: isDragging ? 1000 : 'auto',
+        opacity: isDragging ? 0 : 1,
+      }}
       className={`card task-card ${statusClass}`}
     >
       <div className="card-body p-2">
