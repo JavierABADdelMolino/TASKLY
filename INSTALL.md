@@ -131,7 +131,7 @@ npm install openai
    ```bash
    cd ../frontend
    npm install
-   npm install sass react-icons
+   npm install sass react-icons react-bootstrap bootstrap
    ```
 
    - Estructura de estilos reorganizada: SCSS en `src/styles` con subcarpetas `base/`, `config/`, `components/`, `themes/`.

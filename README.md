@@ -79,7 +79,16 @@ TFG-DAM-JavierABAD/frontend/
 
 ## 💡 Funcionalidades recientes
 
-- Implementación de sistema de temas claro/oscuro con variables CSS/SCSS y persistencia en sessionStorage.
+- Carrusel de héroe, secciones de características y CTA en la página Home.
+- Persistencia y visualización de fecha y hora opcionales de vencimiento en tareas con inputs separados y validación de fechas futuras.
+- Integración de sugerencias de OpenAI que incluyen `dueDateTime`, actualizadas dinámicamente al modificar título, descripción, fecha u hora.
+- Modernización del diseño del tablero: tarjetas de tareas con bordes redondeados, sombras y franja de acento principal.
+- Destacado de tareas urgentes (menos de 24h) y vencidas en ambos temas.
+- Ordenación de tareas por importancia (alta → media → baja).
+- Columnas centradas con desplazamiento horizontal responsivo.
+- Modales de confirmación de eliminación (`ConfirmDeleteTaskModal`, `ConfirmDeleteColumnModal`) implementados con React Portal.
+- Logo dinámico en Navbar, ThemeSwitcher y adaptabilidad de temas.
+- Documentación actualizada (`README.md`, `INSTALL.md`, `THEME.md`, `DIARIO.md`) con los cambios recientes.
 - Modales centrados a nivel global usando React Portal (Create/Edit/ConfirmDeleteTask/InfoModal).
 - UI modernizada para tableros, columnas y tareas: fondos diferenciados, bordes redondeados, sombras y efectos hover.
 - Dropdown de usuario en Navbar activado por hover y ThemeSwitcher siempre accesible.

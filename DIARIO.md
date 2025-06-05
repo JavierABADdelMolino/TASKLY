@@ -530,6 +530,15 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 - Diseño y maquetación de la nueva página Home con encabezado animado, descripción de la plataforma y logos.
 - Integración de nuevos assets en `Home.jsx` y aplicación de estilos con Bootstrap y SCSS.
 - Limpieza de código y actualización de la documentación: `README.md`, `INSTALL.md` y `THEME.md`.
+- Modernización de la UI del tablero: tarjetas de tareas con bordes redondeados, sombras y franja de acento principal en modo claro y oscuro.
+- Implementación de persistencia y visualización de fecha y hora de vencimiento en tareas; separación de inputs de fecha y hora con validación de no permitir fechas pasadas.
+- Integración de sugerencias de importancia vía OpenAI incluyendo el campo `dueDateTime`; actualización en tiempo real al modificar datos de la tarea.
+- Destacado automático de tareas urgentes (próximas 24h) y vencidas con clases de estado tanto en modo claro como oscuro.
+- Ordenación de tareas por nivel de importancia (Alta → Media → Baja) dentro de cada columna.
+- Centrado de columnas con desplazamiento horizontal responsivo para facilitar la navegación en pantallas estrechas.
+- Implementación de modales de confirmación de eliminación (`ConfirmDeleteTaskModal`, `ConfirmDeleteColumnModal`) usando React Portal con fondo y centrado.
+- Ajustes de la paleta de colores en `theme.scss`, `_light.scss` y `_dark.scss` para mejorar contraste en elementos interactivos y estados.
+- Actualización de la documentación: reflejados estos cambios en `README.md`, `INSTALL.md` y `THEME.md`.
 
 ### 📝 Observaciones
 
