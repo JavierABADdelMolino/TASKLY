@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import RouteChangeLoader from './components/ui/RouteChangeLoader';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import './styles/theme.scss';
+import './styles/index.scss';
 
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';

@@ -59,7 +59,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
           <button
-            className="btn btn-link btn-sm p-0 text-warning"
+            className="btn btn-link btn-sm p-0 text-body"
             onPointerDown={e => e.stopPropagation()}
             onClick={e => { e.stopPropagation(); setShowEdit(true); }}
             title="Editar tarea"

@@ -1,0 +1,10 @@
+// Mixins SCSS
+// Añade aquí mixins globales para SCSS, como media queries o helpers.
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}

@@ -1,0 +1,206 @@
+// Estilos personalizados de componentes
+
+// 1. Switch de tema (form-check)
+.form-check.form-switch {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--bs-body-tertiary-bg);
+  border-radius: 1.5rem;
+  width: 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form-check.form-switch .form-check-input {
+  width: 2rem;
+  height: 1rem;
+  margin: 0;
+  background-color: #ccc;
+  border-radius: 1rem;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+.form-check.form-switch .form-check-input:focus {
+  box-shadow: none;
+}
+.form-check.form-switch .form-check-input:checked {
+  background-color: var(--bs-primary);
+}
+.form-check.form-switch .form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.form-check.form-switch .form-check-input:checked::before {
+  transform: translateX(1.5rem);
+}
+
+// 2. Custom theme toggle
+.theme-toggle {
+  width: 4rem;
+  height: 2rem;
+  background-color: var(--bs-body-tertiary-bg);
+  border: 2px solid var(--bs-primary);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin: 0.25rem auto 0;
+}
+.theme-toggle:hover {
+  background-color: var(--bs-hover-bg);
+}
+.theme-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.theme-toggle-label {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0.15rem;
+  left: 0.15rem;
+  gap: 0.2rem;
+  user-select: none;
+}
+.theme-icon {
+  font-size: 1rem;
+  color: var(--bs-body-color);
+}
+.theme-toggle-slider {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  top: 50%;
+  left: 0.25rem;
+  transform: translateY(-50%);
+  background-color: var(--bs-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+.theme-toggle-input:checked + .theme-toggle-label .theme-toggle-slider {
+  left: calc(100% - 1.75rem);
+}
+.theme-toggle-input:checked + .theme-toggle-label .theme-icon-sun {
+  color: var(--bs-primary);
+}
+.theme-toggle-input:not(:checked) + .theme-toggle-label .theme-icon-moon {
+  color: var(--bs-primary);
+}
+
+// 3. Carousel controls e indicadores
+.carousel-light-controls {
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: brightness(0) !important;
+  }
+  .carousel-indicators {
+    bottom: 15px;
+  }
+  .carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--bs-body-color) !important;
+    opacity: 0.6;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-body-color) !important;
+    opacity: 1;
+  }
+}
+.carousel-light-controls,
+.carousel-dark-controls {
+  .carousel-indicators {
+    display: flex;
+    bottom: 15px;
+    gap: 8px;
+  }
+  .carousel-indicators button {
+    width: 30px;
+    height: 4px;
+    border-radius: 2px;
+    margin: 0;
+    opacity: 0.5;
+  }
+}
+.carousel-light-controls {
+  .carousel-indicators button {
+    background-color: var(--bs-body-color) !important;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-body-color) !important;
+    opacity: 1;
+  }
+}
+.carousel-dark-controls {
+  .carousel-indicators button {
+    background-color: var(--bs-white) !important;
+  }
+  .carousel-indicators .active {
+    background-color: var(--bs-white) !important;
+    opacity: 1;
+  }
+}
+
+// 4. Custom hover para botones en Task.jsx
+.task-card .btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.task-card .btn-link:hover {
+  background-color: var(--bs-body-tertiary-bg) !important;
+  color: var(--bs-body-color) !important;
+  border-radius: 0.25rem;
+}
+
+// 5. Destacar tareas según estado de fecha de finalización
+.task-card.today {
+  border-left: 4px solid var(--bs-info) !important;
+  background-color: rgba(var(--bs-info-rgb), 0.1) !important;
+}
+.task-card.urgent {
+  border-left: 4px solid var(--bs-warning) !important;
+  background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
+}
+.task-card.overdue {
+  border-left: 4px solid var(--bs-danger) !important;
+  background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
+}
+
+// 6. Estilos generales de Column y Task (antes en theme.scss)
+.column-card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+.column-card:hover {
+  transform: translateY(-4px);
+}
+.task-card {
+  background-color: #fafcff;
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--bs-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 0.75rem;
+  transition: box-shadow 0.2s;
+}
+.task-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}

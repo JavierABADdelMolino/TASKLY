@@ -1,0 +1,18 @@
+// Punto de entrada principal de estilos
+// 1. Variables y configuraciones
+@import './config/_variables';
+@import './config/_mixins';
+@import './config/_functions';
+
+// 2. Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// 3. Temas dinámicos
+@import './themes/_light';
+@import './themes/_dark';
+
+// 4. Base y utilidades
+@import './base/_base';
+
+// 5. Componentes personalizados
+@import './components/_custom';
