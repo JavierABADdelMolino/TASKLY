@@ -44,10 +44,11 @@ TFG-DAM-JavierABAD/frontend/
 │   ├── pages/                      # Vistas principales de la app (Home, Dashboard, Profile, etc.)
 │   ├── services/                   # Lógica de conexión con la API (fetch abstraído)
 │   ├── styles/                     # Estilos globales organizados con SCSS y Bootstrap
-│   │   ├── base/                   # Estilos base: reset, formularios, tipografía
+│   │   ├── base/                   # Estilos base: reset, tipografía
 │   │   ├── config/                 # Variables SCSS y configuración de temas
-│   │   ├── components/             # Estilos específicos de componentes individuales
-│   │   └── themes/                 # Estilos de tema claro y oscuro con variables CSS
+│   │   ├── components/             # Overrides específicos de componentes
+│   │   ├── themes/                 # Definiciones de CSS vars para claro/oscuro
+│   │   └── index.scss              # Punto de entrada principal que importa todos los partials
 │   ├── App.js                      # Componente principal de rutas y layout
 │   └── index.js                    # Punto de entrada de la app React
 ├── .env                            # Variables de entorno del frontend
@@ -68,6 +69,7 @@ TFG-DAM-JavierABAD/frontend/
 
 * [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
 * [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
+* [`THEME.md`](./THEME.md): descripción detallada del sistema de temas y estructura de estilos.
 
 ---
 
@@ -79,20 +81,16 @@ TFG-DAM-JavierABAD/frontend/
 
 ## 💡 Funcionalidades recientes
 
-- Carrusel de héroe, secciones de características y CTA en la página Home.
-- Persistencia y visualización de fecha y hora opcionales de vencimiento en tareas con inputs separados y validación de fechas futuras.
-- Integración de sugerencias de OpenAI que incluyen `dueDateTime`, actualizadas dinámicamente al modificar título, descripción, fecha u hora.
-- Modernización del diseño del tablero: tarjetas de tareas con bordes redondeados, sombras y franja de acento principal.
-- Destacado de tareas urgentes (menos de 24h) y vencidas en ambos temas.
-- Ordenación de tareas por importancia (alta → media → baja).
-- Columnas centradas con desplazamiento horizontal responsivo.
-- Modales de confirmación de eliminación (`ConfirmDeleteTaskModal`, `ConfirmDeleteColumnModal`) implementados con React Portal.
-- Logo dinámico en Navbar, ThemeSwitcher y adaptabilidad de temas.
-- Documentación actualizada (`README.md`, `INSTALL.md`, `THEME.md`, `DIARIO.md`) con los cambios recientes.
-- Modales centrados a nivel global usando React Portal (Create/Edit/ConfirmDeleteTask/InfoModal).
-- UI modernizada para tableros, columnas y tareas: fondos diferenciados, bordes redondeados, sombras y efectos hover.
-- Dropdown de usuario en Navbar activado por hover y ThemeSwitcher siempre accesible.
-- Reorganización de assets de logos en `public` y actualización de `manifest.json` y `index.html` con nuevos iconos/favicons.
+- Sistema de temas claro/oscuro con variables CSS y SCSS, switch dinámico en Navbar.  
+- Drag & Drop de columnas y tareas usando `@dnd-kit`, con overlay y animaciones suaves.  
+- Reordenamiento optimista de columnas y persistencia en backend.  
+- Creación, edición, borrado y movimiento de tareas con modales y confirmaciones.  
+- Sugerencias de importancia de tareas vía IA (OpenAI) con prefetch onBlur.  
+- Validación de fechas futuras y destacando tareas urgentes/vencidas.  
+- Organización de estilos en SCSS por config, base, themes y components (`index.scss`).  
+- Modernización de UI: bordes redondeados, sombras, franja de acento, hover states.  
+- Estructura de carpetas clara: componentes, context, hooks, pages, services y styles.  
+- Persistencia de sesión y JWT en sessionStorage, carga automática de usuario autenticado.  
 
 ---
 
