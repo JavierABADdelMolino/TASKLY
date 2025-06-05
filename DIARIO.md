@@ -500,4 +500,50 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 
 ---
 
+## 🗓️ Día 18 - Lunes 3 de junio de 2025
+
+### ✅ Tareas realizadas
+
+* Refactor del `Navbar` y `Layout` para extraer el switch de tema del dropdown de perfil y situarlo siempre visible en la barra de navegación.
+* Actualización de `ThemeContext` para inicializar el tema desde el perfil de usuario o el valor en `localStorage`, y mantener el tema tras cerrar sesión.
+* Implementación del toggle global en `Navbar` (identificador `themeSwitchNav`), disponible en Home, Dashboard y Profile.
+* Ajuste de los estilos en `theme.scss`, `_dark.scss` y `_light.scss`: borde blanco en selects, flechas personalizadas en modo oscuro, contraste de botones hover y enlaces.
+* Adaptación del modal de autenticación en `Home.jsx` para aplicar el tema actual en overlay y contenedor interno.
+* Cambio del botón de selección de avatar a `btn-outline-light` en modo oscuro y ajuste de contrastes en Profile (`Cambiar contraseña`, `Eliminar cuenta`).
+* Actualización de la documentación (`INSTALL.md`, `README.md`, `THEME.md`) con detalles del nuevo sistema de temas.
+
+### 📝 Observaciones
+
+* El tema se aplica y persiste correctamente al iniciar y cerrar sesión, así como al navegar entre vistas.
+* Se garantiza coherencia visual en todos los modales, formularios y dropdowns.
+* Próximos pasos: implementar drag-and-drop de tareas con `react-beautiful-dnd` y añadir pruebas unitarias/E2E para el sistema de temas.
+
+---
+
+## 🗓️ Día 19 - Miércoles 4 de junio de 2025
+
+### ✅ Tareas realizadas
+
+- Creación de la rama `feature/homepage-enhancements` para mejoras en la página de inicio.
+- Reorganización de los archivos de logos e íconos en `frontend/public`.
+- Eliminación de íconos React generados por defecto y actualización de `manifest.json` e `index.html` con nuevos favicons y PWA icons.
+- Diseño y maquetación de la nueva página Home con encabezado animado, descripción de la plataforma y logos.
+- Integración de nuevos assets en `Home.jsx` y aplicación de estilos con Bootstrap y SCSS.
+- Limpieza de código y actualización de la documentación: `README.md`, `INSTALL.md` y `THEME.md`.
+- Modernización de la UI del tablero: tarjetas de tareas con bordes redondeados, sombras y franja de acento principal en modo claro y oscuro.
+- Implementación de persistencia y visualización de fecha y hora de vencimiento en tareas; separación de inputs de fecha y hora con validación de no permitir fechas pasadas.
+- Integración de sugerencias de importancia vía OpenAI incluyendo el campo `dueDateTime`; actualización en tiempo real al modificar datos de la tarea.
+- Destacado automático de tareas urgentes (próximas 24h) y vencidas con clases de estado tanto en modo claro como oscuro.
+- Ordenación de tareas por nivel de importancia (Alta → Media → Baja) dentro de cada columna.
+- Centrado de columnas con desplazamiento horizontal responsivo para facilitar la navegación en pantallas estrechas.
+- Implementación de modales de confirmación de eliminación (`ConfirmDeleteTaskModal`, `ConfirmDeleteColumnModal`) usando React Portal con fondo y centrado.
+- Ajustes de la paleta de colores en `theme.scss`, `_light.scss` y `_dark.scss` para mejorar contraste en elementos interactivos y estados.
+- Actualización de la documentación: reflejados estos cambios en `README.md`, `INSTALL.md` y `THEME.md`.
+
+### 📝 Observaciones
+
+- La página de inicio presenta un diseño más visual y atractivo, coherente con la marca.
+- La reorganización de assets facilita el mantenimiento y futuras actualizaciones.
+---
+
 *(continúa actualizando este documento día a día...)*

@@ -1,79 +1,79 @@
 # 🎨 Sistema de Temas - Proyecto Taskly
 
-Este documento describe el funcionamiento, estructura y personalización del sistema de temas claro/oscuro de la aplicación Taskly.
+Este documento describe el sistema de temas claro/oscuro implementado en Taskly, basado en variables CSS y SCSS.
 
 ---
 
-## 📁 Estructura actual de estilos
+## 📁 Estructura de estilos relevante
 
-```bash
-src/styles/
-├── base/         # Reset, helpers globales
-├── config/       # Variables SCSS
-├── components/   # Estilos específicos por componente
-├── themes/       # Archivos de tema claro y oscuro (vacíos actualmente)
-│   ├── light.scss        # ⚠️ Pendiente de implementar
-│   └── dark.scss         # ⚠️ Pendiente de implementar
-├── theme.scss    # Archivo central que importa Bootstrap + override básico
+```
+frontend/src/styles/
+├── base/                   # Reset, utilidades globales
+├── config/                 # Definición de variables SCSS y CSS (--bs-*)
+│   └── _variables.scss     # Variables de marca y mapeo a --bs-*
+├── components/             # Overrides específicos de componentes (modals, forms)
+├── themes/                 # Temas dinámicos
+│   ├── _light.scss         # Definiciones de CSS vars para modo claro
+│   └── _dark.scss          # Definiciones de CSS vars para modo oscuro
+└── theme.scss              # Archivo central que importa Bootstrap, base y temas
 ```
 
 ---
 
-## 🧠 Estado actual del sistema de temas
+## ⚙️ Mapeo de variables y Bootstrap
 
-Actualmente, `theme.scss` es el único archivo activo. Este:
-
-- Importa Bootstrap.
-- Puede incluir `@import` de `base/`, `config/` o `components/`.
-- No aplica aún variables dinámicas para modo claro/oscuro.
-
-```scss
-// src/styles/theme.scss
-@import "bootstrap/scss/bootstrap";
-@import "./base/reset";
-@import "./config/variables";
-// etc.
-```
-
----
-
-## 📌 Plan futuro para tematización completa
-
-1. Implementar dos temas reales (`light.scss`, `dark.scss`) que redefinan variables CSS como:
+En `config/_variables.scss` se declaran variables SCSS y CSS globals:
 
 ```scss
 :root {
-  --bs-body-bg: #fff;
-  --bs-body-color: #111;
-  --bs-primary: #6366f1;
-  ...
-}
-
-[data-theme='dark'] {
-  --bs-body-bg: #111;
-  --bs-body-color: #eee;
-  --bs-primary: #8b5cf6;
-  ...
+  --bs-body-bg: #f5f7fa;
+  --bs-body-color: #333333;
+  --bs-primary: #1abc9c;
+  --bs-secondary: #e74c3c;
+  --bs-border-color: #dee2e6;
+  --bs-hover-bg: rgba(26,188,156,0.1);
+  /* y más tokens de marca... */
 }
 ```
 
-2. Separar colores y tokens personalizados en `config/variables.scss`.
-3. Integrar selectores condicionales (`[data-theme='dark']`) para adaptar formularios, botones y modales.
+Luego, en `themes/_light.scss` y `themes/_dark.scss` se redefinen las mismas variables CSS dentro del selector `[data-theme='light']` y `[data-theme='dark']`, respectivamente. Esto permite que Bootstrap y nuestros estilos respondan automáticamente al tema activo.
 
 ---
 
-## 🔧 Situación actual
+## 💻 Integración en React
 
-- No hay variables dinámicas aún.
-- No se aplican los temas `light.scss` ni `dark.scss` (están vacíos).
-- Se usa Bootstrap tal cual, con pequeños overrides si acaso en `config/`.
+- El `ThemeContext` inicializa el tema leyendo la preferencia manual en **sessionStorage** o, en ausencia de esta, el valor de `user.theme`.
+- Al cambiar el tema, se persiste la elección en **sessionStorage** (se reemplaza `localStorage`).
+- Cada vez que cambia, el hook React aplica el atributo `data-theme="<light|dark>"` al elemento `<html>`.
+- El sistema de estilos central (`theme.scss`) importa Bootstrap, variables globales (`_variables.scss`) y los temas dinámicos (`_light.scss` y `_dark.scss`).
+- Formularios, modales y componentes (e.g. BoardCard, ColumnCard, TaskCard) adaptan colores automáticamente vía variables CSS.
+- El `ThemeSwitcher` en la Navbar permite cambiar de tema en cualquier página y mantiene la persistencia mientras la sesión del navegador esté abierta.
 
 ---
 
-## ✅ Próximos pasos
+## 🛠️ Cómo añadir y customizar colores
 
-- Completar definición de colores personalizados (`--color-*`) y mapearlos a `--bs-*`.
-- Aplicar estas definiciones en `light.scss` y `dark.scss`.
-- Confirmar que `ThemeContext` cambia `data-theme` correctamente.
-- Adaptar componentes visuales a esas variables para que se actualicen con el tema.
+1. En `config/_variables.scss`, ajusta tus colores de marca (primary, secondary, etc.).
+2. En `themes/_light.scss` y `themes/_dark.scss`, redefine los valores de fondo, texto, bordes y componentes:
+   ```scss
+   [data-theme='dark'] {
+     --bs-body-bg: #121212;
+     --bs-body-color: #e0e0e0;
+     --bs-card-bg: #1e1e1e;
+     /* reglas específicas de componentes */
+   }
+   ```
+3. Agrega overrides puntuales en `components/` si necesitas adaptar widgets concretos.
+
+---
+
+## ✅ Buenas prácticas
+
+- Usa siempre las variables CSS (`var(--bs-*)`) en lugar de colores hard-coded.
+- Al crear nuevos componentes o modales, verifica en ambos temas.
+- Mantén la lista de tokens (`--bs-primary`, `--bs-hover-bg`, etc.) sincronizada en ambos archivos de tema.
+
+---
+
+*(Este documento se mantiene actualizado con los cambios de diseño y accesibilidad del sistema de temas.)*
 

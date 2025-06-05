@@ -79,25 +79,20 @@ TFG-DAM-JavierABAD/frontend/
 
 ## 💡 Funcionalidades recientes
 
-- CRUD de pizarras, columnas
-* [`INSTALL.md`](./INSTALL.md): guía paso a paso de instalación del entorno en macOS.
-* [`DIARIO.md`](./DIARIO.md): diario de trabajo y seguimiento del desarrollo día a día.
-
----
-
-## 🛠️ Instalación y configuración adicional
-
-- Se añadió la librería `react-icons` para iconos de flecha, estrella e información.
-
-## 💡 Funcionalidades recientes
-
-- CRUD de pizarras, columnas y tareas con modales de creación, edición y eliminación.
-- Añadir/quitar favorito en pizarras, con visualización por defecto al cargar el dashboard.
-- Reordenamiento de columnas y tareas con flechas de movimiento (próximamente drag&drop).
-- Edición y eliminación de pizarras/columnas/tareas directamente desde la UI.
-- Popover en hover para ver descripción de la pizarra.
-- Orden automático de columnas y tareas gestionado por el backend.
-- UX mejorada: cambios de favorito y nuevos elementos reflejados al instante sin recargar.
+- Carrusel de héroe, secciones de características y CTA en la página Home.
+- Persistencia y visualización de fecha y hora opcionales de vencimiento en tareas con inputs separados y validación de fechas futuras.
+- Integración de sugerencias de OpenAI que incluyen `dueDateTime`, actualizadas dinámicamente al modificar título, descripción, fecha u hora.
+- Modernización del diseño del tablero: tarjetas de tareas con bordes redondeados, sombras y franja de acento principal.
+- Destacado de tareas urgentes (menos de 24h) y vencidas en ambos temas.
+- Ordenación de tareas por importancia (alta → media → baja).
+- Columnas centradas con desplazamiento horizontal responsivo.
+- Modales de confirmación de eliminación (`ConfirmDeleteTaskModal`, `ConfirmDeleteColumnModal`) implementados con React Portal.
+- Logo dinámico en Navbar, ThemeSwitcher y adaptabilidad de temas.
+- Documentación actualizada (`README.md`, `INSTALL.md`, `THEME.md`, `DIARIO.md`) con los cambios recientes.
+- Modales centrados a nivel global usando React Portal (Create/Edit/ConfirmDeleteTask/InfoModal).
+- UI modernizada para tableros, columnas y tareas: fondos diferenciados, bordes redondeados, sombras y efectos hover.
+- Dropdown de usuario en Navbar activado por hover y ThemeSwitcher siempre accesible.
+- Reorganización de assets de logos en `public` y actualización de `manifest.json` y `index.html` con nuevos iconos/favicons.
 
 ---
 
