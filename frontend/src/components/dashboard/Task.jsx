@@ -1,12 +1,18 @@
 import { useState } from 'react';
-import { FiChevronLeft, FiChevronRight, FiEdit, FiTrash2, FiCalendar, FiClock } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiCalendar, FiClock } from 'react-icons/fi';
 import EditTaskModal from './modals/EditTaskModal';
 import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
-import { updateTask, deleteTask } from '../../services/taskService';
-import { useTheme } from '../../context/ThemeContext';
+import { deleteTask } from '../../services/taskService';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
-  const { theme } = useTheme();
+  // Hacer la tarea draggable para DnD
+  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+    id: task._id,
+    activationConstraint: { distance: 10 },
+  });
+
   // Estado de vencimiento para resaltar según proximidad o retraso
   const dueDateTimeObj = task.dueDateTime ? new Date(task.dueDateTime) : null;
   const now = new Date();
@@ -19,9 +25,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
       statusClass = 'urgent';
     }
   }
-  // Estados para mover, editar y eliminar
-  const [loadingMove, setLoadingMove] = useState(false);
-  const [errorMove, setErrorMove] = useState('');
+  // Estados para editar y eliminar
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   // Fecha y hora de vencimiento parseadas y formateadas
@@ -34,37 +38,24 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
     dueTime = hhmm !== '00:00' ? hhmm : null;
   }
 
-  // Find current column index in columns array
-  const colIdx = columns.findIndex(c => c._id === column._id);
-
-  const handleMove = async (direction) => {
-    const newIdx = colIdx + direction;
-    if (newIdx < 0 || newIdx >= columns.length) return;
-    const targetColumn = columns[newIdx];
-    setLoadingMove(true);
-    setErrorMove('');
-    try {
-      const data = await updateTask(task._id, { column: targetColumn._id });
-      onTaskMoved && onTaskMoved(data);
-    } catch (err) {
-      setErrorMove(err.message);
-    } finally {
-      setLoadingMove(false);
-    }
-  };
-
   return (
-    <div className={`card task-card ${statusClass}`}>  
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      className={`card task-card ${statusClass}`}
+    >
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
-          <button className="btn btn-link btn-sm p-0 text-warning" onClick={() => setShowEdit(true)} title="Editar tarea">
+          <button className="btn btn-link btn-sm p-0 text-warning" onPointerDown={e => e.stopPropagation()} onClick={() => setShowEdit(true)} title="Editar tarea">
             <FiEdit size={14} />
           </button>
           <div className="flex-grow-1 text-center mx-2">
             <h6 className="mb-1" title={task.title} style={{ fontSize: '0.9rem' }}>{task.title}</h6>
           </div>
-          <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => setShowDelete(true)} title="Eliminar tarea">
+          <button className="btn btn-link btn-sm p-0 text-danger" onPointerDown={e => e.stopPropagation()} onClick={() => setShowDelete(true)} title="Eliminar tarea">
             <FiTrash2 size={14} />
           </button>
         </div>
@@ -84,28 +75,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           </p>
         )}
         <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
-        <div className="d-flex justify-content-between align-items-center mt-2">
-          {/* Flecha izquierda */}
-          <div>
-            {colIdx > 0 && (
-              <button className={`btn btn-link btn-sm p-0 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => handleMove(-1)} disabled={loadingMove} title="Mover a la columna anterior">
-                <FiChevronLeft size={16} />
-              </button>
-            )}
-          </div>
-          {/* Espacio central */}
-          <div />
-          {/* Flecha derecha */}
-          <div>
-            {colIdx < columns.length - 1 && (
-              <button className={`btn btn-link btn-sm p-0 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => handleMove(1)} disabled={loadingMove} title="Mover a la columna siguiente">
-                <FiChevronRight size={16} />
-              </button>
-            )}
-          </div>
-        </div>
-        {/* Mensaje de error de movimiento */}
-        {errorMove && <div className="text-danger small mt-1 text-center">{errorMove}</div>}
+        {/* Drag & Drop de tareas gestiona el movimiento entre columnas */}
         {/* Modal confirmar borrar tarea */}
         <ConfirmDeleteTaskModal
           show={showDelete}

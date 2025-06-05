@@ -1,11 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import Column from './Column';
 import { getColumnsByBoard, updateColumn, deleteColumn } from '../../services/columnService';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { updateTask } from '../../services/taskService';
 
 const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); // Nuevo estado global de refresco
+
+  // sensores para arrastrar tareas
+  const sensors = useSensors(useSensor(PointerSensor));
 
   // función para obtener y ordenar columnas
   const fetchColumns = useCallback(async () => {
@@ -58,34 +63,52 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
     if (boardId) fetchColumns();
   }, [boardId, refresh, fetchColumns]);
 
+  // manejar drop de tarea en columna
+  const handleDragEnd = async ({ active, over }) => {
+    if (!over || active.id === over.id) return;
+    const targetColumnId = over.id;
+    try {
+      await updateTask(active.id, { column: targetColumnId });
+      setRefreshKey((k) => k + 1);
+    } catch (err) {
+      console.error('Error al mover tarea por DnD', err);
+    }
+  };
+
   if (error) {
     return <div className="text-danger">{error}</div>;
   }
 
   return (
-    <div className="overflow-auto" style={{ padding: '1rem 0' }}>
-      <div className="d-flex gap-4" style={{ width: 'max-content', margin: '0 auto' }}>
-        {columns.length === 0 ? (
-          <p className="text-muted">No hay columnas aún en esta pizarra.</p>
-        ) : (
-          columns.map((col, idx) => (
-            <div key={col._id} className="flex-shrink-0">
-              <Column
-                column={col}
-                index={idx}
-                total={columns.length}
-                allColumns={columns}
-                onMove={moveColumn}
-                onColumnDeleted={handleColumnDeleted}
-                onColumnUpdated={handleColumnUpdated}
-                refreshKey={refreshKey}
-                onAnyTaskChange={handleGlobalRefresh}
-              />
-            </div>
-          ))
-        )}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="overflow-auto" style={{ padding: '1rem 0' }}>
+        <div className="d-flex gap-4" style={{ width: 'max-content', margin: '0 auto' }}>
+          {columns.length === 0 ? (
+            <p className="text-muted">No hay columnas aún en esta pizarra.</p>
+          ) : (
+            columns.map((col, idx) => (
+              <div key={col._id} className="flex-shrink-0">
+                <Column
+                  column={col}
+                  index={idx}
+                  total={columns.length}
+                  allColumns={columns}
+                  onMove={moveColumn}
+                  onColumnDeleted={handleColumnDeleted}
+                  onColumnUpdated={handleColumnUpdated}
+                  refreshKey={refreshKey}
+                  onAnyTaskChange={handleGlobalRefresh}
+                />
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </DndContext>
   );
 };
 

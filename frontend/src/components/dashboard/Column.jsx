@@ -6,6 +6,7 @@ import CreateTaskModal from './modals/CreateTaskModal';
 import { getTasksByColumn } from '../../services/taskService';
 import { updateColumn, deleteColumn } from '../../services/columnService';
 import { useTheme } from '../../context/ThemeContext';
+import { useDroppable } from '@dnd-kit/core';
 
 const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -37,6 +38,9 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
     };
     loadTasks();
   }, [column._id, refreshTasks, refreshKey]);
+
+  // marcar área de tareas como droppable para recibir tareas
+  const { setNodeRef: setTasksDroppableRef } = useDroppable({ id: column._id });
 
   return (
     <div className="card shadow-sm column-card" style={{ width: '280px', position: 'relative' }}>
@@ -107,30 +111,25 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           </button>
         </div>
         {/* Lista de tareas */}
-        {loadingTasks ? (
-          <div className="text-center text-muted small">Cargando tareas...</div>
-        ) : taskError ? (
-          <div className="text-danger small">{taskError}</div>
-        ) : tasks.length === 0 ? (
-          <div className="text-muted small text-center">No hay tareas en esta columna.</div>
-        ) : (
-          <div className="d-flex flex-column gap-2">
-            {tasks.slice().sort((a, b) => {
-              const order = { high: 2, medium: 1, low: 0 };
-              return order[b.importance] - order[a.importance];
-            }).map((task) => (
-              <Task
-                key={task._id}
-                task={task}
-                column={column}
-                columns={allColumns}
-                onTaskMoved={onAnyTaskChange}
-                onTaskUpdated={onAnyTaskChange}
-                onTaskDeleted={onAnyTaskChange}
-              />
-            ))}
-          </div>
-        )}
+        {/* Droppable area for tasks and empty placeholder */}
+        <div ref={setTasksDroppableRef} className="d-flex flex-column gap-2">
+          {loadingTasks ? (
+            <div className="text-center text-muted small">Cargando tareas...</div>
+          ) : taskError ? (
+            <div className="text-danger small">{taskError}</div>
+          ) : tasks.length === 0 ? (
+            <div className="text-muted small text-center">No hay tareas en esta columna.</div>
+          ) : (
+            tasks.slice()
+              .sort((a, b) => {
+                const orderMap = { high: 2, medium: 1, low: 0 };
+                return orderMap[b.importance] - orderMap[a.importance];
+              })
+              .map(task => (
+                <Task key={task._id} task={task} column={column} columns={allColumns} onTaskMoved={onAnyTaskChange} onTaskUpdated={onAnyTaskChange} onTaskDeleted={onAnyTaskChange} />
+              ))
+          )}
+        </div>
       </div>
       {/* Modal crear tarea */}
       {showCreateTask && (
