@@ -7,11 +7,15 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
 const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted }) => {
-  // Hacer la tarea draggable para DnD
+  // Estados para editar y eliminar (moverlos antes de useDraggable)
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  // Hacer la tarea draggable para DnD, deshabilitar cuando se abra modal
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
     id: task._id,
     activationConstraint: { distance: 10 },
     data: { task, column },
+    disabled: showEdit || showDelete,
   });
 
   // Estado de vencimiento para resaltar según proximidad o retraso
@@ -26,9 +30,6 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
       statusClass = 'urgent';
     }
   }
-  // Estados para editar y eliminar
-  const [showEdit, setShowEdit] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
   // Fecha y hora de vencimiento parseadas y formateadas
   const dueDate = task.dueDateTime ? task.dueDateTime.split('T')[0] : null;
   const rawTime = task.dueDateTime && task.dueDateTime.includes('T') ? task.dueDateTime.split('T')[1] : null;
@@ -57,7 +58,12 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
-          <button className="btn btn-link btn-sm p-0 text-warning" onPointerDown={e => e.stopPropagation()} onClick={() => setShowEdit(true)} title="Editar tarea">
+          <button
+            className="btn btn-link btn-sm p-0 text-warning"
+            onPointerDown={e => e.stopPropagation()}
+            onClick={e => { e.stopPropagation(); setShowEdit(true); }}
+            title="Editar tarea"
+          >
             <FiEdit size={14} />
           </button>
           <div className="flex-grow-1 text-center mx-2">
