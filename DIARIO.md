@@ -546,4 +546,23 @@ Este documento registra el desarrollo diario del proyecto **Taskly**, un gestor 
 - La reorganización de assets facilita el mantenimiento y futuras actualizaciones.
 ---
 
-*(continúa actualizando este documento día a día...)*
+## 🗓️ Día 20 - Jueves 5 de junio de 2025
+
+### ✅ Tareas realizadas
+
+* Creación de la rama `docs` desde `main` para actualización de documentación.
+* Reorganización completa del sistema de estilos SCSS:
+  - Introducción de `src/styles/index.scss` como punto de entrada.
+  - Separación en subcarpetas `config`, `base`, `themes` y `components`.
+  - Movidos y refactorizados los partials de estilos personalizados.
+* Eliminación de `theme.scss` obsoleto y actualización de imports en `src/index.js`.
+* Actualización de `THEME.md`, `INSTALL.md` y `README.md` para reflejar la nueva estructura de estilos.
+* Ajustes finales de documentación para presentar el proyecto de forma clara y comprensible.
+
+### 📝 Observaciones
+
+* Todo el sistema de temas y estilos queda perfectamente organizado y documentado.
+* Las guías de instalación y uso son coherentes con la implementación actual.
+* Proyecto listo para entrega y posterior mantenimiento.
+
+---

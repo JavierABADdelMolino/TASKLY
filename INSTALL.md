@@ -136,11 +136,25 @@ npm install openai
 
    - Estructura de estilos reorganizada: SCSS en `src/styles` con subcarpetas `base/`, `config/`, `components/`, `themes/`.
    - Reorganización de assets de logos en `public/logos` y actualización de `manifest.json` e `index.html` con nuevos favicons e íconos PWA.
+   - Importa estilos principales en `src/index.js` reemplazando `import './styles/theme.scss'` por `import './styles/index.scss'`.
 
 4. Duplica y configura variables de entorno:
    ```bash
    cp backend/.env.example backend/.env
    cp frontend/.env.example frontend/.env
+   ```
+
+   A continuación un ejemplo de contenidos para cada `.env.example`:
+
+   ```dotenv
+   # backend/.env.example
+   MONGODB_URI=mongodb://admin:claveSegura123@127.0.0.1:27017/TFG-DAM-JavierABAD?authSource=admin
+   JWT_SECRET=tu_secreto_jwt
+   OPENAI_API_KEY=tu_clave_api
+
+   # frontend/.env.example
+   REACT_APP_API_URL=http://localhost:5000/api
+   REACT_APP_FILES_URL=http://localhost:5000
    ```
 
 ---

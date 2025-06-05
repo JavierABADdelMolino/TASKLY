@@ -15,7 +15,7 @@ frontend/src/styles/
 ├── themes/                 # Temas dinámicos
 │   ├── _light.scss         # Definiciones de CSS vars para modo claro
 │   └── _dark.scss          # Definiciones de CSS vars para modo oscuro
-└── theme.scss              # Archivo central que importa Bootstrap, base y temas
+└── index.scss              # Punto de entrada central que importa config, Bootstrap, base y temas
 ```
 
 ---
@@ -45,7 +45,7 @@ Luego, en `themes/_light.scss` y `themes/_dark.scss` se redefinen las mismas var
 - El `ThemeContext` inicializa el tema leyendo la preferencia manual en **sessionStorage** o, en ausencia de esta, el valor de `user.theme`.
 - Al cambiar el tema, se persiste la elección en **sessionStorage** (se reemplaza `localStorage`).
 - Cada vez que cambia, el hook React aplica el atributo `data-theme="<light|dark>"` al elemento `<html>`.
-- El sistema de estilos central (`theme.scss`) importa Bootstrap, variables globales (`_variables.scss`) y los temas dinámicos (`_light.scss` y `_dark.scss`).
+- El sistema de estilos central (`index.scss`) importa Bootstrap, variables globales (`_variables.scss`) y los temas dinámicos (`_light.scss` y `_dark.scss`).
 - Formularios, modales y componentes (e.g. BoardCard, ColumnCard, TaskCard) adaptan colores automáticamente vía variables CSS.
 - El `ThemeSwitcher` en la Navbar permite cambiar de tema en cualquier página y mantiene la persistencia mientras la sesión del navegador esté abierta.
 
