@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight, FiTrash2 } from 'react-icons/fi';
+import { FiTrash2, FiMove } from 'react-icons/fi';
 import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
 import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
@@ -7,6 +7,8 @@ import { getTasksByColumn } from '../../services/taskService';
 import { updateColumn, deleteColumn } from '../../services/columnService';
 import { useTheme } from '../../context/ThemeContext';
 import { useDroppable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -42,8 +44,19 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
   // marcar área de tareas como droppable para recibir tareas
   const { setNodeRef: setTasksDroppableRef } = useDroppable({ id: column._id });
 
+  // sortable para columnas
+  const { attributes: colAttributes, listeners: colListeners, setNodeRef: setColNodeRef, setActivatorNodeRef, transform: colTransform, transition: colTransition, isDragging: colIsDragging } = useSortable({ id: column._id, data: { type: 'column', column } });
+  const colStyle = {
+    position: 'relative',        // allow z-index
+    willChange: 'transform',     // optimize performance
+    transform: CSS.Translate.toString(colTransform),
+    transition: colIsDragging ? 'none' : colTransition,
+    zIndex: colIsDragging ? 1000 : 'auto',
+    opacity: colIsDragging ? 0 : 1,      // hide original during drag
+  };
+
   return (
-    <div className="card shadow-sm column-card" style={{ width: '280px', position: 'relative' }}>
+    <div ref={setColNodeRef} className="card shadow-sm column-card" style={{ width: '280px', position: 'relative', ...colStyle }}>
       {/* Botón eliminar columna */}
       <button
         className="btn btn-link p-1 text-danger position-absolute"
@@ -53,17 +66,19 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
       >
         <FiTrash2 size={16} />
       </button>
+      {/* Drag handle para reordenar columnas */}
+      <div
+        ref={setActivatorNodeRef}
+        {...colListeners}
+        {...colAttributes}
+        style={{ position: 'absolute', top: '4px', left: '50%', transform: 'translateX(-50%)', cursor: 'grab', zIndex: 'auto' }}
+        title="Mover columna"
+      >
+        <FiMove size={16} />
+      </div>
       <div className="card-body">
-        <div className="d-flex align-items-center mb-2">
-          {/* Left arrow container */}
-          <div style={{ width: '40px', textAlign: 'left' }}>
-            {index > 0 && (
-              <button className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => onMove(column, -1)}>
-                <FiChevronLeft size={16} />
-              </button>
-            )}
-          </div>
-          {/* Title centered with edit */}
+        <div className="d-flex align-items-center mb-2 justify-content-center">
+          {/* Título editable */}
           <div className="flex-grow-1 text-center overflow-hidden">
             {isEditing ? (
               <input
@@ -93,14 +108,6 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
               >
                 {column.title}
               </h5>
-            )}
-          </div>
-          {/* Right arrow container */}
-          <div style={{ width: '40px', textAlign: 'right' }}>
-            {index < total - 1 && (
-              <button className={`btn btn-link p-1 ${theme === 'dark' ? 'text-white' : 'text-dark'}`} onClick={() => onMove(column, 1)}>
-                <FiChevronRight size={16} />
-              </button>
             )}
           </div>
         </div>
