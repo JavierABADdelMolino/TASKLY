@@ -15,10 +15,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
   const path = currentPath || location.pathname;
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-<<<<<<< HEAD
   const [showUserMenu, setShowUserMenu] = useState(false);
-=======
->>>>>>> docs
 
   const handleLogout = () => {
     logout();
@@ -46,7 +43,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
           {/* Izquierda: logo + título dinámico */}
           <div className="d-flex align-items-center gap-3">
             <button
-<<<<<<< HEAD
               className="btn btn-sm btn-link p-0"
               onClick={() => navigate('/')}
               style={{ textDecoration: 'none' }}
@@ -56,13 +52,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 alt="Taskly Logo"
                 style={{ height: '40px' }}
               />
-=======
-              className="btn btn-sm btn-link fw-bold p-0"
-              onClick={() => navigate('/dashboard')}
-              style={{ textDecoration: 'none' }}
-            >
-              Taskly
->>>>>>> docs
             </button>
             <button
               className="btn btn-sm btn-link text-muted p-0"
@@ -112,7 +101,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
 
             {/* Menú usuario (avatar) */}
             {user && (
-<<<<<<< HEAD
               <div
                 className={`dropdown ms-3 ${showUserMenu ? 'show' : ''}`}
                 onMouseEnter={() => setShowUserMenu(true)}
@@ -125,14 +113,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                   aria-expanded={showUserMenu}
                   onMouseDown={(e) => e.preventDefault()}
                   style={{ color: theme === 'dark' ? '#fff' : '#000' }}
-=======
-              <div className="dropdown ms-3">
-                <button
-                  className="btn d-flex align-items-center dropdown-toggle"
-                  id="userMenu"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
->>>>>>> docs
                 >
                   <img
                     src={`${process.env.REACT_APP_URL}${user.avatarUrl}`}
@@ -143,37 +123,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                   <span className="d-none d-md-inline">{user.firstName}</span>
                 </button>
 
-<<<<<<< HEAD
                 <ul className={`dropdown-menu dropdown-menu-end ${showUserMenu ? 'show' : ''}`} aria-labelledby="userMenu" data-bs-auto-close="outside">
-=======
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" data-bs-auto-close="outside">
-                  {/* Theme switch: moon/sun icons with Bootstrap switch */}
-                  <li>
-                    <div className="dropdown-item py-0">
-                      <div
-                        className="theme-toggle m-0"
-                        onClick={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
-                      >
-                        <input
-                          className="theme-toggle-input"
-                          type="checkbox"
-                          id="themeSwitch"
-                          checked={theme === 'dark'}
-                          onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        />
-                        <label htmlFor="themeSwitch" className="theme-toggle-label">
-                          <span className="theme-toggle-slider">
-                            {theme === 'dark' ? <FiMoon /> : <FiSun />}
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li><hr className="dropdown-divider" /></li>
-
->>>>>>> docs
                   <li>
                     <button className="dropdown-item" onClick={() => navigate('/profile')}>
                       Mi perfil
@@ -187,7 +137,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 </ul>
               </div>
             )}
-<<<<<<< HEAD
 
             {/* Theme switch (global) */}
             <div
@@ -208,8 +157,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 </span>
               </label>
             </div>
-=======
->>>>>>> docs
           </div>
         </div>
       </nav>

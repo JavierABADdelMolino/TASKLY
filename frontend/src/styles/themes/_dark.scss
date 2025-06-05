@@ -62,11 +62,8 @@
     color: #ffffff;
   }
 
-<<<<<<< HEAD
   /* Solid and outline danger */
-=======
   /* Outline danger button (delete account) */
->>>>>>> docs
   .btn-outline-danger {
     color: var(--bs-secondary);
     border-color: var(--bs-secondary);
@@ -74,7 +71,6 @@
   .btn-outline-danger:hover,
   .btn-outline-danger:focus {
     background-color: var(--bs-secondary);
-<<<<<<< HEAD
     color: #ffffff;
   }
 
@@ -98,7 +94,6 @@
   .btn-outline-warning:focus {
     background-color: #ffc107 !important;
     color: #ffffff !important;
-=======
     color: #ffffff !important;
   }
 
@@ -112,13 +107,11 @@
   .btn-danger:focus {
     background-color: rgba(var(--bs-secondary-rgb), 0.85);
     color: #ffffff;
->>>>>>> docs
   }
 
   /* Solid primary and danger buttons: white text always */
   .btn-primary {
     color: #ffffff !important;
-<<<<<<< HEAD
   }
   .btn-danger {
     color: #ffffff !important;
@@ -126,7 +119,6 @@
   .btn-danger:hover,
   .btn-danger:focus {
     background-color: rgba(var(--bs-secondary-rgb), 0.85) !important;
-=======
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
   }
@@ -141,7 +133,6 @@
   }
   .btn-danger:hover,
   .btn-danger:focus {
->>>>>>> docs
     color: #ffffff !important;
   }
 
@@ -152,8 +143,6 @@
     color: #ffffff;
   }
 
-<<<<<<< HEAD
-=======
   /* Warning outline button for change password */
   .btn-outline-warning {
     color: #ffc107;
@@ -165,7 +154,6 @@
     color: #ffffff !important;
   }
 
->>>>>>> docs
   /* Cards */
   .card {
     background-color: var(--bs-card-bg);
@@ -193,11 +181,8 @@
   }
   .dropdown-toggle:hover,
   .dropdown-toggle:focus {
-<<<<<<< HEAD
     color: var(--bs-primary) !important;
-=======
     color: var(--bs-body-color) !important;
->>>>>>> docs
   }
 
   /* Keep dropdown toggle text white on active / when menu is shown */
@@ -224,7 +209,6 @@
     color: var(--bs-link-color);
   }
   a:hover, .link:hover {
-<<<<<<< HEAD
     color: var(--bs-link-hover-color);
   }
   /* Keep danger text/icons red in dark mode */
@@ -250,7 +234,6 @@
     border-top: 1px solid var(--bs-navbar-border-color) !important;
   }
   footer small {
-=======
     color: var(--bs-body-color) !important;
   }
 
@@ -287,7 +270,6 @@
   footer,
   footer small,
   .bg-body-tertiary.text-body.footer {
->>>>>>> docs
     color: var(--bs-body-color) !important;
   }
 
@@ -325,7 +307,6 @@
   .modal-header .btn-close {
     filter: invert(1) brightness(2) !important;
   }
-<<<<<<< HEAD
 
   /* Info text (e.g., InfoCircle icon) */
   .text-info {
@@ -370,6 +351,4 @@
   .task-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
   }
-=======
->>>>>>> docs
 }

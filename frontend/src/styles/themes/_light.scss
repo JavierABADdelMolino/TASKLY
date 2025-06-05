@@ -84,7 +84,6 @@
     color: #ffffff;
   }
 
-<<<<<<< HEAD
   /* Outline secondary and warning hover state: white text */
   .btn-outline-secondary:hover,
   .btn-outline-secondary:focus {
@@ -99,8 +98,6 @@
     color: #ffffff !important;
   }
 
-=======
->>>>>>> docs
   /* Buttons danger */
   .btn-outline-danger {
     color: var(--bs-secondary);
@@ -146,15 +143,12 @@
     background-color: var(--bs-hover-bg);
     color: var(--bs-primary);
   }
-<<<<<<< HEAD
   /* Danger icons/buttons (delete) white text on hover */
   .btn-link.text-danger:hover,
   .btn-link.text-danger:focus {
     color: var(--bs-secondary) !important;
     background-color: var(--bs-secondary);
   }
-=======
->>>>>>> docs
 
   /* Keep dropdown toggle (username) default color on hover */
   .dropdown-toggle:hover,
@@ -168,7 +162,6 @@
   .modal-header .btn-close {
     filter: none !important;
   }
-<<<<<<< HEAD
 
   /* Links styling */
   a, .link {
@@ -225,6 +218,4 @@
   .task-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
-=======
->>>>>>> docs
 }

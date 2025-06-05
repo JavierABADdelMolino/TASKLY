@@ -4,20 +4,14 @@ import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
 import Layout from '../components/layout/Layout';
-<<<<<<< HEAD
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
 import { Carousel } from 'react-bootstrap';
-=======
->>>>>>> docs
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null);
   const { user } = useAuth();
-<<<<<<< HEAD
   const { theme } = useTheme();
-=======
->>>>>>> docs
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,21 +34,12 @@ const Home = () => {
 
   return (
     <Layout>
-<<<<<<< HEAD
       {/* Modal de autenticación */}
-=======
-      <header className="text-center">
-        <h1 className="display-4 fw-bold">Taskly</h1>
-        <p className="lead">Organiza tus tareas de forma sencilla y eficiente.</p>
-      </header>
-
->>>>>>> docs
       {authMode && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}
         >
-<<<<<<< HEAD
           <div
             className={`card shadow p-4 position-relative ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
             style={{ width: '100%', maxWidth: '460px' }}
@@ -63,13 +48,6 @@ const Home = () => {
             <button
               type="button"
               className={`btn-close position-absolute top-0 end-0 m-3 ${theme === 'dark' ? 'btn-close-white' : ''}`}
-=======
-          <div className="bg-white rounded-3 shadow p-4 position-relative" style={{ width: '100%', maxWidth: '460px' }}>
-            {/* Close button in top-right */}
-            <button
-              type="button"
-              className="btn-close position-absolute top-0 end-0 m-3"
->>>>>>> docs
               aria-label="Cerrar"
               onClick={handleCloseAuth}
             />
@@ -97,7 +75,6 @@ const Home = () => {
           </div>
         </div>
       )}
-<<<<<<< HEAD
 
       {/* Hero Carousel */}
       <Carousel
@@ -198,9 +175,6 @@ const Home = () => {
         <h3 className="mb-4">Listo para empezar?</h3>
         {/* Botón de registro eliminado: usar Navbar */}
       </section>
-
-=======
->>>>>>> docs
     </Layout>
   );
 };
