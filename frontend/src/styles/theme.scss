@@ -199,11 +199,20 @@ footer {
   border-radius: 0.25rem;
 }
 
-// Custom hover for column delete button analogous to task delete
-.column-card .btn-link:hover {
-  background-color: var(--bs-body-tertiary-bg) !important;
-  color: var(--bs-body-color) !important;
-  border-radius: 0.25rem;
+/* En Light Mode, el botón de eliminar (text-danger) no cambia fondo ni color al hover/focus/active */
+[data-theme="light"] .task-card .btn-link.text-danger:hover,
+[data-theme="light"] .task-card .btn-link.text-danger:focus,
+[data-theme="light"] .task-card .btn-link.text-danger:active {
+  background-color: transparent !important;
+  color: var(--bs-danger) !important;
+}
+
+/* Igual para el botón eliminar columna */
+[data-theme="light"] .column-card .btn-link.text-danger:hover,
+[data-theme="light"] .column-card .btn-link.text-danger:focus,
+[data-theme="light"] .column-card .btn-link.text-danger:active {
+  background-color: transparent !important;
+  color: var(--bs-danger) !important;
 }
 
 // Revert custom overrides: remove .modal.show.d-block rule
