@@ -32,7 +32,7 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
           <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
             + Añadir columna
           </button>
-          <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowEditBoard(true)}>
+          <button className="btn btn-sm btn-outline-warning" onClick={() => setShowEditBoard(true)}>
             Editar pizarra
           </button>
         </div>

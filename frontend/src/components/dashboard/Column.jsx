@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FiTrash2, FiMove } from 'react-icons/fi';
+import { FiTrash2 } from 'react-icons/fi';
+import { MdDragHandle } from 'react-icons/md';
 import ConfirmDeleteColumnModal from './modals/ConfirmDeleteColumnModal';
 import Task from './Task';
 import CreateTaskModal from './modals/CreateTaskModal';
 import { getTasksByColumn } from '../../services/taskService';
 import { updateColumn, deleteColumn } from '../../services/columnService';
-import { useTheme } from '../../context/ThemeContext';
 import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -19,7 +19,6 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [taskError, setTaskError] = useState('');
   const [refreshTasks, setRefreshTasks] = useState(false);
-  const { theme } = useTheme();
 
   // keep title in sync
   useEffect(() => { setNewTitle(column.title); }, [column.title]);
@@ -71,12 +70,20 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
         ref={setActivatorNodeRef}
         {...colListeners}
         {...colAttributes}
-        style={{ position: 'absolute', top: '4px', left: '50%', transform: 'translateX(-50%)', cursor: 'grab', zIndex: 'auto' }}
+        style={{
+          position: 'absolute',
+          top: '4px',         // moved higher up
+          left: '50%',
+          transform: 'translateX(-50%)',
+          cursor: 'grab',
+          padding: '2px',     // reduced padding
+          zIndex: 'auto',
+        }}
         title="Mover columna"
       >
-        <FiMove size={16} />
+        <MdDragHandle size={24} />
       </div>
-      <div className="card-body">
+      <div className="card-body pt-5">
         <div className="d-flex align-items-center mb-2 justify-content-center">
           {/* Título editable */}
           <div className="flex-grow-1 text-center overflow-hidden">
