@@ -362,4 +362,9 @@
     background-color: var(--bs-body-color) !important;
     color: var(--bs-body-bg) !important;
   }
+
+  /* Date picker icon color in dark mode */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+  }
 }
