@@ -182,6 +182,20 @@
   background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
 }
 
+// Estado de tareas en modo claro
+[data-theme="light"] .task-card.today {
+  border-left: 4px solid var(--bs-info) !important;
+  background-color: rgba(var(--bs-info-rgb), 0.1) !important;
+}
+[data-theme="light"] .task-card.urgent {
+  border-left: 4px solid var(--bs-warning) !important;
+  background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
+}
+[data-theme="light"] .task-card.overdue {
+  border-left: 4px solid var(--bs-danger) !important;
+  background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
+}
+
 // 6. Estilos generales de Column y Task (antes en theme.scss)
 .column-card {
   background-color: #ffffff;
@@ -203,4 +217,32 @@
 }
 .task-card:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+// Resaltado de tareas según estado en Light
+[data-theme="light"] .task-card.today {
+  border-left: 4px solid var(--bs-info) !important;
+  background-color: rgba(var(--bs-info-rgb), 0.1) !important;
+}
+[data-theme="light"] .task-card.urgent {
+  border-left: 4px solid var(--bs-warning) !important;
+  background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
+}
+[data-theme="light"] .task-card.overdue {
+  border-left: 4px solid var(--bs-danger) !important;
+  background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
+}
+
+// Reset hover/focus/active styles for delete buttons in light mode
+[data-theme="light"] .column-card .btn-link.text-danger:hover,
+[data-theme="light"] .column-card .btn-link.text-danger:focus,
+[data-theme="light"] .column-card .btn-link.text-danger:active {
+  background-color: transparent !important;
+  color: var(--bs-danger) !important;
+}
+[data-theme="light"] .task-card .btn-link.text-danger:hover,
+[data-theme="light"] .task-card .btn-link.text-danger:focus,
+[data-theme="light"] .task-card .btn-link.text-danger:active {
+  background-color: transparent !important;
+  color: var(--bs-danger) !important;
 }

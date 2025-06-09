@@ -351,4 +351,15 @@
   .task-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
   }
+
+  /* Outline dark button for avatar selection visibility */
+  .btn-outline-dark {
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-body-color) !important;
+  }
+  .btn-outline-dark:hover,
+  .btn-outline-dark:focus {
+    background-color: var(--bs-body-color) !important;
+    color: var(--bs-body-bg) !important;
+  }
 }
