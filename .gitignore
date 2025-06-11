@@ -23,3 +23,6 @@ backend/dist/
 
 /uploads/avatars/*
 !/uploads/avatars/.gitkeep
+
+# MD
+.MEMORIA.md
