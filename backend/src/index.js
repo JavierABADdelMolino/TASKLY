@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const multer = require('multer');
 const connectDB = require('./config/database');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
@@ -16,8 +17,12 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-// 📂 Servir archivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+// Ruta de uploads: usa env var UPLOADS_PATH o carpeta uploads por defecto
+const UPLOADS_PATH = process.env.UPLOADS_PATH || path.join(__dirname, '..', 'uploads');
+
+// 📂 Servir archivos estáticos de uploads
+if (!fs.existsSync(UPLOADS_PATH)) fs.mkdirSync(UPLOADS_PATH, { recursive: true });
+app.use('/uploads', express.static(UPLOADS_PATH));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // 🔗 Importar rutas
