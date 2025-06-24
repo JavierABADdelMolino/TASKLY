@@ -28,7 +28,12 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Validación local
     if (validate()) {
+      // Si hay errores del servidor, no avanzar
+      if (errors.email || errors.username || errors.password || errors.confirmPassword || errors.general) {
+        return;
+      }
       onNext();
     }
   };
@@ -48,11 +53,12 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         <input
           id="email"
           type="email"
-          className={`form-control ${localErrors.email ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.email || errors.email ? 'is-invalid' : ''}`}
           value={data.email}
           onChange={(e) => onChange('email', e.target.value)}
         />
         {localErrors.email && <small className="text-danger">{localErrors.email}</small>}
+        {errors.email && <small className="text-danger">{errors.email}</small>}
       </div>
 
       <div className="mb-3">
@@ -60,11 +66,12 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         <input
           id="username"
           type="text"
-          className={`form-control ${localErrors.username ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.username || errors.username ? 'is-invalid' : ''}`}
           value={data.username}
           onChange={(e) => onChange('username', e.target.value)}
         />
         {localErrors.username && <small className="text-danger">{localErrors.username}</small>}
+        {errors.username && <small className="text-danger">{errors.username}</small>}
       </div>
 
       <div className="mb-3">
@@ -72,11 +79,12 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         <input
           id="password"
           type="password"
-          className={`form-control ${localErrors.password ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.password || errors.password ? 'is-invalid' : ''}`}
           value={data.password}
           onChange={(e) => onChange('password', e.target.value)}
         />
         {localErrors.password && <small className="text-danger">{localErrors.password}</small>}
+        {errors.password && <small className="text-danger">{errors.password}</small>}
       </div>
 
       <div className="mb-3">
@@ -84,12 +92,15 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         <input
           id="confirmPassword"
           type="password"
-          className={`form-control ${localErrors.confirmPassword ? 'is-invalid' : ''}`}
+          className={`form-control ${localErrors.confirmPassword || errors.confirmPassword ? 'is-invalid' : ''}`}
           value={data.confirmPassword}
           onChange={(e) => onChange('confirmPassword', e.target.value)}
         />
         {localErrors.confirmPassword && (
           <small className="text-danger">{localErrors.confirmPassword}</small>
+        )}
+        {errors.confirmPassword && (
+          <small className="text-danger">{errors.confirmPassword}</small>
         )}
       </div>
 

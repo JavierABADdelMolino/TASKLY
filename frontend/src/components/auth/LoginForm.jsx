@@ -46,7 +46,14 @@ const LoginForm = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setServerError('Error de conexión con el servidor');
+      // Errores específicos
+      if (err.message === 'Email no registrado') {
+        setErrors((prev) => ({ ...prev, email: 'Este correo no está registrado.' }));
+      } else if (err.message === 'Contraseña incorrecta') {
+        setErrors((prev) => ({ ...prev, password: 'Contraseña incorrecta.' }));
+      } else {
+        setServerError(err.message || 'Error de conexión con el servidor');
+      }
     }
   };
 

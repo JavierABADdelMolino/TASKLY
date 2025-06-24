@@ -37,6 +37,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
     <form onSubmit={handleSubmit} className="d-flex flex-column justify-content-between h-100">
       <h3 className="mb-3 text-center">Información personal</h3>
 
+      {/* errores generales */}
       {errors.general && (
         <div className="alert alert-danger text-center small mb-3">
           {errors.general}
@@ -45,54 +46,82 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
 
       <div className="mb-3">
         <label htmlFor="firstName" className="form-label">Nombre</label>
-        <input
-          id="firstName"
-          type="text"
-          className={`form-control ${localErrors.firstName ? 'is-invalid' : ''}`}
-          value={data.firstName}
-          onChange={(e) => onChange('firstName', e.target.value)}
-        />
-        {localErrors.firstName && <small className="text-danger">{localErrors.firstName}</small>}
+        {(() => {
+          const msg = localErrors.firstName || errors.firstName;
+          return (
+            <>
+              <input
+                id="firstName"
+                type="text"
+                className={`form-control ${msg ? 'is-invalid' : ''}`}
+                value={data.firstName}
+                onChange={(e) => onChange('firstName', e.target.value)}
+              />
+              {msg && <small className="text-danger">{msg}</small>}
+            </>
+          );
+        })()}
       </div>
 
       <div className="mb-3">
         <label htmlFor="lastName" className="form-label">Apellidos</label>
-        <input
-          id="lastName"
-          type="text"
-          className={`form-control ${localErrors.lastName ? 'is-invalid' : ''}`}
-          value={data.lastName}
-          onChange={(e) => onChange('lastName', e.target.value)}
-        />
-        {localErrors.lastName && <small className="text-danger">{localErrors.lastName}</small>}
+        {(() => {
+          const msg = localErrors.lastName || errors.lastName;
+          return (
+            <>
+              <input
+                id="lastName"
+                type="text"
+                className={`form-control ${msg ? 'is-invalid' : ''}`}
+                value={data.lastName}
+                onChange={(e) => onChange('lastName', e.target.value)}
+              />
+              {msg && <small className="text-danger">{msg}</small>}
+            </>
+          );
+        })()}
       </div>
 
       <div className="mb-3">
         <label htmlFor="birthDate" className="form-label">Fecha de nacimiento</label>
-        <input
-          id="birthDate"
-          type="date"
-          className={`form-control ${localErrors.birthDate ? 'is-invalid' : ''}`}
-          value={data.birthDate}
-          onChange={(e) => onChange('birthDate', e.target.value)}
-        />
-        {localErrors.birthDate && <small className="text-danger">{localErrors.birthDate}</small>}
+        {(() => {
+          const msg = localErrors.birthDate || errors.birthDate;
+          return (
+            <>
+              <input
+                id="birthDate"
+                type="date"
+                className={`form-control ${msg ? 'is-invalid' : ''}`}
+                value={data.birthDate}
+                onChange={(e) => onChange('birthDate', e.target.value)}
+              />
+              {msg && <small className="text-danger">{msg}</small>}
+            </>
+          );
+        })()}
       </div>
 
       <div className="row mb-3">
         <div className="col-6">
           <label htmlFor="gender" className="form-label">Sexo</label>
-          <select
-            id="gender"
-            className={`form-select ${localErrors.gender ? 'is-invalid' : ''}`}
-            value={data.gender}
-            onChange={(e) => onChange('gender', e.target.value)}
-          >
-            <option value="">Selecciona</option>
-            <option value="male">Hombre</option>
-            <option value="female">Mujer</option>
-          </select>
-          {localErrors.gender && <small className="text-danger">{localErrors.gender}</small>}
+          {(() => {
+            const msg = localErrors.gender || errors.gender;
+            return (
+              <>
+                <select
+                  id="gender"
+                  className={`form-select ${msg ? 'is-invalid' : ''}`}
+                  value={data.gender}
+                  onChange={(e) => onChange('gender', e.target.value)}
+                >
+                  <option value="">Selecciona</option>
+                  <option value="male">Hombre</option>
+                  <option value="female">Mujer</option>
+                </select>
+                {msg && <small className="text-danger">{msg}</small>}
+              </>
+            );
+          })()}
         </div>
 
         <div className="col-6">
