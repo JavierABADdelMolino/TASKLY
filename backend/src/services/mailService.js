@@ -17,6 +17,9 @@ async function sendMail(to, subject, html) {
   });
 }
 
+// Variables de estilo (CSS variables para email)
+const supportEmail = process.env.SUPPORT_EMAIL || 'support@taskly.es';
+
 /**
  * Envía email de bienvenida con datos de acceso
  */
@@ -26,20 +29,20 @@ async function sendWelcomeEmail(to, firstName, userEmail, originalPassword) {
   const baseUrl = rawBase.replace(/\/$/, '');
   const logoUrl = `${baseUrl}/logo-color.svg`;
   const html = `
-  <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:20px;background:#f9f9f9;border-radius:8px;">
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background:var(--bs-light);border:1px solid var(--bs-secondary);border-radius:8px;">
     <div style="text-align:center;margin-bottom:20px;">
       <img src="${logoUrl}" alt="Taskly" width="120" />
     </div>
-    <h2 style="color:#333;">¡Hola ${firstName}, bienvenido a Taskly!</h2>
-    <p>Tu cuenta ha sido creada con éxito. Estos son tus datos de acceso:</p>
-    <ul style="list-style:none;padding:0;">
-      <li><strong>Email:</strong> ${userEmail}</li>
-      <li><strong>Contraseña:</strong> ${originalPassword}</li>
-    </ul>
-    <p style="text-align:center;margin-top:30px;">
-      <a href="${baseUrl}/" style="display:inline-block;padding:10px 20px;background:#4A90E2;color:#fff;text-decoration:none;border-radius:4px;">Ir a Taskly</a>
-    </p>
-    <p style="font-size:12px;color:#777;margin-top:30px;">Si no solicitaste este correo, ignóralo.</p>
+    <h2 style="color:var(--bs-dark);">¡Hola ${firstName}!</h2>
+    <p style="color:var(--bs-dark);">Gracias por unirte a <strong>Taskly</strong>. Aquí tienes tus credenciales de acceso:</p>
+    <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+      <tr><td style="padding:8px;border:1px solid #ddd;"><strong>Email:</strong></td><td style="padding:8px;border:1px solid #ddd;">${userEmail}</td></tr>
+      <tr><td style="padding:8px;border:1px solid #ddd;"><strong>Contraseña:</strong></td><td style="padding:8px;border:1px solid #ddd;">${originalPassword}</td></tr>
+    </table>
+    <p style="text-align:center;margin:30px 0;"><a href="${baseUrl}/" style="display:inline-block;padding:12px 24px;background:var(--bs-primary);color:var(--bs-light);text-decoration:none;border-radius:4px;">Acceder a Taskly</a></p>
+    <hr style="border:none;border-top:1px solid #e0e0e0;" />
+    <p style="font-size:14px;color:var(--bs-dark);">¿Tienes dudas o necesitas ayuda? Escríbenos a <a href="mailto:${supportEmail}" style="color:var(--bs-primary);">${supportEmail}</a>.</p>
+    <p style="font-size:12px;color:var(--bs-secondary);">Si no creaste esta cuenta, ignora este mensaje.</p>
   </div>
   `;
   await sendMail(to, 'Bienvenido a Taskly', html);
@@ -54,17 +57,16 @@ async function sendPasswordResetEmail(to, resetUrl) {
   const baseUrl = rawBase.replace(/\/$/, '');
   const logoUrl = `${baseUrl}/logo-color.svg`;
   const html = `
-  <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:20px;background:#f9f9f9;border-radius:8px;">
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background:var(--bs-light);border:1px solid var(--bs-secondary);border-radius:8px;">
     <div style="text-align:center;margin-bottom:20px;">
       <img src="${logoUrl}" alt="Taskly" width="120" />
     </div>
-    <h2 style="color:#333;">Recupera tu contraseña</h2>
-    <p>Hemos recibido una solicitud para restablecer tu contraseña.</p>
-    <p style="text-align:center;margin:30px 0;">
-      <a href="${resetUrl}" style="display:inline-block;padding:10px 20px;background:#E74C3C;color:#fff;text-decoration:none;border-radius:4px;">Restablecer contraseña</a>
-    </p>
-    <p>Si no solicitaste este cambio, puedes ignorar este correo.</p>
-    <p style="font-size:12px;color:#777;margin-top:30px;">El enlace expirará en 1 hora.</p>
+    <h2 style="color:var(--bs-dark);">Restablece tu contraseña</h2>
+    <p style="color:var(--bs-dark);">Recibimos una solicitud para cambiar tu contraseña de Taskly.</p>
+    <p style="text-align:center;margin:30px 0;"><a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:var(--bs-danger);color:var(--bs-light);text-decoration:none;border-radius:4px;">Cambiar contraseña</a></p>
+    <hr style="border:none;border-top:1px solid #e0e0e0;" />
+    <p style="font-size:14px;color:var(--bs-dark);">Si no solicitaste este cambio, ignora este correo o contáctanos en <a href="mailto:${supportEmail}" style="color:var(--bs-primary);">${supportEmail}</a>.</p>
+    <p style="font-size:12px;color:var(--bs-secondary);">Este enlace caducará en 1 hora.</p>
   </div>
   `;
   await sendMail(to, 'Recupera tu contraseña en Taskly', html);
