@@ -53,7 +53,17 @@ const RegisterForm = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setServerErrors({ general: 'Error en la petición al servidor' });
+      // Errores de validación de Mongoose enviados por backend
+      if (err.validation) {
+        setServerErrors(err.validation);
+      }
+      // Mensaje específico si el email ya existe
+      else if (err.message === 'El usuario ya existe' || err.message.includes('existe')) {
+        setServerErrors({ general: 'Este email ya está en uso' });
+      } else {
+        // Otros errores del servidor
+        setServerErrors({ general: err.message || 'Error en la petición al servidor' });
+      }
     }
   };
 

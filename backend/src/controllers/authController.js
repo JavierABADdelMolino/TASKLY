@@ -95,6 +95,15 @@ exports.registerUser = async (req, res) => {
       }
     });
   } catch (err) {
+    // Errores de validación de Mongoose
+    if (err.name === 'ValidationError') {
+      const errors = {};
+      Object.values(err.errors).forEach(({ path, message }) => {
+        errors[path] = message;
+      });
+      return res.status(400).json({ errors });
+    }
+    // Otros errores
     res.status(500).json({ message: 'Error en el servidor', error: err.message });
   }
 };

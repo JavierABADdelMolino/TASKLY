@@ -31,7 +31,14 @@ export async function register(formData) {
     body: formData,
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Error al registrar usuario');
+  if (!res.ok) {
+    const error = new Error(data.message || 'Error al registrar usuario');
+    // adjunta errores de validación de Mongoose si existen
+    if (data.errors) {
+      error.validation = data.errors;
+    }
+    throw error;
+  }
   return data; // { token, user }
 }
 
