@@ -53,15 +53,19 @@ const RegisterForm = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      // Errores de validación de Mongoose enviados por backend
       if (err.validation) {
+        // Si errores de validación en paso 1, volver a página 1
+        const v = err.validation;
+        if (v.email || v.username || v.password || v.confirmPassword) {
+          setStep(1);
+        }
         setServerErrors(err.validation);
       }
-      // Mensaje específico si el email ya existe
       else if (err.message === 'El usuario ya existe' || err.message.includes('existe')) {
+        // Email duplicado: mostrar error en email y volver a paso 1
         setServerErrors(prev => ({ ...prev, email: 'Este email ya está en uso' }));
+        setStep(1);
       } else {
-        // Otros errores del servidor
         setServerErrors(prev => ({ ...prev, general: err.message || 'Error en la petición al servidor' }));
       }
     }
