@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
+import ResetPassword from './ResetPassword';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
@@ -10,6 +11,8 @@ import { Carousel } from 'react-bootstrap';
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null);
+  // Capturar token de URL para reset
+  const { token } = useParams();
   const { user } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -27,9 +30,19 @@ const Home = () => {
     window.addEventListener('openAuthModal', handleAuthModal);
     return () => window.removeEventListener('openAuthModal', handleAuthModal);
   }, []);
+  useEffect(() => {
+    // abrir modal de reset al navegar a /reset-password/:token
+    if (token) {
+      setAuthMode('reset');
+    }
+  }, [token]);
 
   const handleCloseAuth = () => {
     setAuthMode(null);
+    // Si estamos en ruta de reset, volvemos al home para restaurar la navbar
+    if (token) {
+      navigate('/');
+    }
   };
 
   return (
@@ -51,27 +64,31 @@ const Home = () => {
               aria-label="Cerrar"
               onClick={handleCloseAuth}
             />
-            {/* Login or Register form */}
-            {authMode === 'login' ? <LoginForm /> : <RegisterForm />}
+            {/* Login, Register o Reset forms */}
+            {authMode === 'login' && <LoginForm />}
+            {authMode === 'register' && <RegisterForm />}
+            {authMode === 'reset' && <ResetPassword />}
             {/* Switch between modes */}
-            <div className="mt-3 text-center">
-              {authMode === 'login' && (
-                <span>
-                  ¿No tienes cuenta?{' '}
-                  <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('register')}>
-                    Registrarse
-                  </button>
-                </span>
-              )}
-              {authMode === 'register' && (
-                <span>
-                  ¿Ya tienes cuenta?{' '}
-                  <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('login')}>
-                    Iniciar sesión
-                  </button>
-                </span>
-              )}
-            </div>
+            {(authMode === 'login' || authMode === 'register') && (
+              <div className="mt-3 text-center">
+                {authMode === 'login' && (
+                  <span>
+                    ¿No tienes cuenta?{' '}
+                    <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('register')}>
+                      Registrarse
+                    </button>
+                  </span>
+                )}
+                {authMode === 'register' && (
+                  <span>
+                    ¿Ya tienes cuenta?{' '}
+                    <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('login')}>
+                      Iniciar sesión
+                    </button>
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

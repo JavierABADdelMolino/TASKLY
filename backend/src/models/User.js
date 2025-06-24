@@ -53,7 +53,10 @@ const userSchema = new mongoose.Schema({
   avatarUrl: {
     type: String,
     default: ''
-  }
+  },
+  // --- Campos para recuperación de contraseña ---
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 }, {
   timestamps: true
 });

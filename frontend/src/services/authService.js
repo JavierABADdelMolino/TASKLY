@@ -34,3 +34,27 @@ export async function register(formData) {
   if (!res.ok) throw new Error(data.message || 'Error al registrar usuario');
   return data; // { token, user }
 }
+
+// Enviar email de recuperación de contraseña
+export async function forgotPassword(email) {
+  const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al enviar email de recuperación');
+  return data;
+}
+
+// Restablecer contraseña con token
+export async function resetPassword(token, password) {
+  const res = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al restablecer contraseña');
+  return data;
+}
