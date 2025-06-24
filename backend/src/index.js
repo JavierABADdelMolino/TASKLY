@@ -17,11 +17,15 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-// Ruta de uploads: usa env var UPLOADS_PATH o carpeta uploads por defecto
-const UPLOADS_PATH = process.env.UPLOADS_PATH || path.join(__dirname, '..', 'uploads');
-
+// Ruta de uploads: usa env var solo en producción o carpeta uploads en desarrollo
+const UPLOADS_PATH = process.env.NODE_ENV === 'production'
+  ? process.env.UPLOADS_PATH
+  : path.join(__dirname, '..', 'uploads');
+// Crear carpeta local de uploads solo en desarrollo
+if (process.env.NODE_ENV !== 'production' && !fs.existsSync(UPLOADS_PATH)) {
+  fs.mkdirSync(UPLOADS_PATH, { recursive: true });
+}
 // 📂 Servir archivos estáticos de uploads
-if (!fs.existsSync(UPLOADS_PATH)) fs.mkdirSync(UPLOADS_PATH, { recursive: true });
 app.use('/uploads', express.static(UPLOADS_PATH));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 

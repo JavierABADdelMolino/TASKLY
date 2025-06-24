@@ -1,5 +1,6 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Sanea el email para que sea un nombre de archivo seguro
 const sanitizeEmail = (email) => {
@@ -15,10 +16,17 @@ const getFormattedTimestamp = () => {
     .replace(/\..+/, '');      // quita milisegundos
 };
 
+// Determinar carpeta raíz de uploads según entorno
+const UPLOADS_ROOT = process.env.NODE_ENV === 'production'
+  ? process.env.UPLOADS_PATH
+  : path.join(__dirname, '..', '..', 'uploads');
+const AVATARS_PATH = path.join(UPLOADS_ROOT, 'avatars');
+// Crear carpeta avatars solo en desarrollo
+if (process.env.NODE_ENV !== 'production' && !fs.existsSync(AVATARS_PATH)) {
+  fs.mkdirSync(AVATARS_PATH, { recursive: true });
+}
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/avatars');
-  },
+  destination: (req, file, cb) => cb(null, AVATARS_PATH),
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
     const email = req.user?.email || req.body.email || 'unknown';
