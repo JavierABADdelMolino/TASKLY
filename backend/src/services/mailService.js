@@ -21,12 +21,27 @@ async function sendMail(to, subject, html) {
 const supportEmail = process.env.SUPPORT_EMAIL || 'support@taskly.es';
 
 /**
+ * Función auxiliar para generar la URL base del frontend con dominio custom
+ */
+function getBaseUrl() {
+  const fallback = (process.env.FRONTEND_URL || process.env.CLIENT_URL || '').replace(/\/$/, '');
+  if (process.env.APP_DOMAIN) {
+    try {
+      const proto = new URL(process.env.FRONTEND_URL || process.env.CLIENT_URL).protocol;
+      return `${proto}//${process.env.APP_DOMAIN}`;
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
+/**
  * Envía email de bienvenida con datos de acceso
  */
 async function sendWelcomeEmail(to, firstName, userEmail, originalPassword) {
-  // Usa FRONTEND_URL o CLIENT_URL como base para enlaces
-  const rawBase = process.env.FRONTEND_URL || process.env.CLIENT_URL || '';
-  const baseUrl = rawBase.replace(/\/$/, '');
+  // Obtener URL base (host custom si APP_DOMAIN está definido)
+  const baseUrl = getBaseUrl();
   const logoUrl = `${baseUrl}/logo-color.svg`;
   const html = `
   <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background:var(--bs-light);border:1px solid var(--bs-secondary);border-radius:8px;">
@@ -52,10 +67,11 @@ async function sendWelcomeEmail(to, firstName, userEmail, originalPassword) {
  * Envía email de recuperación de contraseña con enlace
  */
 async function sendPasswordResetEmail(to, resetUrl) {
-  // Usa FRONTEND_URL o CLIENT_URL como base para enlaces
-  const rawBase = process.env.FRONTEND_URL || process.env.CLIENT_URL || '';
-  const baseUrl = rawBase.replace(/\/$/, '');
+  // Obtener URL base (host custom si APP_DOMAIN está definido)
+  const baseUrl = getBaseUrl();
   const logoUrl = `${baseUrl}/logo-color.svg`;
+  // Asegura que resetUrl sea absoluto
+  const link = resetUrl.startsWith('http') ? resetUrl : `${baseUrl}/reset-password/${resetUrl}`;
   const html = `
   <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background:var(--bs-light);border:1px solid var(--bs-secondary);border-radius:8px;">
     <div style="text-align:center;margin-bottom:20px;">
@@ -63,7 +79,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
     </div>
     <h2 style="color:var(--bs-dark);">Restablece tu contraseña</h2>
     <p style="color:var(--bs-dark);">Recibimos una solicitud para cambiar tu contraseña de Taskly.</p>
-    <p style="text-align:center;margin:30px 0;"><a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:var(--bs-danger);color:var(--bs-light);text-decoration:none;border-radius:4px;">Cambiar contraseña</a></p>
+    <p style="text-align:center;margin:30px 0;"><a href="${link}" style="display:inline-block;padding:12px 24px;background:var(--bs-danger);color:var(--bs-light);text-decoration:none;border-radius:4px;">Cambiar contraseña</a></p>
     <hr style="border:none;border-top:1px solid #e0e0e0;" />
     <p style="font-size:14px;color:var(--bs-dark);">Si no solicitaste este cambio, ignora este correo o contáctanos en <a href="mailto:${supportEmail}" style="color:var(--bs-primary);">${supportEmail}</a>.</p>
     <p style="font-size:12px;color:var(--bs-secondary);">Este enlace caducará en 1 hora.</p>
