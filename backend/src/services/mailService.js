@@ -21,7 +21,9 @@ async function sendMail(to, subject, html) {
  * Envía email de bienvenida con datos de acceso
  */
 async function sendWelcomeEmail(to, firstName, userEmail, originalPassword) {
-  const baseUrl = process.env.FRONTEND_URL.replace(/\/$/, '');
+  // Usa FRONTEND_URL o CLIENT_URL como base para enlaces
+  const rawBase = process.env.FRONTEND_URL || process.env.CLIENT_URL || '';
+  const baseUrl = rawBase.replace(/\/$/, '');
   const logoUrl = `${baseUrl}/logo-color.svg`;
   const html = `
   <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:20px;background:#f9f9f9;border-radius:8px;">
@@ -47,7 +49,9 @@ async function sendWelcomeEmail(to, firstName, userEmail, originalPassword) {
  * Envía email de recuperación de contraseña con enlace
  */
 async function sendPasswordResetEmail(to, resetUrl) {
-  const baseUrl = process.env.FRONTEND_URL.replace(/\/$/, '');
+  // Usa FRONTEND_URL o CLIENT_URL como base para enlaces
+  const rawBase = process.env.FRONTEND_URL || process.env.CLIENT_URL || '';
+  const baseUrl = rawBase.replace(/\/$/, '');
   const logoUrl = `${baseUrl}/logo-color.svg`;
   const html = `
   <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:20px;background:#f9f9f9;border-radius:8px;">
