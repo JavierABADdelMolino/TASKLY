@@ -1,5 +1,5 @@
 // src/App.js
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
@@ -31,6 +31,8 @@ function App() {
           </PrivateRoute>
         }
       />
+      {/* Ruta wildcard: redirige al home para todos los paths no reconocidos */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

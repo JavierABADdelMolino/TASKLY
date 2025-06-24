@@ -188,7 +188,8 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000;
     await user.save();
     // Construir URL base usando CLIENT_URL y opcionalmente APP_DOMAIN para reemplazar el host
-    const rawUrl = process.env.CLIENT_URL;
+    // Base URL: CLIENT_URL env o el origen de la request
+    const rawUrl = process.env.CLIENT_URL || req.get('origin');
     // Elimina slash final
     let baseUrl = rawUrl.replace(/\/$/, '');
     if (process.env.APP_DOMAIN) {
