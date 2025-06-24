@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const cloudinary = require('../services/cloudinaryService');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
@@ -62,16 +63,29 @@ exports.updateUserProfile = async (req, res) => {
 
     // Subida de un nuevo avatar
     if (avatarFile) {
-      const oldAvatarPath = user.avatarUrl;
-      user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
-      updated = true;
-
-      // Eliminar avatar anterior si era personalizado
-      if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
-        const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
-        fs.unlink(fullPath, err => {
-          if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
+      if (process.env.NODE_ENV === 'production') {
+        // Sube a Cloudinary
+        const uploadResult = await cloudinary.uploader.upload(avatarFile.path, {
+          folder: 'taskly/avatars',
+          public_id: `${user._id}`,
+          overwrite: true,
         });
+        user.avatarUrl = uploadResult.secure_url;
+        updated = true;
+        // Eliminar archivo temporal local
+        fs.unlinkSync(avatarFile.path);
+      } else {
+        const oldAvatarPath = user.avatarUrl;
+        user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
+        updated = true;
+
+        // Eliminar avatar anterior si era personalizado
+        if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
+          const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
+          fs.unlink(fullPath, err => {
+            if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
+          });
+        }
       }
     }
 
@@ -169,8 +183,11 @@ exports.deleteUserAccount = async (req, res) => {
     // Eliminar pizarras del usuario
     await Board.deleteMany({ user: userId });
 
-    // Eliminar avatar personalizado si existe
-    if (user.avatarUrl && user.avatarUrl.includes('/uploads/avatars/')) {
+    // Eliminar avatar personalizado si existe al eliminar cuenta
+    if (process.env.NODE_ENV === 'production' && user.avatarUrl && user.avatarUrl.includes('res.cloudinary.com')) {
+      // Elimina recurso en Cloudinary (usando public_id: user ID)
+      await cloudinary.uploader.destroy(`taskly/avatars/${userId}`);
+    } else if (user.avatarUrl && user.avatarUrl.includes('/uploads/avatars/')) {
       const fullPath = path.join(__dirname, '..', '..', user.avatarUrl.replace(/^\/+/, ''));
       fs.unlink(fullPath, err => {
         if (err) console.warn('No se pudo eliminar el avatar del usuario:', err.message);

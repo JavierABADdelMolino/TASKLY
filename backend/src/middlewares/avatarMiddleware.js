@@ -25,17 +25,20 @@ const AVATARS_PATH = path.join(UPLOADS_ROOT, 'avatars');
 if (process.env.NODE_ENV !== 'production' && !fs.existsSync(AVATARS_PATH)) {
   fs.mkdirSync(AVATARS_PATH, { recursive: true });
 }
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, AVATARS_PATH),
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const email = req.user?.email || req.body.email || 'unknown';
-    const safeEmail = sanitizeEmail(email);
-    const timestamp = getFormattedTimestamp();
-    const filename = `avatar_${safeEmail}_${timestamp}${ext}`;
-    cb(null, filename);
-  }
-});
+// En producción: almacenar en memoria para subir a Cloudinary; en desarrollo: en disco
+const storage = process.env.NODE_ENV === 'production'
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (req, file, cb) => cb(null, AVATARS_PATH),
+      filename: function (req, file, cb) {
+        const ext = path.extname(file.originalname);
+        const email = req.user?.email || req.body.email || 'unknown';
+        const safeEmail = sanitizeEmail(email);
+        const timestamp = getFormattedTimestamp();
+        const filename = `avatar_${safeEmail}_${timestamp}${ext}`;
+        cb(null, filename);
+      }
+    });
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png/;
