@@ -59,10 +59,10 @@ const RegisterForm = () => {
       }
       // Mensaje específico si el email ya existe
       else if (err.message === 'El usuario ya existe' || err.message.includes('existe')) {
-        setServerErrors({ general: 'Este email ya está en uso' });
+        setServerErrors(prev => ({ ...prev, email: 'Este email ya está en uso' }));
       } else {
         // Otros errores del servidor
-        setServerErrors({ general: err.message || 'Error en la petición al servidor' });
+        setServerErrors(prev => ({ ...prev, general: err.message || 'Error en la petición al servidor' }));
       }
     }
   };
