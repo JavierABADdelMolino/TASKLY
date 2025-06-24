@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { sendMail } = require('../services/mailService');
+const { sendMail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/mailService');
 
 /**
  * Genera un token JWT con los datos del usuario
@@ -73,13 +73,9 @@ exports.registerUser = async (req, res) => {
 
     const token = generateToken(user);
 
-    // Enviar email de bienvenida con usuario y contraseña
+    // Enviar email de bienvenida con plantilla HTML
     try {
-      await sendMail(
-        email,
-        'Bienvenido a Taskly',
-        `<p>Hola ${firstName},</p><p>Tu cuenta ha sido creada exitosamente.</p><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña:</strong> ${originalPassword}</p>`
-      );
+      await sendWelcomeEmail(email, firstName, email, originalPassword);
     } catch (mailErr) {
       console.error('Error enviando email de bienvenida:', mailErr);
     }
@@ -198,11 +194,8 @@ exports.forgotPassword = async (req, res) => {
       baseUrl = `${protocol}//${process.env.APP_DOMAIN}`;
     }
     const resetUrl = `${baseUrl}/reset-password/${token}`;
-    await sendMail(
-      email,
-      'Recuperación de contraseña Taskly',
-      `<p>Para restablecer tu contraseña, haz click <a href="${resetUrl}">aquí</a>. Este enlace expirará en 1 hora.</p>`
-    );
+    // Enviar email de restablecimiento con plantilla HTML
+    await sendPasswordResetEmail(email, resetUrl);
     res.json({ message: 'Email de recuperación enviado' });
   } catch (err) {
     console.error('Error en forgotPassword:', err);
