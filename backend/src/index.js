@@ -25,8 +25,10 @@ const UPLOADS_PATH = process.env.NODE_ENV === 'production'
 if (process.env.NODE_ENV !== 'production' && !fs.existsSync(UPLOADS_PATH)) {
   fs.mkdirSync(UPLOADS_PATH, { recursive: true });
 }
-// 📂 Servir archivos estáticos de uploads
-app.use('/uploads', express.static(UPLOADS_PATH));
+// 📂 Servir archivos estáticos de uploads (solo en desarrollo)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static(UPLOADS_PATH));
+}
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // 🔗 Importar rutas
