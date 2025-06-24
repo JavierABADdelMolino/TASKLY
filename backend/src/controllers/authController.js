@@ -187,9 +187,16 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 3600000;
     await user.save();
-    // Construir URL de frontend: PRIORIDAD FRONTEND_URL > CLIENT_URL
-    const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL;
-    const resetUrl = `${frontendUrl.replace(/\/$/, '')}/reset-password/${token}`;
+    // Construir URL base usando CLIENT_URL y opcionalmente APP_DOMAIN para reemplazar el host
+    const rawUrl = process.env.CLIENT_URL;
+    // Elimina slash final
+    let baseUrl = rawUrl.replace(/\/$/, '');
+    if (process.env.APP_DOMAIN) {
+      // Reemplaza el dominio original (ej. Render) por tu dominio custom
+      const { protocol } = new URL(rawUrl);
+      baseUrl = `${protocol}//${process.env.APP_DOMAIN}`;
+    }
+    const resetUrl = `${baseUrl}/reset-password/${token}`;
     await sendMail(
       email,
       'Recuperación de contraseña Taskly',
