@@ -30,3 +30,8 @@ backend/dist/
 
 # Coverage directory
 coverage/
+
+# Documentación de proyecto
+MEMORIA.md
+DIARIO.md
+DEPLOY.md
