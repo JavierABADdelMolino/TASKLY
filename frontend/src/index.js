@@ -6,7 +6,7 @@ import RouteChangeLoader from './components/ui/RouteChangeLoader';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './styles/index.scss';
 
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LoaderProvider } from './context/LoaderContext';
 import Loader from './components/ui/Loader';
@@ -17,13 +17,13 @@ root.render(
   <React.StrictMode>
     <LoaderProvider>
       <AuthProvider>
-        <HashRouter>
+        <BrowserRouter>
           <ThemeProvider>
             <Loader />
             <RouteChangeLoader /> {/* 👈 Loader al navegar entre páginas */}
             <App />
           </ThemeProvider>
-        </HashRouter>
+        </BrowserRouter>
       </AuthProvider>
     </LoaderProvider>
   </React.StrictMode>
