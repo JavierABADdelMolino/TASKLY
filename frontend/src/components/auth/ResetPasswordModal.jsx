@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { resetPassword, getCurrentUser } from '../services/authService';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { resetPassword, getCurrentUser } from '../../services/authService';
 
-const ResetPassword = () => {
+export default function ResetPasswordModal() {
   const { token } = useParams();
   const navigate = useNavigate();
   const { setUser } = useAuth();
@@ -24,7 +24,6 @@ const ResetPassword = () => {
     }
     try {
       const data = await resetPassword(token, password);
-      // auto-login
       sessionStorage.setItem('token', data.token);
       const userData = await getCurrentUser();
       setUser(userData);
@@ -63,6 +62,4 @@ const ResetPassword = () => {
       </form>
     </>
   );
-};
-
-export default ResetPassword;
+}

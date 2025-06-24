@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
-import ResetPassword from './ResetPassword';
+import ResetPasswordModal from '../components/auth/ResetPasswordModal';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
@@ -67,7 +67,7 @@ const Home = () => {
             {/* Login, Register o Reset forms */}
             {authMode === 'login' && <LoginForm />}
             {authMode === 'register' && <RegisterForm />}
-            {authMode === 'reset' && <ResetPassword />}
+            {authMode === 'reset' && <ResetPasswordModal />}
             {/* Switch between modes */}
             {(authMode === 'login' || authMode === 'register') && (
               <div className="mt-3 text-center">
