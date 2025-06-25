@@ -21,7 +21,6 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
     lastName: '',
     birthDate: '',
     gender: '',
-    avatarFile: null,
   });
 
   // Estado para el registro con Google - inicializar con los datos recibidos como prop si existen
@@ -39,11 +38,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
   const onRegister = async () => {
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'avatarFile' && value) {
-        form.append('avatar', value);
-      } else if (key !== 'avatarFile') {
-        form.append(key, value);
-      }
+      form.append(key, value);
     });
 
     try {

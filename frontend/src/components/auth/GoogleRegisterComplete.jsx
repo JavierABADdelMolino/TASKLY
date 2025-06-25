@@ -11,25 +11,15 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
 
   const [formData, setFormData] = useState({
     birthDate: '',
-    gender: '',
-    customAvatar: null
+    gender: ''
   });
 
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
     
-    // Manejar archivos
-    if (type === 'file' && files?.length > 0) {
-      setFormData(prev => ({ 
-        ...prev, 
-        customAvatar: files[0]
-      }));
-      return;
-    }
-    
-    // Para otros campos
+    // Para campos de formulario
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Limpiar errores al editar
@@ -94,15 +84,12 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
         formDataToSend.append('tokenId', googleData.tokenId);
       }
       
-      // Manejar avatar: prioridad al subido, luego Google, luego por defecto
-      if (formData.customAvatar) {
-        // Si se subió un archivo de avatar personalizado
-        formDataToSend.append('avatar', formData.customAvatar);
-      } else if (googleData?.avatarUrl) {
-        // Si hay avatar de Google y no se subió ninguno
+      // Establecer avatar: prioridad al de Google, o predeterminado
+      if (googleData?.avatarUrl) {
+        // Si hay avatar de Google
         formDataToSend.append('avatarUrl', googleData.avatarUrl);
       } else {
-        // Si no hay ni subido ni de Google, se usará el predeterminado según género
+        // Si no hay avatar de Google, se usará el predeterminado según género
         formDataToSend.append('avatarUrl', '');
       }
       
@@ -127,21 +114,19 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
   };
 
   return (
-    <div className="complete-google-register">
-      <h3 className="mb-3 text-center">Completar tu perfil</h3>
+    <form onSubmit={handleSubmit} className="login-form d-flex flex-column justify-content-between h-100">
+      <h3 className="mb-4 text-center fw-bold">Completar tu perfil</h3>
       
       {error && (
-        <div className="alert alert-danger text-center small mb-3">{error}</div>
+        <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>
       )}
       
       <div className="mb-3 text-center">
         <img 
           src={
-            formData.customAvatar
-              ? URL.createObjectURL(formData.customAvatar)
-              : googleData?.avatarUrl
-                ? googleData.avatarUrl
-                : `${process.env.REACT_APP_URL}/public/avatars/default-avatar-${formData.gender || 'male'}.png`
+            googleData?.avatarUrl
+              ? googleData.avatarUrl
+              : `${process.env.REACT_APP_URL}/public/avatars/default-avatar-${formData.gender || 'male'}.png`
           }
           alt="Avatar" 
           onError={(e) => {
@@ -160,72 +145,52 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
       <p className="text-center small mb-4">
         Para finalizar tu registro necesitamos unos datos adicionales:
       </p>
-      
-      <form onSubmit={handleSubmit}>
         {/* Fecha de nacimiento y género en la misma línea */}
         <div className="row mb-4">
           <div className="col-6">
-            <label htmlFor="birthDate" className="form-label">Fecha de nacimiento</label>
-            <input
-              type="date"
-              id="birthDate"
-              name="birthDate"
-              className={`form-control ${validationErrors.birthDate ? 'is-invalid' : ''}`}
-              value={formData.birthDate}
-              onChange={handleChange}
-              max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
-            />
-            {validationErrors.birthDate && (
-              <div className="invalid-feedback">{validationErrors.birthDate}</div>
-            )}
+            <div className="form-floating">
+              <input
+                type="date"
+                id="birthDate"
+                name="birthDate"
+                placeholder="Fecha de nacimiento"
+                className={`form-control ${validationErrors.birthDate ? 'is-invalid' : ''}`}
+                value={formData.birthDate}
+                onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+              />
+              <label htmlFor="birthDate">Fecha de nacimiento</label>
+              {validationErrors.birthDate && (
+                <small className="text-danger d-block mt-1">{validationErrors.birthDate}</small>
+              )}
+            </div>
           </div>
           
           <div className="col-6">
-            <label htmlFor="gender" className="form-label">Género</label>
-            <select
-              id="gender"
-              name="gender"
-              className={`form-select ${validationErrors.gender ? 'is-invalid' : ''}`}
-              value={formData.gender}
-              onChange={handleChange}
-            >
-              <option value="">Selecciona</option>
-              <option value="male">Masculino</option>
-              <option value="female">Femenino</option>
-            </select>
-            {validationErrors.gender && (
-              <div className="invalid-feedback">{validationErrors.gender}</div>
-            )}
-          </div>
-        </div>
-        
-        <div className="mb-4">
-          <label className="form-label">Foto de perfil (opcional)</label>
-          <div className="mt-1">
-            <input
-              type="file"
-              className="form-control"
-              id="customAvatar"
-              name="customAvatar"
-              accept="image/jpeg,image/png,image/jpg"
-              onChange={handleChange}
-            />
-            <div className="text-muted small mt-2">
-              {googleData?.avatarUrl ? (
-                <>Si no subes una imagen, se usará tu perfil de Google. </>
-              ) : (
-                <>Si no subes una imagen, se usará un avatar predeterminado según tu género. </>
+            <div className="form-floating">
+              <select
+                id="gender"
+                name="gender"
+                className={`form-select ${validationErrors.gender ? 'is-invalid' : ''}`}
+                value={formData.gender}
+                onChange={handleChange}
+              >
+                <option value="">Selecciona</option>
+                <option value="male">Masculino</option>
+                <option value="female">Femenino</option>
+              </select>
+              <label htmlFor="gender">Género</label>
+              {validationErrors.gender && (
+                <small className="text-danger d-block mt-1">{validationErrors.gender}</small>
               )}
-              <br />
-              Formatos permitidos: JPG, JPEG, PNG. Tamaño máximo: 2MB.
             </div>
           </div>
         </div>
         
-        <div className="d-flex gap-2">
+        <div className="d-flex justify-content-between mt-4">
           <button 
             type="button" 
-            className="btn btn-outline-secondary flex-grow-1"
+            className="btn btn-outline-secondary px-4"
             onClick={onCancel}
             disabled={loading}
           >
@@ -233,14 +198,13 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
           </button>
           <button 
             type="submit" 
-            className="btn btn-primary flex-grow-1"
+            className="btn btn-primary px-4 py-2 fw-medium"
             disabled={loading}
           >
             {loading ? 'Procesando...' : 'Completar registro'}
           </button>
         </div>
-      </form>
-    </div>
+    </form>
   );
 };
 

@@ -79,7 +79,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
       </div>
 
       {/* Fecha de nacimiento y sexo en la misma línea */}
-      <div className="row mb-3">
+      <div className="row mb-4">
         <div className="col-6">
           <div className="form-floating">
             <input
@@ -120,23 +120,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
         </div>
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="avatar" className="form-label fw-medium">Foto de perfil (opcional)</label>
-        <input
-          id="avatar"
-          type="file"
-          className="form-control"
-          accept="image/jpeg,image/png,image/jpg"
-          onChange={(e) => onChange('avatarFile', e.target.files[0])}
-        />
-        <div className="text-muted small mt-2">
-          Si no subes una imagen, se usará un avatar predeterminado según tu género.
-          <br />
-          Formatos permitidos: JPG, JPEG, PNG. Tamaño máximo: 2MB.
-        </div>
-      </div>
-
-      <div className="d-flex justify-content-between mt-2">
+      <div className="d-flex justify-content-between mt-4">
         <button type="button" className="btn btn-outline-secondary px-4" onClick={onBack}>
           Atrás
         </button>
