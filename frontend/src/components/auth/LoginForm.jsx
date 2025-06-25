@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { login, getCurrentUser, forgotPassword } from '../../services/authService';
+import { login, getCurrentUser, forgotPassword, googleLogin } from '../../services/authService';
+import GoogleLoginButton from './GoogleLoginButton';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -69,6 +70,27 @@ const LoginForm = () => {
     }
   };
 
+  // Manejar el inicio de sesión con Google
+  const handleGoogleLogin = async (googleData) => {
+    try {
+      // Si Google ya completó todos los datos necesarios
+      if (!googleData.needsCompletion) {
+        const userData = await getCurrentUser();
+        setUser(userData);
+        navigate('/dashboard');
+      } else {
+        // Manejar el caso de un nuevo usuario de Google
+        // (se mostrarán campos adicionales para completar)
+        console.log('Usuario de Google necesita completar datos', googleData);
+        // Aquí puedes mostrar el formulario para completar datos o redirigir
+        navigate('/auth/google-complete', { state: googleData });
+      }
+    } catch (err) {
+      console.error('Error en inicio de sesión con Google:', err);
+      setServerError(err.message || 'Error al iniciar sesión con Google');
+    }
+  };
+
   return (
     <> 
       <form onSubmit={handleSubmit}>
@@ -109,6 +131,14 @@ const LoginForm = () => {
           <button type="button" className="btn btn-link small" onClick={() => setShowForgotModal(true)}>
             ¿Has olvidado tu contraseña?
           </button>
+        </div>
+
+        {/* Separador y botón de Google */}
+        <div className="text-center mt-3">
+          <div className="separator">
+            <span>O</span>
+          </div>
+          <GoogleLoginButton onGoogleSignIn={handleGoogleLogin} />
         </div>
       </form>
 
