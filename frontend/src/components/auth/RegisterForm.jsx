@@ -97,7 +97,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
             errors={serverErrors}
           />
           
-          <div className="text-center mt-3">
+          <div className="text-center mt-4 mb-2">
             <div className="separator">
               <span>O</span>
             </div>

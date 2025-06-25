@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
 import ResetPasswordModal from '../components/auth/modals/ResetPasswordModal';
+import LinkGoogleAccountModal from '../components/auth/modals/LinkGoogleAccountModal';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
@@ -12,6 +13,7 @@ import { Carousel } from 'react-bootstrap';
 const Home = () => {
   const [authMode, setAuthMode] = useState(null);
   const [googleRegisterData, setGoogleRegisterData] = useState(null);
+  const [showLinkGoogleModal, setShowLinkGoogleModal] = useState(false);
   // Capturar token de URL para reset
   const { token } = useParams();
   const { user } = useAuth();
@@ -42,8 +44,20 @@ const Home = () => {
   // Revisar si hay data de Google en el estado de navegación
   useEffect(() => {
     if (location.state?.openGoogleRegister && location.state?.googleData) {
-      setAuthMode('register');
-      setGoogleRegisterData(location.state.googleData);
+      const googleData = location.state.googleData;
+      
+      // Si necesita enlazar cuenta (email existe como cuenta normal)
+      if (googleData.needsLinking) {
+        console.log('Home: Usuario necesita enlazar cuenta Google', googleData);
+        setGoogleRegisterData(googleData);
+        setShowLinkGoogleModal(true);
+      } 
+      // Si necesita completar registro (email nuevo con Google)
+      else if (googleData.needsCompletion) {
+        console.log('Home: Usuario necesita completar registro Google', googleData);
+        setAuthMode('register');
+        setGoogleRegisterData(googleData);
+      }
     }
   }, [location.state]);
 
@@ -198,6 +212,18 @@ const Home = () => {
       </section>
 
       {/* Call to Action */}
+      
+      {/* Modal para enlazar cuenta de Google */}
+      {showLinkGoogleModal && googleRegisterData && (
+        <LinkGoogleAccountModal 
+          data={googleRegisterData} 
+          onCancel={() => {
+            setShowLinkGoogleModal(false);
+            // Limpiar estado de navegación
+            navigate('/', { replace: true });
+          }} 
+        />
+      )}
       <section className="cta bg-primary text-white text-center py-5">
         <h3 className="mb-4">Listo para empezar?</h3>
         {/* Botón de registro eliminado: usar Navbar */}

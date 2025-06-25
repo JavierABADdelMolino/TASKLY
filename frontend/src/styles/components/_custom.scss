@@ -1,5 +1,73 @@
 // Estilos personalizados de componentes
 
+// Login/Register Form Styling
+.login-form {
+  .form-control {
+    border-radius: 0.5rem;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15);
+    }
+  }
+  
+  .form-floating label {
+    padding-left: 1rem;
+  }
+  
+  .form-floating > .form-control:focus ~ label,
+  .form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+  }
+  
+  .btn-primary {
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  // Animación suave para alertas
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+// Modal styling improvements
+.modal-content {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  
+  .modal-header {
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+  }
+  
+  .btn-close:focus {
+    box-shadow: none;
+  }
+}
+
+// Corrección para el icono de calendario en inputs de fecha en modo oscuro
+html[data-bs-theme="dark"] {
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+  
+  .form-control::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
 // 1. Switch de tema (form-check)
 .form-check.form-switch {
   padding: 0.25rem 0.5rem;
@@ -253,21 +321,41 @@
   align-items: center;
   text-align: center;
   margin: 1.5rem 0;
-  color: var(--bs-secondary);
+  position: relative;
 }
 
 .separator::before,
 .separator::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid var(--bs-body-color); /* Color principal del texto (negro/blanco según tema) */
+  height: 1px;
+  background: linear-gradient(
+    to var(--direction, right),
+    transparent,
+    rgba(var(--bs-body-color-rgb), 0.3),
+    rgba(var(--bs-body-color-rgb), 0.3)
+  );
+}
+
+.separator::before {
+  --direction: right;
+  margin-right: 1rem;
+}
+
+.separator::after {
+  --direction: left;
+  margin-left: 1rem;
 }
 
 .separator span {
-  padding: 0 1rem;
+  padding: 0 0.8rem;
   font-size: 0.9rem;
-  color: var(--bs-body-color); /* Color principal del texto (negro/blanco según tema) */
-  font-weight: normal;
+  color: var(--bs-body-color); /* Color neutro según tema */
+  font-weight: 500;
+  background-color: var(--bs-body-bg);
+  position: relative;
+  z-index: 1;
+  opacity: 0.8;
 }
 
 // Google Login Button container

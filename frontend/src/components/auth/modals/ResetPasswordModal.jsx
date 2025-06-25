@@ -35,30 +35,32 @@ export default function ResetPasswordModal() {
 
   return (
     <>
-      <h5 className="mb-3 text-center">Restablecer contraseña</h5>
-      {error && <div className="alert alert-danger text-center small mb-2">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Nueva contraseña</label>
+      <h3 className="mb-4 text-center fw-bold">Restablecer contraseña</h3>
+      {error && <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>}
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="mb-3 form-floating">
           <input
             id="password"
             type="password"
+            placeholder="Nueva contraseña"
             className={`form-control ${error ? 'is-invalid' : ''}`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <label htmlFor="password">Nueva contraseña</label>
         </div>
-        <div className="mb-3">
-          <label htmlFor="confirm" className="form-label">Confirmar contraseña</label>
+        <div className="mb-4 form-floating">
           <input
             id="confirm"
             type="password"
+            placeholder="Confirmar contraseña"
             className={`form-control ${error ? 'is-invalid' : ''}`}
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
           />
+          <label htmlFor="confirm">Confirmar contraseña</label>
         </div>
-        <button type="submit" className="btn btn-primary w-100">Cambiar contraseña</button>
+        <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">Cambiar contraseña</button>
       </form>
     </>
   );

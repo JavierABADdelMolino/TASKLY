@@ -35,59 +35,63 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3 className="mb-3 text-center">Información de acceso</h3>
+    <form onSubmit={handleSubmit} className="login-form">
+      <h3 className="mb-4 text-center fw-bold">Información de acceso</h3>
 
       {errors.general && (
-        <div className="alert alert-danger text-center small mb-3">
+        <div className="alert alert-danger text-center small mb-3 fade-in">
           {errors.general}
         </div>
       )}
 
-      <div className="mb-3">
-        <label htmlFor="email" className="form-label">Correo electrónico</label>
+      <div className="mb-3 form-floating">
         <input
           id="email"
           type="email"
+          placeholder="nombre@ejemplo.com"
           className={`form-control ${localErrors.email || errors.email ? 'is-invalid' : ''}`}
           value={data.email}
           onChange={(e) => onChange('email', e.target.value)}
         />
-        {localErrors.email && <small className="text-danger">{localErrors.email}</small>}
-        {errors.email && <small className="text-danger">{errors.email}</small>}
+        <label htmlFor="email">Correo electrónico</label>
+        {(localErrors.email || errors.email) && (
+          <small className="text-danger d-block mt-1">{localErrors.email || errors.email}</small>
+        )}
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="password" className="form-label">Contraseña</label>
+      <div className="mb-3 form-floating">
         <input
           id="password"
           type="password"
+          placeholder="Contraseña"
           className={`form-control ${localErrors.password || errors.password ? 'is-invalid' : ''}`}
           value={data.password}
           onChange={(e) => onChange('password', e.target.value)}
         />
-        {localErrors.password && <small className="text-danger">{localErrors.password}</small>}
-        {errors.password && <small className="text-danger">{errors.password}</small>}
+        <label htmlFor="password">Contraseña</label>
+        {(localErrors.password || errors.password) && (
+          <small className="text-danger d-block mt-1">{localErrors.password || errors.password}</small>
+        )}
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="confirmPassword" className="form-label">Confirmar contraseña</label>
+      <div className="mb-4 form-floating">
         <input
           id="confirmPassword"
           type="password"
+          placeholder="Confirmar contraseña"
           className={`form-control ${localErrors.confirmPassword || errors.confirmPassword ? 'is-invalid' : ''}`}
           value={data.confirmPassword}
           onChange={(e) => onChange('confirmPassword', e.target.value)}
         />
-        {localErrors.confirmPassword && (
-          <small className="text-danger">{localErrors.confirmPassword}</small>
-        )}
-        {errors.confirmPassword && (
-          <small className="text-danger">{errors.confirmPassword}</small>
+        <label htmlFor="confirmPassword">Confirmar contraseña</label>
+        {(localErrors.confirmPassword || errors.confirmPassword) && (
+          <small className="text-danger d-block mt-1">
+            {localErrors.confirmPassword || errors.confirmPassword}
+          </small>
         )}
       </div>
 
-      <button type="submit" className="btn btn-primary w-100">
+      <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">
         Siguiente
       </button>
     </form>

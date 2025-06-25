@@ -37,12 +37,12 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
       <div className="modal show d-block position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" tabIndex="-1" aria-modal="true">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Enlazar cuenta con Google</h5>
-              <button type="button" className="btn-close" onClick={onCancel} disabled={loading}></button>
+            <div className="modal-header border-0 pb-0">
+              <h5 className="modal-title fw-bold">Enlazar cuenta con Google</h5>
+              <button type="button" className="btn-close shadow-none" onClick={onCancel} disabled={loading}></button>
             </div>
             
-            <div className="modal-body">
+            <div className="modal-body px-4 pt-2">
               <p>
                 Hemos detectado que ya existe una cuenta con el email <strong>{data.email}</strong> que 
                 usa nombre y contraseña para iniciar sesión.
@@ -52,20 +52,24 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
                 ¿Quieres enlazar tu cuenta de Google con esta cuenta existente?
               </p>
               
-              <div className="alert alert-warning">
+              <div className="alert alert-warning py-3">
+                <i className="bi bi-exclamation-triangle me-2"></i>
                 <strong>Importante:</strong> Si enlazas las cuentas, ya no podrás iniciar sesión con 
                 contraseña y deberás usar siempre Google para acceder.
               </div>
               
               {error && (
-                <div className="alert alert-danger my-3">{error}</div>
+                <div className="alert alert-danger my-3 fade-in">
+                  <i className="bi bi-exclamation-circle me-2"></i>
+                  {error}
+                </div>
               )}
             </div>
             
-            <div className="modal-footer">
+            <div className="modal-footer border-0 pt-0">
               <button 
                 type="button" 
-                className="btn btn-secondary" 
+                className="btn btn-link text-decoration-none" 
                 onClick={onCancel}
                 disabled={loading}
               >
@@ -73,7 +77,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
               </button>
               <button 
                 type="button" 
-                className="btn btn-primary" 
+                className="btn btn-primary px-4" 
                 onClick={handleConfirm}
                 disabled={loading}
               >

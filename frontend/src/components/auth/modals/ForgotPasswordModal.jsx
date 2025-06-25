@@ -21,24 +21,47 @@ export default function ForgotPasswordModal({ onClose }) {
 
   return (
     <>
-      <h5 className="mb-3 text-center">Recuperar contraseña</h5>
-      {msg && <div className="alert alert-success text-center small mb-2">{msg}</div>}
-      {error && <div className="alert alert-danger text-center small mb-2">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Correo electrónico</label>
+      <h3 className="mb-4 text-center fw-bold">Recuperar contraseña</h3>
+      
+      {msg && (
+        <div className="alert alert-success text-center small mb-3 fade-in">
+          <i className="bi bi-check-circle me-2"></i>
+          {msg}
+        </div>
+      )}
+      
+      {error && (
+        <div className="alert alert-danger text-center small mb-3 fade-in">
+          <i className="bi bi-exclamation-circle me-2"></i>
+          {error}
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit} className="login-form">
+        <p className="text-muted mb-3">
+          Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+        </p>
+        
+        <div className="mb-4 form-floating">
           <input
             id="email"
             type="email"
+            placeholder="nombre@ejemplo.com"
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <label htmlFor="email">Correo electrónico</label>
         </div>
-        <div className="d-flex justify-content-end gap-2">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>Cerrar</button>
-          <button type="submit" className="btn btn-primary">Enviar email</button>
+        
+        <div className="d-flex justify-content-between">
+          <button type="button" className="btn btn-link text-decoration-none" onClick={onClose}>
+            Cancelar
+          </button>
+          <button type="submit" className="btn btn-primary px-4 py-2">
+            Enviar email
+          </button>
         </div>
       </form>
     </>

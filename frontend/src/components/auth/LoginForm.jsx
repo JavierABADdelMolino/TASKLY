@@ -77,11 +77,10 @@ const LoginForm = () => {
   // Manejar el inicio de sesión con Google
   const handleGoogleLogin = async (googleData) => {
     try {
-      // Si se necesita enlazar la cuenta con una existente o completar registro,
-      // usamos el mismo flujo: navegar a home con el modal de registro
-      if (googleData.needsLinking || googleData.needsCompletion) {
-        console.log('Usuario de Google necesita completar datos o enlazar cuenta', googleData);
-        // Abrimos directamente el modal de registro
+      // Si necesita completar registro o enlazar cuenta
+      if (googleData.needsCompletion || googleData.needsLinking) {
+        console.log('Usuario de Google necesita completar registro o enlazar cuenta', googleData);
+        // Guardamos los datos en sessionStorage y navegamos a Home con los datos
         sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
         navigate('/', { state: { openGoogleRegister: true, googleData } });
         return;
@@ -99,48 +98,53 @@ const LoginForm = () => {
 
   return (
     <> 
-      <form onSubmit={handleSubmit}>
-        <h3 className="mb-3 text-center">Iniciar sesión</h3>
+      <form onSubmit={handleSubmit} className="login-form">
+        <h3 className="mb-4 text-center fw-bold">Iniciar sesión</h3>
 
         {serverError && (
-          <div className="alert alert-danger text-center small mb-3">
+          <div className="alert alert-danger text-center small mb-3 fade-in">
             {serverError}
           </div>
         )}
 
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Correo electrónico</label>
+        <div className="mb-3 form-floating">
           <input
             id="email"
             type="email"
             className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+            placeholder="nombre@ejemplo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {errors.email && <small className="text-danger">{errors.email}</small>}
+          <label htmlFor="email">Correo electrónico</label>
+          {errors.email && <small className="text-danger d-block mt-1">{errors.email}</small>}
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="password" className="form-label">Contraseña</label>
+        <div className="mb-4 form-floating">
           <input
             id="password"
             type="password"
             className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+            placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {errors.password && <small className="text-danger">{errors.password}</small>}
+          <label htmlFor="password">Contraseña</label>
+          {errors.password && <small className="text-danger d-block mt-1">{errors.password}</small>}
         </div>
 
-        <button type="submit" className="btn btn-primary w-100">Entrar</button>
+        <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">
+          Entrar
+        </button>
+        
         <div className="text-center mt-2">
-          <button type="button" className="btn btn-link small" onClick={() => setShowForgotModal(true)}>
+          <button type="button" className="btn btn-link small text-decoration-none" onClick={() => setShowForgotModal(true)}>
             ¿Has olvidado tu contraseña?
           </button>
         </div>
 
         {/* Separador y botón de Google */}
-        <div className="text-center mt-3">
+        <div className="text-center mt-4 mb-2">
           <div className="separator">
             <span>O</span>
           </div>
@@ -155,34 +159,59 @@ const LoginForm = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
                 <form onSubmit={handleForgotSubmit}>
-                  <div className="modal-header">
-                    <h5 className="modal-title">Recuperar contraseña</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowForgotModal(false)}></button>
+                  <div className="modal-header border-0 pb-0">
+                    <h5 className="modal-title fw-bold">Recuperar contraseña</h5>
+                    <button type="button" className="btn-close shadow-none" onClick={() => setShowForgotModal(false)}></button>
                   </div>
-                  <div className="modal-body">
-                    {forgotMsg && <div className="alert alert-success text-center small">{forgotMsg}</div>}
-                    {forgotError && <div className="alert alert-danger text-center small">{
-      forgotError === 'Email no registrado' 
-        ? 'Este correo no está registrado.' 
-        : forgotError.includes('usa Google') 
-          ? 'Esta cuenta usa Google para iniciar sesión. Utiliza el botón "Continuar con Google" para acceder.'
-          : forgotError
-    }</div>}
-                    <div className="mb-3">
-                      <label htmlFor="forgotEmail" className="form-label">Correo electrónico</label>
+                  
+                  <div className="modal-body px-4 pt-2">
+                    {!forgotMsg && (
+                      <p className="text-muted mb-4">
+                        Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+                      </p>
+                    )}
+                    
+                    {forgotMsg && (
+                      <div className="alert alert-success text-center small py-3 fade-in">
+                        <i className="bi bi-check-circle me-2"></i>
+                        {forgotMsg}
+                      </div>
+                    )}
+                    
+                    {forgotError && (
+                      <div className="alert alert-danger text-center small py-3 fade-in">
+                        <i className="bi bi-exclamation-circle me-2"></i>
+                        {
+                          forgotError === 'Email no registrado' 
+                            ? 'Este correo no está registrado.' 
+                            : forgotError.includes('usa Google') 
+                              ? 'Esta cuenta usa Google para iniciar sesión. Utiliza el botón "Continuar con Google" para acceder.'
+                              : forgotError
+                        }
+                      </div>
+                    )}
+                    
+                    <div className="mb-4 form-floating">
                       <input
                         id="forgotEmail"
                         type="email"
                         className="form-control"
+                        placeholder="nombre@ejemplo.com"
                         value={forgotEmail}
                         onChange={e => setForgotEmail(e.target.value)}
                         required
                       />
+                      <label htmlFor="forgotEmail">Correo electrónico</label>
                     </div>
                   </div>
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowForgotModal(false)}>Cerrar</button>
-                    <button type="submit" className="btn btn-primary">Enviar email</button>
+                  
+                  <div className="modal-footer border-0 pt-0">
+                    <button type="button" className="btn btn-link text-decoration-none" onClick={() => setShowForgotModal(false)}>
+                      Cancelar
+                    </button>
+                    <button type="submit" className="btn btn-primary px-4">
+                      Enviar email
+                    </button>
                   </div>
                 </form>
               </div>
