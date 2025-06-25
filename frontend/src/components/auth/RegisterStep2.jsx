@@ -35,7 +35,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
 
   return (
     <form onSubmit={handleSubmit} className="login-form d-flex flex-column justify-content-between h-100">
-      <h3 className="mb-4 text-center fw-bold">Información personal</h3>
+      <h3 className="mb-4 text-center fw-bold w-100">Información personal</h3>
 
       {/* errores generales */}
       {errors.general && (
@@ -89,6 +89,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
               className={`form-control ${localErrors.birthDate || errors.birthDate ? 'is-invalid' : ''}`}
               value={data.birthDate}
               onChange={(e) => onChange('birthDate', e.target.value)}
+              style={{ colorScheme: 'auto' }}
             />
             <label htmlFor="birthDate">Fecha de nacimiento</label>
             {(localErrors.birthDate || errors.birthDate) && (
@@ -105,6 +106,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
               className={`form-select ${localErrors.gender || errors.gender ? 'is-invalid' : ''}`}
               value={data.gender}
               onChange={(e) => onChange('gender', e.target.value)}
+              style={{ backgroundColor: 'var(--bs-body-bg)', color: 'var(--bs-body-color)' }}
             >
               <option value="">Selecciona</option>
               <option value="male">Masculino</option>

@@ -21,7 +21,7 @@ export default function ForgotPasswordModal({ onClose }) {
 
   return (
     <>
-      <h3 className="mb-4 text-center fw-bold">Recuperar contraseña</h3>
+      <h3 className="mb-4 text-center fw-bold w-100">Recuperar contraseña</h3>
       
       {msg && (
         <div className="alert alert-success text-center small mb-3 fade-in">

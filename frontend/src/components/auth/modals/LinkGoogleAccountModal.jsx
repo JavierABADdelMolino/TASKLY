@@ -38,7 +38,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header border-0 pb-0">
-              <h5 className="modal-title fw-bold">Enlazar cuenta con Google</h5>
+              <h5 className="modal-title fw-bold text-center w-100">Enlazar cuenta con Google</h5>
               <button type="button" className="btn-close shadow-none" onClick={onCancel} disabled={loading}></button>
             </div>
             

@@ -115,7 +115,7 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="login-form d-flex flex-column justify-content-between h-100">
-      <h3 className="mb-4 text-center fw-bold">Completar tu perfil</h3>
+      <h3 className="mb-4 text-center fw-bold w-100">Completar tu perfil</h3>
       
       {error && (
         <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>
@@ -158,6 +158,7 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
                 value={formData.birthDate}
                 onChange={handleChange}
                 max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+                style={{ colorScheme: 'auto' }}
               />
               <label htmlFor="birthDate">Fecha de nacimiento</label>
               {validationErrors.birthDate && (
@@ -174,6 +175,7 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
                 className={`form-select ${validationErrors.gender ? 'is-invalid' : ''}`}
                 value={formData.gender}
                 onChange={handleChange}
+                style={{ backgroundColor: 'var(--bs-body-bg)', color: 'var(--bs-body-color)' }}
               >
                 <option value="">Selecciona</option>
                 <option value="male">Masculino</option>

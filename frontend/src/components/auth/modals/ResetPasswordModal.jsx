@@ -35,7 +35,7 @@ export default function ResetPasswordModal() {
 
   return (
     <>
-      <h3 className="mb-4 text-center fw-bold">Restablecer contraseña</h3>
+      <h3 className="mb-4 text-center fw-bold w-100">Restablecer contraseña</h3>
       {error && <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>}
       <form onSubmit={handleSubmit} className="login-form">
         <div className="mb-3 form-floating">

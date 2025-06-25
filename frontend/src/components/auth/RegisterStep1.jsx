@@ -36,7 +36,7 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
 
   return (
     <form onSubmit={handleSubmit} className="login-form">
-      <h3 className="mb-4 text-center fw-bold">Información de acceso</h3>
+      <h3 className="mb-4 text-center fw-bold w-100">Información de acceso</h3>
 
       {errors.general && (
         <div className="alert alert-danger text-center small mb-3 fade-in">

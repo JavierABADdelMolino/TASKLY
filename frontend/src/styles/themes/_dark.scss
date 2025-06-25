@@ -364,7 +364,8 @@
   }
 
   /* Date picker icon color in dark mode */
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) !important;
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="date"].form-control::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.8) !important;
   }
 }

@@ -160,7 +160,7 @@ const LoginForm = () => {
               <div className="modal-content">
                 <form onSubmit={handleForgotSubmit}>
                   <div className="modal-header border-0 pb-0">
-                    <h5 className="modal-title fw-bold">Recuperar contraseña</h5>
+                    <h5 className="modal-title fw-bold text-center w-100">Recuperar contraseña</h5>
                     <button type="button" className="btn-close shadow-none" onClick={() => setShowForgotModal(false)}></button>
                   </div>
                   

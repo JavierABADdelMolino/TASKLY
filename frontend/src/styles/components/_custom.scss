@@ -50,6 +50,11 @@
   .modal-header {
     border-top-left-radius: 0.75rem;
     border-top-right-radius: 0.75rem;
+    
+    .modal-title {
+      width: 100%;
+      text-align: center;
+    }
   }
   
   .btn-close:focus {
@@ -57,14 +62,56 @@
   }
 }
 
-// Corrección para el icono de calendario en inputs de fecha en modo oscuro
-html[data-bs-theme="dark"] {
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+// Asegurarse que todos los títulos h3 tengan ancho completo para centrado correcto
+form h3.text-center, 
+div.modal h3.text-center,
+div.modal-body h3.text-center,
+div.modal-header h3.text-center {
+  width: 100%;
+  display: block;
+}
+
+// Corrección para el icono de calendario en inputs de fecha (adaptación por tema)
+// Estilos para los inputs tipo date
+input[type="date"] {
+  position: relative;
+  color-scheme: auto; // Esto ayuda con el esquema de color del calendario
+}
+
+// Selector del calendario personalizado
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
+// Modo oscuro: iconos blancos
+html[data-bs-theme="dark"],
+html[data-theme="dark"] {
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  .form-control::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.8) !important;
+    background-color: transparent !important;
   }
   
+  // Selector de género en modo oscuro
+  select.form-select {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+  }
+}
+
+// Modo claro: iconos oscuros (comportamiento predeterminado)
+html[data-bs-theme="light"],
+html[data-theme="light"] {
+  input[type="date"]::-webkit-calendar-picker-indicator,
   .form-control::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+    filter: none !important;
+    background-color: transparent !important;
   }
 }
 

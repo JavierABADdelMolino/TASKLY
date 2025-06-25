@@ -82,7 +82,7 @@ export default function ChangePasswordModal({ onClose }) {
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Cambiar contraseña</h5>
+            <h5 className="modal-title text-center w-100">Cambiar contraseña</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
