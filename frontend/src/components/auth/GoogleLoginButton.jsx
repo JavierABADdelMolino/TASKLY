@@ -139,7 +139,7 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
           type: 'standard',
           theme: isDarkMode ? 'filled_black' : 'outline',
           size: 'large',
-          text: 'signup_with',
+          text: 'continue_with', // Cambiado de 'signup_with' a 'continue_with'
           shape: 'pill',
           width: '100%',
           logo_alignment: 'center',

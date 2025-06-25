@@ -153,7 +153,12 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 type="checkbox"
                 id="themeSwitchGlobal"
                 checked={theme === 'dark'}
-                onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onChange={() => {
+                  const newTheme = theme === 'dark' ? 'light' : 'dark';
+                  setTheme(newTheme);
+                  // El ThemeContext ya se encarga de guardar en localStorage
+                }}
+                aria-label={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
               />
               <label htmlFor="themeSwitchGlobal" className="theme-toggle-label">
                 <span className="theme-toggle-slider">
