@@ -200,7 +200,7 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
           </button>
           <button 
             type="submit" 
-            className="btn btn-primary px-4 py-2 fw-medium"
+            className="btn btn-primary px-4 py-2"
             disabled={loading}
           >
             {loading ? 'Procesando...' : 'Completar registro'}

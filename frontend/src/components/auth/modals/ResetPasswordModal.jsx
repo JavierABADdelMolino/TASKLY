@@ -60,7 +60,7 @@ export default function ResetPasswordModal() {
           />
           <label htmlFor="confirm">Confirmar contraseña</label>
         </div>
-        <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">Cambiar contraseña</button>
+        <button type="submit" className="btn btn-primary w-100 py-2">Cambiar contraseña</button>
       </form>
     </>
   );

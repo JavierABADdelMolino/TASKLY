@@ -133,7 +133,7 @@ const LoginForm = () => {
           {errors.password && <small className="text-danger d-block mt-1">{errors.password}</small>}
         </div>
 
-        <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">
+        <button type="submit" className="btn btn-primary w-100 py-2">
           Entrar
         </button>
         

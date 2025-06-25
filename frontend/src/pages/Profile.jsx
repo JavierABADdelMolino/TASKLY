@@ -316,7 +316,7 @@ const Profile = () => {
             ) : (
               <>
                 <button type="button" className="btn btn-secondary px-4" onClick={handleCancel}>Cancelar</button>
-                <button type="button" className="btn btn-primary px-4 py-2 fw-medium" onClick={handleSaveChanges}>
+                <button type="button" className="btn btn-primary px-4 py-2" onClick={handleSaveChanges}>
                   Guardar cambios
                 </button>
               </>

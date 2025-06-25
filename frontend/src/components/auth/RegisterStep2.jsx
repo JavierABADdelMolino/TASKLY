@@ -126,7 +126,7 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
         <button type="button" className="btn btn-outline-secondary px-4" onClick={onBack}>
           Atrás
         </button>
-        <button type="submit" className="btn btn-primary px-4 py-2 fw-medium">
+        <button type="submit" className="btn btn-primary px-4 py-2">
           Registrarse
         </button>
       </div>

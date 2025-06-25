@@ -14,8 +14,8 @@ const ConfirmDeleteBoardModal = ({ show, onClose, onConfirm }) => {
             <p className="text-center">¿Estás seguro de que deseas eliminar esta pizarra?<br/>Esta acción es irreversible.</p>
           </div>
           <div className="modal-footer border-top-0 pt-0">
-            <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>Cancelar</button>
-            <button type="button" className="btn btn-danger px-4 py-2 fw-medium" onClick={() => { onConfirm(); onClose(); }}>
+            <button type="button" className="btn btn-secondary px-3 py-2" onClick={onClose}>Cancelar</button>
+            <button type="button" className="btn btn-danger px-4 py-2" onClick={() => { onConfirm(); onClose(); }}>
               Eliminar
             </button>
           </div>

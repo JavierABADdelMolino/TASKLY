@@ -91,7 +91,7 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         )}
       </div>
 
-      <button type="submit" className="btn btn-primary w-100 py-2 fw-medium">
+      <button type="submit" className="btn btn-primary w-100 py-2">
         Siguiente
       </button>
     </form>

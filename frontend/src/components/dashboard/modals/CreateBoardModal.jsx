@@ -80,8 +80,8 @@ const CreateBoardModal = ({ show, onClose, onBoardCreated }) => {
             </div>
 
             <div className="modal-footer border-top-0 pt-0">
-              <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>Cancelar</button>
-              <button type="submit" className="btn btn-primary px-4 py-2 fw-medium" disabled={loading}>
+              <button type="button" className="btn btn-secondary px-3 py-2" onClick={onClose}>Cancelar</button>
+              <button type="submit" className="btn btn-primary px-4 py-2" disabled={loading}>
                 {loading ? 'Creando...' : 'Crear'}
               </button>
             </div>

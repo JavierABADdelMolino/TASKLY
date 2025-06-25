@@ -78,9 +78,9 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
               {error && <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>}
             </div>
             <div className="modal-footer border-top-0 pt-0">
-              <button type="button" className="btn btn-danger me-auto px-3 py-2 fw-medium" onClick={() => setShowConfirm(true)}>Eliminar</button>
-              <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>Cancelar</button>
-              <button type="submit" className="btn btn-primary px-4 py-2 fw-medium" disabled={loading}>
+              <button type="button" className="btn btn-danger me-auto px-3 py-2" onClick={() => setShowConfirm(true)}>Eliminar</button>
+              <button type="button" className="btn btn-secondary px-3 py-2" onClick={onClose}>Cancelar</button>
+              <button type="submit" className="btn btn-primary px-4 py-2" disabled={loading}>
                 {loading ? 'Guardando...' : 'Guardar cambios'}
               </button>
             </div>

@@ -133,10 +133,10 @@ export default function ChangePasswordModal({ onClose }) {
           </div>
 
           <div className="modal-footer border-top-0 pt-0">
-            <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>
+            <button type="button" className="btn btn-secondary px-3 py-2" onClick={onClose}>
               Cancelar
             </button>
-            <button type="button" className="btn btn-primary px-4 py-2 fw-medium" onClick={handleSubmit}>
+            <button type="button" className="btn btn-primary px-4 py-2" onClick={handleSubmit}>
               Cambiar
             </button>
           </div>
