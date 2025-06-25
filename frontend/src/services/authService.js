@@ -50,7 +50,13 @@ export async function forgotPassword(email) {
     body: JSON.stringify({ email }),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Error al enviar email de recuperación');
+  if (!res.ok) {
+    const error = new Error(data.message || 'Error al enviar email de recuperación');
+    if (data.isGoogleAccount) {
+      error.isGoogleAccount = true;
+    }
+    throw error;
+  }
   return data;
 }
 
@@ -95,4 +101,16 @@ export async function completeGoogleRegister(formData) {
     throw error;
   }
   return data; // { token, user }
+}
+
+// Enlazar cuenta de Google con cuenta existente
+export async function linkGoogleAccount(email, googleId, tokenId) {
+  const res = await fetch(`${API_BASE_URL}/auth/link-google-account`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, googleId, tokenId }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al enlazar cuenta de Google');
+  return data;
 }

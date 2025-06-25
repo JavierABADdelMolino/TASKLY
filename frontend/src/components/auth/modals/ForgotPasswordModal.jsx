@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { forgotPassword } from '../../services/authService';
+import { useAuth } from '../../../context/AuthContext';
+import { forgotPassword } from '../../../services/authService';
 
 export default function ForgotPasswordModal({ onClose }) {
   const [email, setEmail] = useState('');

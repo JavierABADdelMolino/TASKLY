@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
-import ResetPasswordModal from '../components/auth/ResetPasswordModal';
+import ResetPasswordModal from '../components/auth/modals/ResetPasswordModal';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
@@ -11,11 +11,13 @@ import { Carousel } from 'react-bootstrap';
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null);
+  const [googleRegisterData, setGoogleRegisterData] = useState(null);
   // Capturar token de URL para reset
   const { token } = useParams();
   const { user } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (user) {
@@ -36,6 +38,14 @@ const Home = () => {
       setAuthMode('reset');
     }
   }, [token]);
+  
+  // Revisar si hay data de Google en el estado de navegación
+  useEffect(() => {
+    if (location.state?.openGoogleRegister && location.state?.googleData) {
+      setAuthMode('register');
+      setGoogleRegisterData(location.state.googleData);
+    }
+  }, [location.state]);
 
   const handleCloseAuth = () => {
     setAuthMode(null);
@@ -66,7 +76,7 @@ const Home = () => {
             />
             {/* Login, Register o Reset forms */}
             {authMode === 'login' && <LoginForm />}
-            {authMode === 'register' && <RegisterForm />}
+            {authMode === 'register' && <RegisterForm googleData={googleRegisterData} />}
             {authMode === 'reset' && <ResetPasswordModal />}
             {/* Switch between modes */}
             {(authMode === 'login' || authMode === 'register') && (

@@ -7,11 +7,12 @@ import GoogleRegisterComplete from './GoogleRegisterComplete';
 import { useAuth } from '../../context/AuthContext';
 import { register, getCurrentUser } from '../../services/authService';
 
-const RegisterForm = () => {
+const RegisterForm = ({ googleData: googleDataProp }) => {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
-  const [step, setStep] = useState(1);
+  // Iniciar directamente en el paso Google si hay datos de Google
+  const [step, setStep] = useState(googleDataProp ? 'google-complete' : 1);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,8 +24,8 @@ const RegisterForm = () => {
     avatarFile: null,
   });
 
-  // Estado para el registro con Google
-  const [googleData, setGoogleData] = useState(null);
+  // Estado para el registro con Google - inicializar con los datos recibidos como prop si existen
+  const [googleData, setGoogleData] = useState(googleDataProp || null);
   const [serverErrors, setServerErrors] = useState({});
 
   const nextStep = () => setStep(step + 1);

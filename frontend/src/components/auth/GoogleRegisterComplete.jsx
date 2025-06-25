@@ -89,6 +89,11 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
       formDataToSend.append('birthDate', formData.birthDate);
       formDataToSend.append('gender', formData.gender);
       
+      // Si es un enlace de cuenta, enviar el tokenId
+      if (googleData.needsLinking && googleData.tokenId) {
+        formDataToSend.append('tokenId', googleData.tokenId);
+      }
+      
       // Manejar avatar: prioridad al subido, luego Google, luego por defecto
       if (formData.customAvatar) {
         // Si se subió un archivo de avatar personalizado
@@ -185,8 +190,8 @@ const GoogleRegisterComplete = ({ googleData, onCancel }) => {
               onChange={handleChange}
             >
               <option value="">Selecciona</option>
-              <option value="male">Hombre</option>
-              <option value="female">Mujer</option>
+              <option value="male">Masculino</option>
+              <option value="female">Femenino</option>
             </select>
             {validationErrors.gender && (
               <div className="invalid-feedback">{validationErrors.gender}</div>

@@ -7,7 +7,8 @@ const {
   forgotPassword, 
   resetPassword,
   googleLogin,
-  completeGoogleRegister
+  completeGoogleRegister,
+  linkGoogleAccount
 } = require('../controllers/authController');
 const verifyToken = require('../middlewares/authMiddleware');
 const avatarMiddleware = require('../middlewares/avatarMiddleware');
@@ -38,5 +39,9 @@ router.post('/google', googleLogin);
 // @route   POST /api/auth/google-register-complete
 // @desc    Completar registro con Google (datos adicionales)
 router.post('/google-register-complete', avatarMiddleware.single('avatar'), completeGoogleRegister);
+
+// @route   POST /api/auth/link-google-account
+// @desc    Enlazar cuenta de Google con una cuenta existente
+router.post('/link-google-account', linkGoogleAccount);
 
 module.exports = router;

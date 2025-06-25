@@ -66,25 +66,31 @@ const LoginForm = () => {
       const data = await forgotPassword(forgotEmail);
       setForgotMsg(data.message || 'Email de recuperación enviado.');
     } catch (err) {
-      setForgotError(err.message);
+      if (err.isGoogleAccount) {
+        setForgotError('Esta cuenta usa Google para iniciar sesión');
+      } else {
+        setForgotError(err.message);
+      }
     }
   };
 
   // Manejar el inicio de sesión con Google
   const handleGoogleLogin = async (googleData) => {
     try {
-      // Si Google ya completó todos los datos necesarios
-      if (!googleData.needsCompletion) {
-        const userData = await getCurrentUser();
-        setUser(userData);
-        navigate('/dashboard');
-      } else {
-        // Manejar el caso de un nuevo usuario de Google
-        // (se mostrarán campos adicionales para completar)
-        console.log('Usuario de Google necesita completar datos', googleData);
-        // Aquí puedes mostrar el formulario para completar datos o redirigir
-        navigate('/auth/google-complete', { state: googleData });
+      // Si se necesita enlazar la cuenta con una existente o completar registro,
+      // usamos el mismo flujo: navegar a home con el modal de registro
+      if (googleData.needsLinking || googleData.needsCompletion) {
+        console.log('Usuario de Google necesita completar datos o enlazar cuenta', googleData);
+        // Abrimos directamente el modal de registro
+        sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
+        navigate('/', { state: { openGoogleRegister: true, googleData } });
+        return;
       }
+      
+      // Si Google ya completó todos los datos necesarios (login normal)
+      const userData = await getCurrentUser();
+      setUser(userData);
+      navigate('/dashboard');
     } catch (err) {
       console.error('Error en inicio de sesión con Google:', err);
       setServerError(err.message || 'Error al iniciar sesión con Google');
@@ -155,7 +161,13 @@ const LoginForm = () => {
                   </div>
                   <div className="modal-body">
                     {forgotMsg && <div className="alert alert-success text-center small">{forgotMsg}</div>}
-                    {forgotError && <div className="alert alert-danger text-center small">{forgotError === 'Email no registrado' ? 'Este correo no está registrado.' : forgotError}</div>}
+                    {forgotError && <div className="alert alert-danger text-center small">{
+      forgotError === 'Email no registrado' 
+        ? 'Este correo no está registrado.' 
+        : forgotError.includes('usa Google') 
+          ? 'Esta cuenta usa Google para iniciar sesión. Utiliza el botón "Continuar con Google" para acceder.'
+          : forgotError
+    }</div>}
                     <div className="mb-3">
                       <label htmlFor="forgotEmail" className="form-label">Correo electrónico</label>
                       <input
@@ -178,6 +190,8 @@ const LoginForm = () => {
           </div>
         </>
       )}
+
+
     </>
   );
 };

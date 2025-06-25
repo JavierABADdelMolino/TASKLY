@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { resetPassword, getCurrentUser } from '../../services/authService';
+import { useAuth } from '../../../context/AuthContext';
+import { resetPassword, getCurrentUser } from '../../../services/authService';
 
 export default function ResetPasswordModal() {
   const { token } = useParams();

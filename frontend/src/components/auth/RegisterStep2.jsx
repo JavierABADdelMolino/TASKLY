@@ -115,8 +115,8 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
                   onChange={(e) => onChange('gender', e.target.value)}
                 >
                   <option value="">Selecciona</option>
-                  <option value="male">Hombre</option>
-                  <option value="female">Mujer</option>
+                  <option value="male">Masculino</option>
+                  <option value="female">Femenino</option>
                 </select>
                 {msg && <small className="text-danger">{msg}</small>}
               </>

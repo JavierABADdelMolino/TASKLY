@@ -9,7 +9,12 @@ exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-    res.json(user);
+    
+    // Añadir la propiedad isGoogleUser
+    const responseData = user.toObject();
+    responseData.isGoogleUser = !!user.googleId;
+    
+    res.json(responseData);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener perfil', error: err.message });
   }
@@ -159,6 +164,14 @@ exports.changePassword = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    
+    // Verificar si es un usuario de Google
+    if (user.googleId) {
+      return res.status(403).json({ 
+        message: 'Los usuarios que inician sesión con Google no pueden cambiar su contraseña', 
+        isGoogleAccount: true 
+      });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);

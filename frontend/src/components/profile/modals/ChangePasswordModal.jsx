@@ -55,7 +55,9 @@ export default function ChangePasswordModal({ onClose }) {
       }, 1000);
     } catch (err) {
       const msg = err.message || '';
-      if (msg.includes('actual no es correcta') || msg.includes('Contraseña actual incorrecta')) {
+      if (err.isGoogleAccount) {
+        setSubmitError('Los usuarios que inician sesión con Google no pueden cambiar su contraseña');
+      } else if (msg.includes('actual no es correcta') || msg.includes('Contraseña actual incorrecta')) {
         setErrors({ currentPassword: 'Contraseña actual incorrecta' });
       } else {
         setSubmitError(msg || 'Error al cambiar la contraseña');

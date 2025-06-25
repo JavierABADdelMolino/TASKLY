@@ -96,9 +96,9 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     try {
       const result = await googleLogin(response.credential);
       
-      // Si requiere completar el registro (datos adicionales)
-      if (result.needsCompletion) {
-        // Llamar a la función que renderizará el modal para completar datos
+      // Si requiere completar el registro (datos adicionales) o enlazar cuenta
+      if (result.needsCompletion || result.needsLinking) {
+        // Llamar a la función que gestionará el siguiente paso
         if (onGoogleSignIn) {
           onGoogleSignIn({
             email: result.email,
@@ -106,7 +106,9 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
             lastName: result.lastName,
             avatarUrl: result.avatarUrl,
             googleId: result.googleId,
-            tokenId: response.credential
+            tokenId: response.credential,
+            needsCompletion: result.needsCompletion,
+            needsLinking: result.needsLinking
           });
         }
       } else {

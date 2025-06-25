@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-// import ForgotPassword from './pages/ForgotPassword';
 
 import PrivateRoute from './components/routing/PrivateRoute';
 

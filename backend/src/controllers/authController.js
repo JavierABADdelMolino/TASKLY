@@ -163,7 +163,8 @@ exports.getMe = async (req, res) => {
       lastName: user.lastName,
       birthDate: user.birthDate,
       gender: user.gender,
-      avatarUrl: user.avatarUrl
+      avatarUrl: user.avatarUrl,
+      isGoogleUser: !!user.googleId  // Añadimos esta propiedad
     });
   } catch (err) {
     res.status(500).json({ message: 'Error al recuperar el usuario', error: err.message });
@@ -182,6 +183,15 @@ exports.forgotPassword = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Email no registrado' });
     }
+    
+    // Verificar si es una cuenta de Google
+    if (user.isGoogleUser()) {
+      return res.status(400).json({ 
+        message: 'Esta cuenta usa Google para iniciar sesión',
+        isGoogleAccount: true 
+      });
+    }
+    
     // Generar token y expiración 1h
     const token = crypto.randomBytes(20).toString('hex');
     user.resetPasswordToken = token;
@@ -258,22 +268,30 @@ exports.googleLogin = async (req, res) => {
       return res.status(400).json({ message: 'El email de Google no está verificado' });
     }
     
-    // Buscar si ya existe el usuario
-    const existingUser = await User.findOne({ 
-      $or: [
-        { email: email },
-        { googleId: googleId }
-      ]
-    });
+    // Buscar si ya existe el usuario con este googleId
+    let existingUser = await User.findOne({ googleId: googleId });
+    
+    // Si no encontramos por googleId, buscamos por email
+    if (!existingUser) {
+      existingUser = await User.findOne({ email: email });
+      
+      // Si existe un usuario con el mismo email pero sin googleId,
+      // es un usuario registrado normalmente que intenta usar Google
+      if (existingUser && !existingUser.googleId) {
+        // Devolver que necesita enlazar cuentas
+        return res.json({
+          needsLinking: true,
+          email: email,
+          firstName: existingUser.firstName,
+          lastName: existingUser.lastName,
+          googleId: googleId,
+          tokenId: tokenId
+        });
+      }
+    }
     
     if (existingUser) {
-      // Si existe, iniciar sesión directamente
-      // Actualizar googleId si es necesario
-      if (!existingUser.googleId) {
-        existingUser.googleId = googleId;
-        await existingUser.save();
-      }
-      
+      // Usuario con Google ya registrado, iniciar sesión directamente
       const token = generateToken(existingUser);
       return res.json({
         token,
@@ -288,7 +306,7 @@ exports.googleLogin = async (req, res) => {
         }
       });
     } else {
-      // Si no existe, devuelver datos para preregistro
+      // Si no existe, devolver datos para preregistro
       // Se requerirá completar con datos adicionales
       return res.json({
         needsCompletion: true,
@@ -328,11 +346,6 @@ exports.completeGoogleRegister = async (req, res) => {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
     
-    // Crear nuevo usuario con contraseña aleatoria
-    // La contraseña no se usará porque el login será con Google,
-    // pero el modelo la requiere
-    const randomPassword = crypto.randomBytes(16).toString('hex');
-    
     // Determinar la URL del avatar según las opciones disponibles
     let finalAvatarUrl;
     
@@ -368,11 +381,12 @@ exports.completeGoogleRegister = async (req, res) => {
     
     console.log(`Avatar seleccionado para ${email}:`, finalAvatarUrl);
     
+    // Crear usuario sin contraseña para cuentas de Google
     const newUser = new User({
       firstName,
       lastName,
       email,
-      password: randomPassword,
+      // No establecemos password para usuarios de Google
       birthDate,
       gender,
       googleId,
@@ -386,7 +400,7 @@ exports.completeGoogleRegister = async (req, res) => {
     
     // Enviar email de bienvenida (opcional)
     try {
-      await sendWelcomeEmail(email, firstName, email, "Tu contraseña se ha generado automáticamente. Usa Google para iniciar sesión.");
+      await sendWelcomeEmail(email, firstName, email, "Has iniciado sesión con Google. Utiliza siempre ese método para acceder a tu cuenta.");
     } catch (mailErr) {
       console.error('Error enviando email de bienvenida:', mailErr);
     }
@@ -417,5 +431,64 @@ exports.completeGoogleRegister = async (req, res) => {
     }
     
     res.status(500).json({ message: 'Error al completar el registro', error: err.message });
+  }
+};
+
+/**
+ * @desc    Enlaza una cuenta de Google con una cuenta existente
+ * @route   POST /api/auth/link-google-account
+ * @access  Público
+ */
+exports.linkGoogleAccount = async (req, res) => {
+  const { email, googleId, tokenId } = req.body;
+  
+  try {
+    // Verificar token con Google para asegurar la autenticidad
+    const ticket = await googleClient.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    
+    const payload = ticket.getPayload();
+    
+    // Verificar que el email coincida con el del token
+    if (payload.email !== email) {
+      return res.status(400).json({ message: 'El email no coincide con la cuenta de Google' });
+    }
+    
+    // Buscar usuario existente
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    
+    // Enlazar cuenta de Google
+    user.googleId = googleId;
+    // Si es un usuario de Google, no tendrá contraseña
+    user.password = undefined;
+    
+    await user.save();
+    
+    // Generar token
+    const token = generateToken(user);
+    
+    res.json({
+      message: 'Cuenta enlazada correctamente',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        gender: user.gender,
+        avatarUrl: user.avatarUrl
+      }
+    });
+    
+  } catch (err) {
+    console.error('Error en linkGoogleAccount:', err);
+    res.status(500).json({ message: 'Error al enlazar cuenta', error: err.message });
   }
 };

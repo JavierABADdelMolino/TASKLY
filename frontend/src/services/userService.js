@@ -46,7 +46,13 @@ export async function changePassword(currentPassword, newPassword) {
     body: JSON.stringify({ currentPassword, newPassword }),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Error al cambiar la contraseña');
+  if (!res.ok) {
+    const error = new Error(data.message || 'Error al cambiar la contraseña');
+    if (data.isGoogleAccount) {
+      error.isGoogleAccount = true;
+    }
+    throw error;
+  }
   return data;
 }
 
