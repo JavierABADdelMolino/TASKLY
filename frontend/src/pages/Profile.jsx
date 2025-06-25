@@ -156,8 +156,8 @@ const Profile = () => {
       } else {
         // Aseguramos que isGoogleUser siempre se mantiene correcto, incluso si el backend no lo devuelve
         // Usamos el valor del backend si existe, de lo contrario usamos el valor actual
-        const isGoogleAccount = data.isGoogleUser !== undefined ? data.isGoogleUser : formData.isGoogleUser;
-        console.log("Estado de isGoogleUser después de la respuesta:", data.isGoogleUser, "Preservado:", isGoogleAccount);
+        const isGoogleAccount = data.isGoogleUser !== undefined ? data.isGoogleUser : currentIsGoogleUser;
+        console.log("Estado de isGoogleUser después de la respuesta:", data.isGoogleUser, "Valor actual:", currentIsGoogleUser, "Valor final:", isGoogleAccount);
         
         setFormData({
           firstName: data.firstName,
@@ -168,7 +168,7 @@ const Profile = () => {
           gender: data.gender,
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt,
-          isGoogleUser: data.isGoogleUser || isGoogleAccount // Usamos el del servidor o preservamos el valor
+          isGoogleUser: data.isGoogleUser !== undefined ? data.isGoogleUser : isGoogleAccount // Usamos el valor exacto del backend o preservamos el anterior
         });
         setUser(data);
         setEditMode(false);
@@ -274,7 +274,7 @@ const Profile = () => {
               <>
                 <button type="button" className="btn btn-outline-primary" onClick={handleEdit}>Editar</button>
                 {/* Solo mostrar el botón de cambiar contraseña para usuarios NO Google */}
-                {formData.isGoogleUser === false && (
+                {!formData.isGoogleUser && (
                   <button type="button" className="btn btn-outline-warning" onClick={() => setShowPwdModal(true)}>Cambiar contraseña</button>
                 )}
                 <button type="button" className="btn btn-outline-danger" onClick={() => setShowDelModal(true)}>Eliminar cuenta</button>
