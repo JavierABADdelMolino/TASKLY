@@ -1,0 +1,83 @@
+/**
+ * Estilos personalizados para el botón de Google
+ * Con soporte para modo claro/oscuro
+ */
+
+/* Clases específicas para modo claro */
+html[data-bs-theme="light"] {
+  .google-btn-light {
+    .abcRioButton {
+      background-color: #ffffff;
+      color: rgba(0, 0, 0, 0.87);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #f8f9fa;
+      }
+      
+      .abcRioButtonContentWrapper {
+        .abcRioButtonIcon {
+          filter: none;
+        }
+      }
+    }
+  }
+}
+
+/* Clases específicas para modo oscuro */
+html[data-bs-theme="dark"] {
+  .google-btn-dark {
+    .abcRioButton {
+      background-color: #202124;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      border-color: #5f6368;
+      
+      &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        background-color: #303134;
+      }
+      
+      .abcRioButtonContentWrapper {
+        .abcRioButtonIcon {
+          filter: grayscale(20%);
+        }
+        
+        .abcRioButtonContents {
+          color: #e8eaed;
+        }
+      }
+    }
+  }
+}
+
+/* Estilos para forzar la apariencia correcta en ambos modos */
+#google-signin-button[data-theme="dark"] iframe {
+  filter: none;
+  background-color: #202124 !important;
+}
+
+#google-signin-button[data-theme="light"] iframe {
+  filter: none;
+}
+
+/* Aplicar estilos directamente al iframe del botón en modo oscuro */
+html[data-bs-theme="dark"] #google-signin-button iframe {
+  background-color: #202124 !important;
+}
+
+/* Clase personalizada para forzar el estilo oscuro del botón */
+.gsi-material-button-dark {
+  background-color: #202124 !important;
+  color: #ffffff !important;
+  border: 1px solid #5f6368 !important;
+}
+
+.gsi-material-button-dark .gsi-material-button-contents {
+  color: #ffffff !important;
+}
+
+.gsi-material-button-dark .gsi-material-button-icon {
+  filter: brightness(1) !important;
+}

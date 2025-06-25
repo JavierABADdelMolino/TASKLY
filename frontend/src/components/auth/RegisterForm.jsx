@@ -98,7 +98,7 @@ const RegisterForm = () => {
           
           <div className="text-center mt-3">
             <div className="separator">
-              <span>O regístrate con</span>
+              <span>O</span>
             </div>
             <GoogleLoginButton onGoogleSignIn={handleGoogleSignIn} />
           </div>

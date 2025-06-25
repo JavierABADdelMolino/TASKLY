@@ -2,12 +2,63 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { googleLogin } from '../../services/authService';
+import { injectDarkModeStyles } from './GoogleButtonStyle';
+
+// Hook personalizado para detectar el modo oscuro
+const useDarkMode = () => {
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.getAttribute('data-bs-theme') === 'dark'
+  );
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const htmlElement = document.documentElement;
+    
+    // Función para actualizar el estado
+    const updateThemeState = () => {
+      const theme = htmlElement.getAttribute('data-bs-theme');
+      setIsDarkMode(theme === 'dark' || 
+        (theme === 'auto' && mediaQuery.matches));
+    };
+    
+    // Observer para detectar cambios en el DOM
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-bs-theme') {
+          updateThemeState();
+        }
+      });
+    });
+    
+    // Iniciar observación
+    observer.observe(htmlElement, {
+      attributes: true,
+      attributeFilter: ['data-bs-theme']
+    });
+    
+    // Detectar cambios en las preferencias del sistema
+    const handleMediaChange = () => updateThemeState();
+    mediaQuery.addEventListener('change', handleMediaChange);
+    
+    // Estado inicial
+    updateThemeState();
+    
+    // Cleanup
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handleMediaChange);
+    };
+  }, []);
+  
+  return isDarkMode;
+};
 
 const GoogleLoginButton = ({ onGoogleSignIn }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const isDarkMode = useDarkMode();
 
   // Cargar el SDK de Google
   useEffect(() => {
@@ -71,36 +122,51 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     }
   }, [navigate, setUser, onGoogleSignIn]);
 
+  // Efecto para inicializar y renderizar el botón de Google
   useEffect(() => {
-    if (scriptLoaded && window.google) {
-      try {
-        window.google.accounts.id.initialize({
-          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-          callback: handleGoogleResponse
-        });
-        
-        window.google.accounts.id.renderButton(
-          document.getElementById('google-signin-button'),
-          { 
-            type: 'standard',
-            theme: 'outline',
-            size: 'large',
-            text: 'signup_with',
-            shape: 'rectangular',
-            width: '100%'
-          }
-        );
-      } catch (err) {
-        console.error('Error al inicializar Google Sign-In:', err);
-        setError('No se pudo cargar el inicio de sesión con Google');
-      }
+    if (!scriptLoaded || !window.google) return;
+
+    try {
+      // Inicializar Google Sign-In
+      window.google.accounts.id.initialize({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
+      });
+      
+      // Renderizar botón
+      window.google.accounts.id.renderButton(
+        document.getElementById('google-signin-button'),
+        { 
+          type: 'standard',
+          theme: isDarkMode ? 'filled_black' : 'outline',
+          size: 'large',
+          text: 'signup_with',
+          shape: 'pill',
+          width: '100%',
+          logo_alignment: 'center',
+          // Propiedades adicionales para el estilo personalizado
+          ...(isDarkMode && {
+            text_align: 'center',
+            locale: 'es_ES'
+          })
+        }
+      );
+      
+      console.log('Google button rendered with theme:', isDarkMode ? 'dark' : 'light');
+    } catch (err) {
+      console.error('Error al inicializar Google Sign-In:', err);
+      setError('No se pudo cargar el inicio de sesión con Google');
     }
-  }, [scriptLoaded, handleGoogleResponse]);
+  }, [scriptLoaded, handleGoogleResponse, isDarkMode]);
 
   return (
     <div className="mt-3 mb-3">
       {error && <div className="alert alert-danger small">{error}</div>}
-      <div id="google-signin-button" className="d-flex justify-content-center"></div>
+      <div 
+        id="google-signin-button" 
+        className={`d-flex justify-content-center ${isDarkMode ? 'google-btn-dark' : 'google-btn-light'}`}
+        data-theme={isDarkMode ? 'dark' : 'light'}
+      ></div>
     </div>
   );
 };
