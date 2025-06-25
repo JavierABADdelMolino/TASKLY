@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { login, getCurrentUser, forgotPassword, googleLogin } from '../../services/authService';
+import { login, getCurrentUser, forgotPassword } from '../../services/authService';
 import GoogleLoginButton from './GoogleLoginButton';
 
 const LoginForm = () => {
