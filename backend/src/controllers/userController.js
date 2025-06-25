@@ -64,21 +64,30 @@ exports.updateUserProfile = async (req, res) => {
     // Subida de un nuevo avatar
     if (avatarFile) {
       if (process.env.NODE_ENV === 'production') {
-        // Sube a Cloudinary
-        const uploadResult = await cloudinary.uploader.upload(avatarFile.path, {
-          folder: 'taskly/avatars',
-          public_id: `${user._id}`,
-          overwrite: true,
-        });
+        // Sube a Cloudinary (archivo en memoria o en disco según multer)
+        let uploadResult;
+        // Si multer usó memoryStorage, avatarFile.buffer existe
+        if (avatarFile.buffer) {
+          const mime = avatarFile.mimetype;
+          const dataUri = `data:${mime};base64,${avatarFile.buffer.toString('base64')}`;
+          uploadResult = await cloudinary.uploader.upload(dataUri, {
+            folder: 'avatars',
+            public_id: `${user._id}`,
+            overwrite: true,
+          });
+        } else {
+          // Disk storage fallback
+          uploadResult = await cloudinary.uploader.upload(avatarFile.path, {
+            folder: 'avatars', public_id: `${user._id}`, overwrite: true
+          });
+          fs.unlinkSync(avatarFile.path);
+        }
         user.avatarUrl = uploadResult.secure_url;
         updated = true;
-        // Eliminar archivo temporal local
-        fs.unlinkSync(avatarFile.path);
       } else {
         const oldAvatarPath = user.avatarUrl;
         user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
         updated = true;
-
         // Eliminar avatar anterior si era personalizado
         if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
           const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
@@ -186,7 +195,7 @@ exports.deleteUserAccount = async (req, res) => {
     // Eliminar avatar personalizado si existe al eliminar cuenta
     if (process.env.NODE_ENV === 'production' && user.avatarUrl && user.avatarUrl.includes('res.cloudinary.com')) {
       // Elimina recurso en Cloudinary (usando public_id: user ID)
-      await cloudinary.uploader.destroy(`taskly/avatars/${userId}`);
+      await cloudinary.uploader.destroy(`avatars/${userId}`);
     } else if (user.avatarUrl && user.avatarUrl.includes('/uploads/avatars/')) {
       const fullPath = path.join(__dirname, '..', '..', user.avatarUrl.replace(/^\/+/, ''));
       fs.unlink(fullPath, err => {
