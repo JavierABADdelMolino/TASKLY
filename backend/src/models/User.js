@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  // --- Campo para autenticación con Google ---
+  googleId: {
+    type: String,
+    sparse: true  // Índice disperso para permitir valores null
+  },
   // --- Campos para recuperación de contraseña ---
   resetPasswordToken: String,
   resetPasswordExpires: Date

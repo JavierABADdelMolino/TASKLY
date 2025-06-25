@@ -1,7 +1,12 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const { sendMail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/mailService');
+const cloudinaryService = require('../services/cloudinaryService');
+
+// Inicializar el cliente OAuth de Google
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
  * Genera un token JWT con los datos del usuario
@@ -228,5 +233,189 @@ exports.resetPassword = async (req, res) => {
   } catch (err) {
     console.error('Error en resetPassword:', err);
     res.status(500).json({ message: 'Error en el servidor', error: err.message });
+  }
+};
+
+/**
+ * @desc    Iniciar sesión o pre-registro con Google
+ * @route   POST /api/auth/google
+ * @access  Público
+ */
+exports.googleLogin = async (req, res) => {
+  const { tokenId } = req.body;
+  
+  try {
+    // Verificar token con Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    
+    const payload = ticket.getPayload();
+    const { email, email_verified, given_name, family_name, sub: googleId, picture } = payload;
+    
+    if (!email_verified) {
+      return res.status(400).json({ message: 'El email de Google no está verificado' });
+    }
+    
+    // Buscar si ya existe el usuario
+    const existingUser = await User.findOne({ 
+      $or: [
+        { email: email },
+        { googleId: googleId }
+      ]
+    });
+    
+    if (existingUser) {
+      // Si existe, iniciar sesión directamente
+      // Actualizar googleId si es necesario
+      if (!existingUser.googleId) {
+        existingUser.googleId = googleId;
+        await existingUser.save();
+      }
+      
+      const token = generateToken(existingUser);
+      return res.json({
+        token,
+        user: {
+          id: existingUser._id,
+          email: existingUser.email,
+          firstName: existingUser.firstName,
+          lastName: existingUser.lastName,
+          birthDate: existingUser.birthDate,
+          gender: existingUser.gender,
+          avatarUrl: existingUser.avatarUrl
+        }
+      });
+    } else {
+      // Si no existe, devuelver datos para preregistro
+      // Se requerirá completar con datos adicionales
+      return res.json({
+        needsCompletion: true,
+        email: email,
+        firstName: given_name || '',
+        lastName: family_name || '',
+        avatarUrl: picture || '',
+        googleId: googleId
+      });
+    }
+  } catch (err) {
+    console.error('Error en googleLogin:', err);
+    res.status(500).json({ message: 'Error al autenticar con Google', error: err.message });
+  }
+};
+
+/**
+ * @desc    Completar registro con Google (datos adicionales)
+ * @route   POST /api/auth/google-register-complete
+ * @access  Público
+ */
+exports.completeGoogleRegister = async (req, res) => {
+  try {
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      googleId, 
+      birthDate, 
+      gender, 
+      avatarUrl 
+    } = req.body;
+    
+    // Verificar que no exista el usuario mientras tanto
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'El usuario ya existe' });
+    }
+    
+    // Crear nuevo usuario con contraseña aleatoria
+    // La contraseña no se usará porque el login será con Google,
+    // pero el modelo la requiere
+    const randomPassword = crypto.randomBytes(16).toString('hex');
+    
+    // Determinar la URL del avatar según las opciones disponibles
+    let finalAvatarUrl;
+    
+    // Prioridad 1: Si hay un archivo de avatar subido
+    if (req.file) {
+      if (process.env.NODE_ENV === 'production') {
+        // En producción, subir a Cloudinary
+        try {
+          const result = await cloudinaryService.uploadAvatar(req.file);
+          finalAvatarUrl = result.secure_url;
+        } catch (cloudinaryError) {
+          console.error('Error al subir avatar a Cloudinary:', cloudinaryError);
+          // Si falla, usar avatar por defecto según género
+          finalAvatarUrl = gender === 'female'
+            ? '/public/avatars/default-avatar-female.png'
+            : '/public/avatars/default-avatar-male.png';
+        }
+      } else {
+        // En desarrollo, usar ruta local
+        finalAvatarUrl = `/uploads/avatars/${req.file.filename}`;
+      }
+    } 
+    // Prioridad 2: Si se especificó una URL de avatar de Google
+    else if (avatarUrl && avatarUrl.trim() !== '') {
+      finalAvatarUrl = avatarUrl;
+    }
+    // Prioridad 3: Usar avatar predeterminado según género
+    else {
+      finalAvatarUrl = gender === 'female'
+        ? '/public/avatars/default-avatar-female.png'
+        : '/public/avatars/default-avatar-male.png';
+    }
+    
+    console.log(`Avatar seleccionado para ${email}:`, finalAvatarUrl);
+    
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password: randomPassword,
+      birthDate,
+      gender,
+      googleId,
+      avatarUrl: finalAvatarUrl
+    });
+    
+    await newUser.save();
+    
+    // Generar token
+    const token = generateToken(newUser);
+    
+    // Enviar email de bienvenida (opcional)
+    try {
+      await sendWelcomeEmail(email, firstName, email, "Tu contraseña se ha generado automáticamente. Usa Google para iniciar sesión.");
+    } catch (mailErr) {
+      console.error('Error enviando email de bienvenida:', mailErr);
+    }
+
+    // Devolver datos para inicio de sesión directo
+    res.status(201).json({
+      token,
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        birthDate: newUser.birthDate,
+        gender: newUser.gender,
+        avatarUrl: newUser.avatarUrl
+      }
+    });
+  } catch (err) {
+    console.error('Error en completeGoogleRegister:', err);
+    
+    // Manejar errores de validación
+    if (err.name === 'ValidationError') {
+      const errors = {};
+      Object.keys(err.errors).forEach(key => {
+        errors[key] = err.errors[key].message;
+      });
+      return res.status(400).json({ validation: errors });
+    }
+    
+    res.status(500).json({ message: 'Error al completar el registro', error: err.message });
   }
 };

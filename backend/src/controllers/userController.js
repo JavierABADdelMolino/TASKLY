@@ -96,15 +96,33 @@ exports.updateUserProfile = async (req, res) => {
         ? '/public/avatars/default-avatar-female.png'
         : '/public/avatars/default-avatar-male.png';
 
+      // Si es un avatar local (subido)
       if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
         const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
         fs.unlink(fullPath, err => {
           if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
         });
+      } 
+      // Si es un avatar de Cloudinary
+      else if (oldAvatarPath && oldAvatarPath.includes('cloudinary.com')) {
+        try {
+          // Extraer el public_id del URL de Cloudinary
+          const urlParts = oldAvatarPath.split('/');
+          const fileName = urlParts[urlParts.length - 1];
+          const publicId = `avatars/${fileName.split('.')[0]}`;
+          
+          await cloudinary.uploader.destroy(publicId);
+          console.log('Avatar eliminado de Cloudinary:', publicId);
+        } catch (err) {
+          console.warn('No se pudo eliminar el avatar de Cloudinary:', err.message);
+        }
       }
+      // No hacemos nada especial con avatares de Google, simplemente los reemplazamos
 
       user.avatarUrl = defaultAvatar;
       updated = true;
+      
+      console.log(`Avatar cambiado al predeterminado para usuario ${user.email}: ${defaultAvatar}`);
     }
 
     // Si el avatar actual es uno por defecto del género anterior y ha cambiado el género

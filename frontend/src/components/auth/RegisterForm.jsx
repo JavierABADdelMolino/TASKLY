@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RegisterStep1 from './RegisterStep1';
 import RegisterStep2 from './RegisterStep2';
+import GoogleLoginButton from './GoogleLoginButton';
+import GoogleRegisterComplete from './GoogleRegisterComplete';
 import { useAuth } from '../../context/AuthContext';
 import { register, getCurrentUser } from '../../services/authService';
 
@@ -21,6 +23,8 @@ const RegisterForm = () => {
     avatarFile: null,
   });
 
+  // Estado para el registro con Google
+  const [googleData, setGoogleData] = useState(null);
   const [serverErrors, setServerErrors] = useState({});
 
   const nextStep = () => setStep(step + 1);
@@ -69,15 +73,36 @@ const RegisterForm = () => {
     }
   };
 
+  // Manejador para los datos de Google
+  const handleGoogleSignIn = (data) => {
+    setGoogleData(data);
+    setStep('google-complete');
+  };
+  
+  // Cancelar el registro con Google
+  const handleCancelGoogle = () => {
+    setGoogleData(null);
+    setStep(1);
+  };
+
   return (
     <div className="auth-form-wrapper">
       {step === 1 && (
-        <RegisterStep1
-          data={formData}
-          onChange={handleChange}
-          onNext={nextStep}
-          errors={serverErrors}
-        />
+        <>
+          <RegisterStep1
+            data={formData}
+            onChange={handleChange}
+            onNext={nextStep}
+            errors={serverErrors}
+          />
+          
+          <div className="text-center mt-3">
+            <div className="separator">
+              <span>O regístrate con</span>
+            </div>
+            <GoogleLoginButton onGoogleSignIn={handleGoogleSignIn} />
+          </div>
+        </>
       )}
       {step === 2 && (
         <RegisterStep2
@@ -86,6 +111,12 @@ const RegisterForm = () => {
           onBack={prevStep}
           onSubmit={onRegister}
           errors={serverErrors}
+        />
+      )}
+      {step === 'google-complete' && googleData && (
+        <GoogleRegisterComplete 
+          googleData={googleData}
+          onCancel={handleCancelGoogle}
         />
       )}
     </div>

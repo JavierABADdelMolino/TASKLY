@@ -65,3 +65,34 @@ export async function resetPassword(token, password) {
   if (!res.ok) throw new Error(data.message || 'Error al restablecer contraseña');
   return data;
 }
+
+// Iniciar sesión con Google (o iniciar proceso de registro)
+export async function googleLogin(tokenId) {
+  const res = await fetch(`${API_BASE_URL}/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tokenId }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al autenticar con Google');
+  return data;
+}
+
+// Completar registro con Google (añadiendo campos adicionales)
+export async function completeGoogleRegister(formData) {
+  const res = await fetch(`${API_BASE_URL}/auth/google-register-complete`, {
+    method: 'POST',
+    // No establecemos 'Content-Type' para que lo haga automáticamente con el boundary
+    // cuando se envía FormData con archivos
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const error = new Error(data.message || 'Error al completar el registro con Google');
+    if (data.errors) {
+      error.validation = data.errors;
+    }
+    throw error;
+  }
+  return data; // { token, user }
+}

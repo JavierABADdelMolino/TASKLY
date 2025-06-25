@@ -131,9 +131,14 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
           id="avatar"
           type="file"
           className="form-control"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/jpg"
           onChange={(e) => onChange('avatarFile', e.target.files[0])}
         />
+        <div className="text-muted small mt-2">
+          Si no subes una imagen, se usará un avatar predeterminado según tu género.
+          <br />
+          Formatos permitidos: JPG, JPEG, PNG. Tamaño máximo: 2MB.
+        </div>
       </div>
 
       <div className="d-flex justify-content-between">

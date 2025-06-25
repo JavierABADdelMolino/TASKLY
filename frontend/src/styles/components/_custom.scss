@@ -246,3 +246,30 @@
   background-color: transparent !important;
   color: var(--bs-danger) !important;
 }
+
+// Separador para opciones de login/registro
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: var(--bs-secondary);
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.separator span {
+  padding: 0 1rem;
+  font-size: 0.9rem;
+}
+
+// Google Login Button container
+#google-signin-button {
+  width: 100%;
+  margin: 0.5rem 0;
+}

@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getMe, forgotPassword, resetPassword } = require('../controllers/authController');
+const { 
+  registerUser, 
+  loginUser, 
+  getMe, 
+  forgotPassword, 
+  resetPassword,
+  googleLogin,
+  completeGoogleRegister
+} = require('../controllers/authController');
 const verifyToken = require('../middlewares/authMiddleware');
 const avatarMiddleware = require('../middlewares/avatarMiddleware');
 
@@ -22,5 +30,13 @@ router.post('/forgot-password', forgotPassword);
 // @route   POST /api/auth/reset-password/:token
 // @desc    Restablecer contraseña con token
 router.post('/reset-password/:token', resetPassword);
+
+// @route   POST /api/auth/google
+// @desc    Iniciar sesión o iniciar registro con Google
+router.post('/google', googleLogin);
+
+// @route   POST /api/auth/google-register-complete
+// @desc    Completar registro con Google (datos adicionales)
+router.post('/google-register-complete', avatarMiddleware.single('avatar'), completeGoogleRegister);
 
 module.exports = router;
