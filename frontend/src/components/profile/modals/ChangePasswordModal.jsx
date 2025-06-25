@@ -80,57 +80,63 @@ export default function ChangePasswordModal({ onClose }) {
       }}
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title text-center w-100">Cambiar contraseña</h5>
+        <div className="modal-content shadow-sm">
+          <div className="modal-header border-bottom-0">
+            <h5 className="modal-title text-center w-100 fw-bold">Cambiar contraseña</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <label className="form-label">Contraseña actual</label>
+          <div className="modal-body pt-0">
+            <div className="mb-3 form-floating">
               <input
+                id="currentPassword"
                 type="password"
                 name="currentPassword"
-                className="form-control"
+                className={`form-control ${errors.currentPassword ? 'is-invalid' : ''}`}
                 value={passwords.currentPassword}
                 onChange={handleChange}
+                placeholder="Contraseña actual"
               />
-              {errors.currentPassword && <small className="text-danger">{errors.currentPassword}</small>}
+              <label htmlFor="currentPassword">Contraseña actual</label>
+              {errors.currentPassword && <small className="text-danger d-block mt-1">{errors.currentPassword}</small>}
             </div>
 
-            <div className="mb-3">
-              <label className="form-label">Nueva contraseña</label>
+            <div className="mb-3 form-floating">
               <input
+                id="newPassword"
                 type="password"
                 name="newPassword"
-                className="form-control"
+                className={`form-control ${errors.newPassword ? 'is-invalid' : ''}`}
                 value={passwords.newPassword}
                 onChange={handleChange}
+                placeholder="Nueva contraseña"
               />
-              {errors.newPassword && <small className="text-danger">{errors.newPassword}</small>}
+              <label htmlFor="newPassword">Nueva contraseña</label>
+              {errors.newPassword && <small className="text-danger d-block mt-1">{errors.newPassword}</small>}
             </div>
 
-            <div className="mb-3">
-              <label className="form-label">Confirmar contraseña</label>
+            <div className="mb-3 form-floating">
               <input
+                id="confirmPassword"
                 type="password"
                 name="confirmPassword"
-                className="form-control"
+                className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                 value={passwords.confirmPassword}
                 onChange={handleChange}
+                placeholder="Confirmar contraseña"
               />
-              {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
+              <label htmlFor="confirmPassword">Confirmar contraseña</label>
+              {errors.confirmPassword && <small className="text-danger d-block mt-1">{errors.confirmPassword}</small>}
             </div>
 
-            {submitError && <div className="text-danger">{submitError}</div>}
-            {success && <div className="text-success">Contraseña actualizada correctamente</div>}
+            {submitError && <div className="alert alert-danger text-center small mb-3 fade-in">{submitError}</div>}
+            {success && <div className="alert alert-success text-center small mb-3 fade-in">Contraseña actualizada correctamente</div>}
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+          <div className="modal-footer border-top-0 pt-0">
+            <button type="button" className="btn btn-secondary px-3" onClick={onClose}>
               Cancelar
             </button>
-            <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+            <button type="button" className="btn btn-primary px-4 py-2 fw-medium" onClick={handleSubmit}>
               Cambiar
             </button>
           </div>
