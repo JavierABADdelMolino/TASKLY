@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { googleLogin } from '../../services/authService';
-import { injectDarkModeStyles } from './GoogleButtonStyle';
 
 // Hook personalizado para detectar el modo oscuro
 const useDarkMode = () => {
