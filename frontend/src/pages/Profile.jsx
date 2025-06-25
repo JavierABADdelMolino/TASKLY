@@ -124,18 +124,18 @@ const Profile = () => {
     ['firstName', 'lastName', 'birthDate', 'gender'].forEach((f) => {
       if (!formData[f]) err[f] = 'Campo obligatorio';
     });
-    if (Object.keys(err).length) return setErrors(err);
-
-    // Guardamos el valor de isGoogleUser para preservarlo
-    const isGoogleAccount = formData.isGoogleUser;
+    if (Object.keys(err).length) return setErrors(err);      // Guardamos el valor de isGoogleUser para preservarlo y asegurarnos
+    // de que se mantiene después de actualizar
+    const currentIsGoogleUser = formData.isGoogleUser;
+    console.log("Estado actual de isGoogleUser antes de guardar:", currentIsGoogleUser);
 
     const fd = new FormData();
     Object.entries({
       firstName: formData.firstName,
       lastName: formData.lastName,
       birthDate: formData.birthDate,
-      gender: formData.gender,
-      isGoogleUser: isGoogleAccount // Aseguramos que se envía esta información
+      gender: formData.gender
+      // No enviamos isGoogleUser porque el backend lo determina basado en googleId
     }).forEach(([k, v]) => fd.append(k, v));
 
     if (newAvatarFile) fd.append('avatar', newAvatarFile);
@@ -154,6 +154,11 @@ const Profile = () => {
       if (!res.ok) {
         setErrors({ submit: data.message || 'Error en el servidor' });
       } else {
+        // Aseguramos que isGoogleUser siempre se mantiene correcto, incluso si el backend no lo devuelve
+        // Usamos el valor del backend si existe, de lo contrario usamos el valor actual
+        const isGoogleAccount = data.isGoogleUser !== undefined ? data.isGoogleUser : formData.isGoogleUser;
+        console.log("Estado de isGoogleUser después de la respuesta:", data.isGoogleUser, "Preservado:", isGoogleAccount);
+        
         setFormData({
           firstName: data.firstName,
           lastName: data.lastName,
@@ -163,7 +168,7 @@ const Profile = () => {
           gender: data.gender,
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt,
-          isGoogleUser: data.isGoogleUser
+          isGoogleUser: data.isGoogleUser || isGoogleAccount // Usamos el del servidor o preservamos el valor
         });
         setUser(data);
         setEditMode(false);
@@ -268,7 +273,8 @@ const Profile = () => {
             {!editMode ? (
               <>
                 <button type="button" className="btn btn-outline-primary" onClick={handleEdit}>Editar</button>
-                {!formData.isGoogleUser && (
+                {/* Solo mostrar el botón de cambiar contraseña para usuarios NO Google */}
+                {formData.isGoogleUser === false && (
                   <button type="button" className="btn btn-outline-warning" onClick={() => setShowPwdModal(true)}>Cambiar contraseña</button>
                 )}
                 <button type="button" className="btn btn-outline-danger" onClick={() => setShowDelModal(true)}>Eliminar cuenta</button>

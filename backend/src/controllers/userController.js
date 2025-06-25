@@ -144,7 +144,12 @@ exports.updateUserProfile = async (req, res) => {
     if (updated) await user.save();
 
     const updatedUser = await User.findById(user.id).select('-password');
-    res.json(updatedUser);
+    
+    // Aseguramos que la propiedad isGoogleUser esté en la respuesta
+    const responseData = updatedUser.toObject();
+    responseData.isGoogleUser = !!updatedUser.googleId;
+    
+    res.json(responseData);
 
   } catch (err) {
     console.error(err);
