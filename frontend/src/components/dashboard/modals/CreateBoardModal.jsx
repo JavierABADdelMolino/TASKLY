@@ -43,43 +43,45 @@ const CreateBoardModal = ({ show, onClose, onBoardCreated }) => {
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
+        <div className="modal-content shadow-sm">
 
-          <div className="modal-header">
-            <h5 className="modal-title text-center w-100">Crear nueva pizarra</h5>
+          <div className="modal-header border-bottom-0">
+            <h5 className="modal-title text-center w-100 fw-bold">Crear nueva pizarra</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="title" className="form-label">Título</label>
+            <div className="modal-body pt-0">
+              <div className="mb-3 form-floating">
                 <input
                   type="text"
                   id="title"
                   className="form-control"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Título"
                 />
+                <label htmlFor="title">Título</label>
               </div>
 
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">Descripción</label>
+              <div className="mb-3 form-floating">
                 <textarea
                   id="description"
                   className="form-control"
-                  rows="3"
+                  style={{ height: '100px' }}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Descripción"
                 ></textarea>
+                <label htmlFor="description">Descripción</label>
               </div>
 
-              {error && <div className="alert alert-danger small">{error}</div>}
+              {error && <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>}
             </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+            <div className="modal-footer border-top-0 pt-0">
+              <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>Cancelar</button>
+              <button type="submit" className="btn btn-primary px-4 py-2 fw-medium" disabled={loading}>
                 {loading ? 'Creando...' : 'Crear'}
               </button>
             </div>

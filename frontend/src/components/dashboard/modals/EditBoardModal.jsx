@@ -46,37 +46,41 @@ const EditBoardModal = ({ show, board, onClose, onBoardUpdated, onBoardDeleted }
   return (
     <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header justify-content-center">
-            <h5 className="modal-title text-center w-100">Editar pizarra</h5>
+        <div className="modal-content shadow-sm">
+          <div className="modal-header border-bottom-0 justify-content-center">
+            <h5 className="modal-title text-center w-100 fw-bold">Editar pizarra</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <form onSubmit={handleUpdate}>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label className="form-label">Título</label>
+            <div className="modal-body pt-0">
+              <div className="mb-3 form-floating">
                 <input
                   type="text"
+                  id="edit-title"
                   className="form-control"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Título"
                 />
+                <label htmlFor="edit-title">Título</label>
               </div>
-              <div className="mb-3">
-                <label className="form-label">Descripción</label>
+              <div className="mb-3 form-floating">
                 <textarea
+                  id="edit-description"
                   className="form-control"
-                  rows="3"
+                  style={{ height: '100px' }}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Descripción"
                 ></textarea>
+                <label htmlFor="edit-description">Descripción</label>
               </div>
-              {error && <div className="alert alert-danger small">{error}</div>}
+              {error && <div className="alert alert-danger text-center small mb-3 fade-in">{error}</div>}
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              <button type="button" className="btn btn-danger me-auto" onClick={() => setShowConfirm(true)}>Eliminar</button>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+            <div className="modal-footer border-top-0 pt-0">
+              <button type="button" className="btn btn-danger me-auto px-3 py-2 fw-medium" onClick={() => setShowConfirm(true)}>Eliminar</button>
+              <button type="button" className="btn btn-secondary px-3 py-2 fw-medium" onClick={onClose}>Cancelar</button>
+              <button type="submit" className="btn btn-primary px-4 py-2 fw-medium" disabled={loading}>
                 {loading ? 'Guardando...' : 'Guardar cambios'}
               </button>
             </div>
