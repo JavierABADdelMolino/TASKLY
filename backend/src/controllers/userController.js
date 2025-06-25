@@ -21,10 +21,8 @@ exports.updateUserProfile = async (req, res) => {
     const {
       firstName,
       lastName,
-      username,
       birthDate,
       gender,
-      theme,
       avatar // string vacío si se quiere eliminar
     } = req.body;
 
@@ -44,20 +42,12 @@ exports.updateUserProfile = async (req, res) => {
       user.lastName = lastName;
       updated = true;
     }
-    if (username && username !== user.username) {
-      user.username = username;
-      updated = true;
-    }
     if (birthDate && new Date(birthDate).toISOString() !== user.birthDate.toISOString()) {
       user.birthDate = new Date(birthDate);
       updated = true;
     }
     if (gender && gender !== user.gender) {
       user.gender = gender;
-      updated = true;
-    }
-    if (theme && theme !== user.theme) {
-      user.theme = theme;
       updated = true;
     }
 

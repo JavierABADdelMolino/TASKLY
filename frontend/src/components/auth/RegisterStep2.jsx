@@ -82,28 +82,28 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
         })()}
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="birthDate" className="form-label">Fecha de nacimiento</label>
-        {(() => {
-          const msg = localErrors.birthDate || errors.birthDate;
-          return (
-            <>
-              <input
-                id="birthDate"
-                type="date"
-                className={`form-control ${msg ? 'is-invalid' : ''}`}
-                value={data.birthDate}
-                onChange={(e) => onChange('birthDate', e.target.value)}
-              />
-              {msg && <small className="text-danger">{msg}</small>}
-            </>
-          );
-        })()}
-      </div>
-
+      {/* Fecha de nacimiento y sexo en la misma línea */}
       <div className="row mb-3">
         <div className="col-6">
-          <label htmlFor="gender" className="form-label">Sexo</label>
+          <label htmlFor="birthDate" className="form-label">Fecha de nacimiento</label>
+          {(() => {
+            const msg = localErrors.birthDate || errors.birthDate;
+            return (
+              <>
+                <input
+                  id="birthDate"
+                  type="date"
+                  className={`form-control ${msg ? 'is-invalid' : ''}`}
+                  value={data.birthDate}
+                  onChange={(e) => onChange('birthDate', e.target.value)}
+                />
+                {msg && <small className="text-danger">{msg}</small>}
+              </>
+            );
+          })()}
+        </div>
+        <div className="col-6">
+          <label htmlFor="gender" className="form-label">Género</label>
           {(() => {
             const msg = localErrors.gender || errors.gender;
             return (
@@ -122,19 +122,6 @@ const RegisterStep2 = ({ data, onChange, onBack, onSubmit, errors = {} }) => {
               </>
             );
           })()}
-        </div>
-
-        <div className="col-6">
-          <label htmlFor="theme" className="form-label">Tema</label>
-          <select
-            id="theme"
-            className="form-select"
-            value={data.theme}
-            onChange={(e) => onChange('theme', e.target.value)}
-          >
-            <option value="light">Claro</option>
-            <option value="dark">Oscuro</option>
-          </select>
         </div>
       </div>
 

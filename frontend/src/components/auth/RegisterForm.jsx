@@ -12,14 +12,12 @@ const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
     password: '',
     confirmPassword: '',
     firstName: '',
     lastName: '',
     birthDate: '',
     gender: '',
-    theme: 'light',
     avatarFile: null,
   });
 

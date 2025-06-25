@@ -10,10 +10,6 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
       newErrors.email = 'Correo electrónico no válido';
     }
 
-    if (data.username.trim().length < 3) {
-      newErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
-    }
-
     if (data.password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
@@ -31,7 +27,7 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
     // Validación local
     if (validate()) {
       // Si hay errores del servidor, no avanzar
-      if (errors.email || errors.username || errors.password || errors.confirmPassword || errors.general) {
+      if (errors.email || errors.password || errors.confirmPassword || errors.general) {
         return;
       }
       onNext();
@@ -59,19 +55,6 @@ const RegisterStep1 = ({ data, onChange, onNext, errors = {} }) => {
         />
         {localErrors.email && <small className="text-danger">{localErrors.email}</small>}
         {errors.email && <small className="text-danger">{errors.email}</small>}
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="username" className="form-label">Nombre de usuario</label>
-        <input
-          id="username"
-          type="text"
-          className={`form-control ${localErrors.username || errors.username ? 'is-invalid' : ''}`}
-          value={data.username}
-          onChange={(e) => onChange('username', e.target.value)}
-        />
-        {localErrors.username && <small className="text-danger">{localErrors.username}</small>}
-        {errors.username && <small className="text-danger">{errors.username}</small>}
       </div>
 
       <div className="mb-3">

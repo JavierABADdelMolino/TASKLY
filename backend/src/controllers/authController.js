@@ -24,12 +24,10 @@ exports.registerUser = async (req, res) => {
   const {
     firstName,
     lastName,
-    username,
     email,
     password,
     birthDate,
     gender,
-    theme,
     avatarUrl // opcional: por si eliges un avatar sin subir archivo
   } = req.body;
 
@@ -60,12 +58,10 @@ exports.registerUser = async (req, res) => {
     const user = new User({
       firstName,
       lastName,
-      username,
       email,
       password,
       birthDate,
       gender,
-      theme,
       avatarUrl: finalAvatarUrl
     });
 
@@ -84,13 +80,11 @@ exports.registerUser = async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         birthDate: user.birthDate,
         gender: user.gender,
-        theme: user.theme,
         avatarUrl: user.avatarUrl
       }
     });
@@ -132,13 +126,11 @@ exports.loginUser = async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         birthDate: user.birthDate,
         gender: user.gender,
-        theme: user.theme,
         avatarUrl: user.avatarUrl
       }
     });
@@ -161,13 +153,11 @@ exports.getMe = async (req, res) => {
 
     res.json({
       id: user._id,
-      username: user.username,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       birthDate: user.birthDate,
       gender: user.gender,
-      theme: user.theme,
       avatarUrl: user.avatarUrl
     });
   } catch (err) {

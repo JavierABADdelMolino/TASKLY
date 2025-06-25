@@ -14,13 +14,6 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: [2, 'El apellido debe tener al menos 2 caracteres']
   },
-  username: {
-    type: String,
-    required: [true, 'El nombre de usuario es obligatorio'],
-    unique: true,
-    trim: true,
-    minlength: [3, 'El nombre de usuario debe tener al menos 3 caracteres']
-  },
   email: {
     type: String,
     required: [true, 'El correo electrónico es obligatorio'],
@@ -44,11 +37,6 @@ const userSchema = new mongoose.Schema({
       message: 'El género debe ser "male" o "female"'
     },
     required: [true, 'El género es obligatorio']
-  },
-  theme: {
-    type: String,
-    enum: ['light', 'dark'],
-    default: 'light'
   },
   avatarUrl: {
     type: String,

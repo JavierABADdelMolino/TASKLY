@@ -15,11 +15,9 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    username: '',
     email: '',
     birthDate: '',
     gender: '',
-    theme: '',
     avatarUrl: '',
     createdAt: ''
   });
@@ -30,7 +28,7 @@ const Profile = () => {
   const [errors, setErrors] = useState({});
   const [showPwdModal, setShowPwdModal] = useState(false);
   const [showDelModal, setShowDelModal] = useState(false);
-  const [originalTheme, setOriginalTheme] = useState(theme);
+  const [originalTheme] = useState(theme);
 
   const isDefaultAvatar = (url) =>
     url?.includes('/public/avatars/default-avatar-');
@@ -51,7 +49,6 @@ const Profile = () => {
           email: data.email,
           birthDate: data.birthDate?.slice(0, 10),
           gender: data.gender,
-          theme: data.theme,
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt
         });
@@ -80,20 +77,6 @@ const Profile = () => {
       setFormData((prev) => ({ ...prev, avatarUrl: newDefault }));
     }
   }, [formData.gender, formData.avatarUrl, newAvatarFile]);
-
-  // When entering edit mode, store the original theme
-  useEffect(() => {
-    if (editMode) {
-      setOriginalTheme(theme);
-    }
-  }, [editMode, theme]);
-
-  // Apply theme live when formData.theme changes in edit mode
-  useEffect(() => {
-    if (editMode && formData.theme) {
-      setTheme(formData.theme);
-    }
-  }, [formData.theme, editMode, setTheme]);
 
   const formatJoinDate = (iso) =>
     iso
@@ -136,7 +119,7 @@ const Profile = () => {
 
   const handleSaveChanges = async () => {
     const err = {};
-    ['firstName', 'lastName', 'username', 'birthDate', 'gender', 'theme'].forEach((f) => {
+    ['firstName', 'lastName', 'birthDate', 'gender'].forEach((f) => {
       if (!formData[f]) err[f] = 'Campo obligatorio';
     });
     if (Object.keys(err).length) return setErrors(err);
@@ -145,10 +128,8 @@ const Profile = () => {
     Object.entries({
       firstName: formData.firstName,
       lastName: formData.lastName,
-      username: formData.username,
       birthDate: formData.birthDate,
-      gender: formData.gender,
-      theme: formData.theme
+      gender: formData.gender
     }).forEach(([k, v]) => fd.append(k, v));
 
     if (newAvatarFile) fd.append('avatar', newAvatarFile);
@@ -174,7 +155,6 @@ const Profile = () => {
           email: data.email,
           birthDate: data.birthDate?.slice(0, 10),
           gender: data.gender,
-          theme: data.theme,
           avatarUrl: data.avatarUrl,
           createdAt: data.createdAt
         });
@@ -211,10 +191,21 @@ const Profile = () => {
             gender={formData.gender}
           />
 
-          {['firstName', 'lastName', 'username'].map((f) => (
+          <div className="mb-3">
+            <label className="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={formData.email}
+              disabled
+            />
+          </div>
+
+          {['firstName', 'lastName'].map((f) => (
             <div className="mb-3" key={f}>
               <label className="form-label">
-                {f === 'firstName' ? 'Nombre' : f === 'lastName' ? 'Apellidos' : 'Usuario'}
+                {f === 'firstName' ? 'Nombre' : 'Apellidos'}
               </label>
               <input
                 name={f}
@@ -227,59 +218,33 @@ const Profile = () => {
             </div>
           ))}
 
-          <div className="mb-3">
-            <label className="form-label">Correo electrónico</label>
-            <input
-              type="email"
-              className="form-control"
-              name="email"
-              value={formData.email}
-              disabled
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Fecha de nacimiento</label>
-            <input
-              type="date"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleInputChange}
-              className="form-control"
-              disabled={!editMode}
-            />
-            {errors.birthDate && <small className="text-danger">{errors.birthDate}</small>}
-          </div>
-
-          {[{
-            name: 'gender', label: 'Género', options: [
-              { val: 'male', lbl: 'Masculino' },
-              { val: 'female', lbl: 'Femenino' }
-            ]
-          }, {
-            name: 'theme', label: 'Tema', options: [
-              { val: 'light', lbl: 'Claro' },
-              { val: 'dark', lbl: 'Oscuro' }
-            ]
-          }].map(({ name, label, options }) => (
-            <div className="mb-3" key={name}>
-              <label className="form-label">{label}</label>
+          {/* Fecha de nacimiento y género en la misma línea */}
+          <div className="row mb-3">
+            <div className="col-6">
+              <label className="form-label">Fecha de nacimiento</label>
+              <input
+                type="date"
+                className={`form-control ${errors.birthDate ? 'is-invalid' : ''}`}
+                value={formData.birthDate}
+                onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+                disabled={!editMode}
+              />
+              {errors.birthDate && <div className="text-danger">{errors.birthDate}</div>}
+            </div>
+            <div className="col-6">
+              <label className="form-label">Género</label>
               <select
-                name={name}
-                value={formData[name]}
-                onChange={handleInputChange}
-                className="form-select"
+                className={`form-select ${errors.gender ? 'is-invalid' : ''}`}
+                value={formData.gender}
+                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 disabled={!editMode}
               >
-                {options.map((o) => (
-                  <option key={o.val} value={o.val}>
-                    {o.lbl}
-                  </option>
-                ))}
+                <option value="male">Masculino</option>
+                <option value="female">Femenino</option>
               </select>
-              {errors[name] && <small className="text-danger">{errors[name]}</small>}
+              {errors.gender && <div className="text-danger">{errors.gender}</div>}
             </div>
-          ))}
+          </div>
 
           {errors.submit && <div className="text-danger mb-3">{errors.submit}</div>}
 
