@@ -194,8 +194,8 @@ const Profile = () => {
         )}
 
         <form className="card p-4 shadow-sm login-form">
-          <div className="text-center mb-5">
-            <div style={{marginBottom: '2rem'}}>
+          <div className="text-center mb-4">
+            <div style={{marginBottom: '1rem'}}>
               <AvatarUploader
                 url={formData.avatarUrl}
                 onFile={handleAvatarChange}
