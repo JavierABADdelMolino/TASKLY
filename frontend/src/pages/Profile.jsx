@@ -186,103 +186,139 @@ const Profile = () => {
   return (
     <Layout>
       <div className="container py-4" style={{ maxWidth: 640 }}>
-        <h2 className="mb-2 text-center">Mi perfil</h2>
+        <h2 className="mb-2 text-center fw-bold w-100">Mi perfil</h2>
         {formData.createdAt && (
           <p className="text-muted text-center mb-3">
             <small>{formatJoinDate(formData.createdAt)}</small>
           </p>
         )}
 
-        <form className="card p-4 shadow-sm">
-          <AvatarUploader
-            url={formData.avatarUrl}
-            onFile={handleAvatarChange}
-            onDelete={handleAvatarDelete}
-            disabled={!editMode}
-            deleted={avatarDeleted}
-            gender={formData.gender}
-          />
+        <form className="card p-4 shadow-sm login-form">
+          <div className="text-center mb-5">
+            <div style={{marginBottom: '2rem'}}>
+              <AvatarUploader
+                url={formData.avatarUrl}
+                onFile={handleAvatarChange}
+                onDelete={handleAvatarDelete}
+                disabled={!editMode}
+                deleted={avatarDeleted}
+                gender={formData.gender}
+              />
+            </div>
+          </div>
 
-          <div className="mb-3">
-            <label className="form-label">Correo electrónico</label>
+          <div className="mb-3 form-floating">
             <input
+              id="email"
               type="email"
+              placeholder="Correo electrónico"
               className="form-control"
               name="email"
               value={formData.email}
               disabled
             />
+            <label htmlFor="email">Correo electrónico</label>
           </div>
 
-          {['firstName', 'lastName'].map((f) => (
-            <div className="mb-3" key={f}>
-              <label className="form-label">
-                {f === 'firstName' ? 'Nombre' : 'Apellidos'}
-              </label>
-              <input
-                name={f}
-                value={formData[f]}
-                onChange={handleInputChange}
-                className="form-control"
-                disabled={!editMode}
-              />
-              {errors[f] && <small className="text-danger">{errors[f]}</small>}
-            </div>
-          ))}
+          <div className="mb-3 form-floating">
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              placeholder="Nombre"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
+              disabled={!editMode}
+            />
+            <label htmlFor="firstName">Nombre</label>
+            {errors.firstName && <small className="text-danger d-block mt-1">{errors.firstName}</small>}
+          </div>
+
+          <div className="mb-3 form-floating">
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              placeholder="Apellidos"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
+              disabled={!editMode}
+            />
+            <label htmlFor="lastName">Apellidos</label>
+            {errors.lastName && <small className="text-danger d-block mt-1">{errors.lastName}</small>}
+          </div>
 
           {/* Fecha de nacimiento y género en la misma línea */}
-          <div className="row mb-3">
+          <div className="row mb-4">
             <div className="col-6">
-              <label className="form-label">Fecha de nacimiento</label>
-              <input
-                type="date"
-                className={`form-control ${errors.birthDate ? 'is-invalid' : ''}`}
-                value={formData.birthDate}
-                onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                disabled={!editMode}
-              />
-              {errors.birthDate && <div className="text-danger">{errors.birthDate}</div>}
+              <div className="form-floating">
+                <input
+                  id="birthDate"
+                  type="date"
+                  placeholder="Fecha de nacimiento"
+                  className={`form-control ${errors.birthDate ? 'is-invalid' : ''}`}
+                  value={formData.birthDate}
+                  onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+                  disabled={!editMode}
+                  style={{ colorScheme: 'auto' }}
+                />
+                <label htmlFor="birthDate">Fecha de nacimiento</label>
+                {errors.birthDate && <small className="text-danger d-block mt-1">{errors.birthDate}</small>}
+              </div>
             </div>
             <div className="col-6">
-              <label className="form-label">Género</label>
-              <select
-                className={`form-select ${errors.gender ? 'is-invalid' : ''} ${!editMode ? 'appearance-none' : ''}`}
-                value={formData.gender}
-                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                disabled={!editMode}
-                style={!editMode ? { 
-                  backgroundColor: 'var(--bs-body-bg)', 
-                  color: 'var(--bs-body-color)',
-                  backgroundImage: 'none', 
-                  appearance: 'none' 
-                } : { 
-                  backgroundColor: 'var(--bs-body-bg)', 
-                  color: 'var(--bs-body-color)' 
-                }}
-              >
-                <option value="male">Masculino</option>
-                <option value="female">Femenino</option>
-              </select>
-              {errors.gender && <div className="text-danger">{errors.gender}</div>}
+              <div className="form-floating">
+                <select
+                  id="gender"
+                  className={`form-select ${errors.gender ? 'is-invalid' : ''} ${!editMode ? 'appearance-none' : ''}`}
+                  value={formData.gender}
+                  onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                  disabled={!editMode}
+                  style={!editMode ? { 
+                    backgroundColor: 'var(--bs-body-bg)', 
+                    color: 'var(--bs-body-color)',
+                    backgroundImage: 'none', 
+                    appearance: 'none' 
+                  } : { 
+                    backgroundColor: 'var(--bs-body-bg)', 
+                    color: 'var(--bs-body-color)' 
+                  }}
+                >
+                  <option value="male">Masculino</option>
+                  <option value="female">Femenino</option>
+                </select>
+                <label htmlFor="gender">Género</label>
+                {errors.gender && <small className="text-danger d-block mt-1">{errors.gender}</small>}
+              </div>
             </div>
           </div>
 
-          {errors.submit && <div className="text-danger mb-3">{errors.submit}</div>}
+          {errors.submit && 
+            <div className="alert alert-danger text-center small mb-3 fade-in">{errors.submit}</div>
+          }
 
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between mt-4">
             {!editMode ? (
               <>
-                <button type="button" className="btn btn-outline-primary" onClick={handleEdit}>Editar</button>
+                <button type="button" className="btn btn-outline-primary px-4" onClick={handleEdit}>Editar</button>
                 {/* Solo mostrar el botón de cambiar contraseña para usuarios NO Google */}
                 {!formData.isGoogleUser && (
-                  <button type="button" className="btn btn-outline-warning" onClick={() => setShowPwdModal(true)}>Cambiar contraseña</button>
+                  <button type="button" className="btn btn-outline-warning px-4" onClick={() => setShowPwdModal(true)}>
+                    Cambiar contraseña
+                  </button>
                 )}
-                <button type="button" className="btn btn-outline-danger" onClick={() => setShowDelModal(true)}>Eliminar cuenta</button>
+                <button type="button" className="btn btn-outline-danger px-4" onClick={() => setShowDelModal(true)}>
+                  Eliminar cuenta
+                </button>
               </>
             ) : (
               <>
-                <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Guardar</button>
-                <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancelar</button>
+                <button type="button" className="btn btn-secondary px-4" onClick={handleCancel}>Cancelar</button>
+                <button type="button" className="btn btn-primary px-4 py-2 fw-medium" onClick={handleSaveChanges}>
+                  Guardar cambios
+                </button>
               </>
             )}
           </div>

@@ -1,0 +1,17 @@
+/* Estilos para inputs de fecha */
+input[type="date"] {
+  &::-webkit-calendar-picker-indicator {
+    filter: var(--calendar-icon-filter) !important;
+    cursor: pointer;
+  }
+  
+  /* Asegurar que el color del texto coincide con el tema */
+  color-scheme: auto !important;
+  color: var(--bs-body-color) !important;
+  
+  /* Mejor apariencia del icono en modo oscuro */
+  &.form-control {
+    background-color: var(--bs-body-bg);
+    border-color: var(--bs-border-color);
+  }
+}
