@@ -115,7 +115,11 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                   style={{ color: theme === 'dark' ? '#fff' : '#000' }}
                 >
                   <img
-                    src={`${process.env.REACT_APP_URL}${user.avatarUrl}`}
+                    src={
+                      user.avatarUrl?.startsWith('http')
+                        ? user.avatarUrl
+                        : `${process.env.REACT_APP_URL}${user.avatarUrl}`
+                    }
                     alt="avatar"
                     className="rounded-circle me-2 border"
                     style={{ width: '36px', height: '36px', objectFit: 'cover' }}

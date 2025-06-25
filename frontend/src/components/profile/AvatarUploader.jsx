@@ -14,19 +14,22 @@ export default function AvatarUploader({
   const [preview, setPreview] = useState('');
 
   useEffect(() => {
-    // Ruta del avatar por defecto en carpeta public/avatars
-    const defaultAvatarPath = gender === 'female'
-      ? '/public/avatars/default-avatar-female.png'
-      : '/public/avatars/default-avatar-male.png';
-    const defaultAvatarUrl = process.env.REACT_APP_URL + defaultAvatarPath;
-
+    // Determina la URL de la imagen (Cloudinary o local)
+    const defaultPath = gender === 'female'
+      ? '/avatars/default-avatar-female.png'
+      : '/avatars/default-avatar-male.png';
+    const defaultUrl = `${process.env.PUBLIC_URL || ''}${defaultPath}`;
+    let src;
     if (deleted) {
-      setPreview(defaultAvatarUrl);
+      src = defaultUrl;
     } else if (url) {
-      setPreview(process.env.REACT_APP_URL + url);
+      src = url.startsWith('http')
+        ? url
+        : `${process.env.REACT_APP_URL}${url}`;
     } else {
-      setPreview(defaultAvatarUrl);
+      src = defaultUrl;
     }
+    setPreview(src);
   }, [url, deleted, gender]);
 
   const handleChange = e => {
