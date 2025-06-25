@@ -126,12 +126,16 @@ const Profile = () => {
     });
     if (Object.keys(err).length) return setErrors(err);
 
+    // Guardamos el valor de isGoogleUser para preservarlo
+    const isGoogleAccount = formData.isGoogleUser;
+
     const fd = new FormData();
     Object.entries({
       firstName: formData.firstName,
       lastName: formData.lastName,
       birthDate: formData.birthDate,
-      gender: formData.gender
+      gender: formData.gender,
+      isGoogleUser: isGoogleAccount // Aseguramos que se envía esta información
     }).forEach(([k, v]) => fd.append(k, v));
 
     if (newAvatarFile) fd.append('avatar', newAvatarFile);
@@ -237,10 +241,19 @@ const Profile = () => {
             <div className="col-6">
               <label className="form-label">Género</label>
               <select
-                className={`form-select ${errors.gender ? 'is-invalid' : ''}`}
+                className={`form-select ${errors.gender ? 'is-invalid' : ''} ${!editMode ? 'appearance-none' : ''}`}
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 disabled={!editMode}
+                style={!editMode ? { 
+                  backgroundColor: 'var(--bs-body-bg)', 
+                  color: 'var(--bs-body-color)',
+                  backgroundImage: 'none', 
+                  appearance: 'none' 
+                } : { 
+                  backgroundColor: 'var(--bs-body-bg)', 
+                  color: 'var(--bs-body-color)' 
+                }}
               >
                 <option value="male">Masculino</option>
                 <option value="female">Femenino</option>

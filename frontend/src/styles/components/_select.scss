@@ -1,0 +1,21 @@
+// Estilos para los selectores de formulario en el perfil
+.form-select {
+  &.appearance-none {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+// Específico para los selectores disabled
+select:disabled {
+  opacity: 1 !important; // Mantiene la opacidad completa
+  background-color: var(--bs-body-bg) !important;
+  color: var(--bs-body-color) !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important; 
+  background-image: none !important;
+}
