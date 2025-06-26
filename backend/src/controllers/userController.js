@@ -49,11 +49,25 @@ exports.updateUserProfile = async (req, res) => {
       updated = true;
     }
 
-    // Subida de nuevo avatar
+    // Subida de un nuevo avatar
     if (avatarFile) {
-      const uploadResult = await cloudinaryService.uploadAvatar(avatarFile);
-      user.avatarUrl = uploadResult.secure_url;
-      updated = true;
+      if (process.env.NODE_ENV === 'production') {
+        // Sube a Cloudinary usando el servicio personalizado
+        const uploadResult = await cloudinaryService.uploadAvatar(avatarFile);
+        user.avatarUrl = uploadResult.secure_url;
+        updated = true;
+      } else {
+        const oldAvatarPath = user.avatarUrl;
+        user.avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
+        updated = true;
+        // Eliminar avatar anterior si era personalizado
+        if (oldAvatarPath && oldAvatarPath.startsWith('/uploads/avatars/')) {
+          const fullPath = path.join(__dirname, '..', '..', oldAvatarPath.replace(/^\/+/, ''));
+          fs.unlink(fullPath, err => {
+            if (err) console.warn('No se pudo eliminar el avatar anterior:', err.message);
+          });
+        }
+      }
     }
 
     // Eliminar avatar (volver al predeterminado)
