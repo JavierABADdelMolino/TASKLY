@@ -73,14 +73,9 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
       script.id = 'google-platform';
       script.async = true;
       script.defer = true;
-      script.crossOrigin = "anonymous";
       
       script.onload = () => {
         setScriptLoaded(true);
-      };
-      
-      script.onerror = (error) => {
-        setError('Error al cargar componentes de Google');
       };
       
       document.body.appendChild(script);
@@ -90,32 +85,16 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     
     return () => {
       // Limpiar al desmontar
-      if (window.google && window.google.accounts) {
-        try {
-          // Cancelar cualquier prompt o UI de Google
-          window.google.accounts.id.cancel();
-        } catch (err) {
-          console.error('Error al limpiar Google Sign-In:', err);
-        }
+      const script = document.querySelector('script#google-platform');
+      if (script) {
+        document.body.removeChild(script);
       }
     };
   }, []);
 
   const handleGoogleResponse = useCallback(async (response) => {
     try {
-      if (!response || !response.credential) {
-        console.error('Error: respuesta de Google incompleta');
-        setError('Error al recibir datos de Google. Intente de nuevo.');
-        return;
-      }
-      
       const result = await googleLogin(response.credential);
-      
-      if (!result) {
-        console.error('Error: respuesta vacía del servidor');
-        setError('Error de comunicación con el servidor. Intente de nuevo.');
-        return;
-      }
       
       // Si requiere enlazar cuenta (código LINK_GOOGLE) 
       if (result.code === 'LINK_GOOGLE' || result.needsLinking) {
@@ -123,11 +102,11 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         // Llamar a la función que gestionará el enlace de cuenta
         if (onGoogleSignIn) {
           onGoogleSignIn({
-            email: result.email || '',
-            firstName: result.firstName || '',
-            lastName: result.lastName || '',
-            avatarUrl: result.avatarUrl || '',
-            googleId: result.googleId || '',
+            email: result.email,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            avatarUrl: result.avatarUrl,
+            googleId: result.googleId,
             tokenId: response.credential,
             needsLinking: true,
             code: result.code || 'LINK_GOOGLE'
@@ -140,11 +119,11 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         // Llamar a la función que gestionará el completado de registro
         if (onGoogleSignIn) {
           onGoogleSignIn({
-            email: result.email || '',
-            firstName: result.firstName || '',
-            lastName: result.lastName || '',
-            avatarUrl: result.avatarUrl || '',
-            googleId: result.googleId || '',
+            email: result.email,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            avatarUrl: result.avatarUrl,
+            googleId: result.googleId,
             tokenId: response.credential,
             needsCompletion: true,
             code: result.code || 'NEEDS_COMPLETION'
@@ -152,79 +131,45 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         }
       } else {
         // Usuario ya existente, login normal
-        if (result.token) {
-          sessionStorage.setItem('token', result.token);
-          if (result.user) {
-            setUser(result.user);
-            navigate('/dashboard');
-          } else {
-            console.error('Error: datos de usuario incompletos');
-            setError('Error en los datos del usuario. Intente de nuevo.');
-          }
-        } else {
-          console.error('Error: token no recibido');
-          setError('Error de autenticación. Intente de nuevo.');
-        }
+        sessionStorage.setItem('token', result.token);
+        setUser(result.user);
+        navigate('/dashboard');
       }
     } catch (err) {
       console.error('Error en autenticación con Google:', err);
-      setError(err.message || 'Error al autenticar con Google. Intente de nuevo.');
+      setError(err.message || 'Error al autenticar con Google');
     }
   }, [navigate, setUser, onGoogleSignIn]);
 
   // Efecto para inicializar y renderizar el botón de Google
   useEffect(() => {
-    if (!scriptLoaded) return;
-    
-    // Verificar que el script de Google se haya cargado correctamente
-    if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-      console.error('El SDK de Google no se cargó correctamente');
-      setError('No se pudo cargar el inicio de sesión con Google');
-      return;
-    }
-    
+    if (!scriptLoaded || !window.google) return;
+
     try {
-      // Inicializar Google Sign-In con manejo de errores
-      const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-      if (!clientId) {
-        console.error('REACT_APP_GOOGLE_CLIENT_ID no está definido');
-        setError('Error de configuración. Contacte al administrador.');
-        return;
-      }
-      
-      // Limpiar cualquier botón previo
-      const container = document.getElementById('google-signin-button');
-      if (container) {
-        container.innerHTML = '';
-      } else {
-        console.error('Contenedor del botón no encontrado');
-        return;
-      }
-      
-      // Inicializar con el cliente ID
+      // Inicializar Google Sign-In
       window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleGoogleResponse,
-        ux_mode: 'popup',  // Usar popup en lugar de redirect para evitar problemas CORS
-        context: 'signin'  // Especificar el contexto para mejorar UX
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
       });
       
-      // Renderizar botón con tema adaptado al modo oscuro/claro
+      // Renderizar botón
       window.google.accounts.id.renderButton(
-        container,
+        document.getElementById('google-signin-button'),
         { 
           type: 'standard',
           theme: isDarkMode ? 'filled_black' : 'outline',
           size: 'large',
-          text: 'continue_with',
-          shape: 'rectangular', // Cambiar a rectangular puede ayudar con problemas de renderizado
-          width: container.offsetWidth, // Ajustar al ancho del contenedor
-          locale: 'es_ES'
+          text: 'continue_with', // Cambiado de 'signup_with' a 'continue_with'
+          shape: 'pill',
+          width: '100%',
+          logo_alignment: 'center',
+          // Propiedades adicionales para el estilo personalizado
+          ...(isDarkMode && {
+            text_align: 'center',
+            locale: 'es_ES'
+          })
         }
       );
-      
-      // También puede ser útil mostrar el One Tap en algunos casos
-      // window.google.accounts.id.prompt();
       
       console.log('Google button rendered with theme:', isDarkMode ? 'dark' : 'light');
     } catch (err) {
@@ -235,33 +180,12 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
 
   return (
     <div className="mt-3 mb-3">
-      {error && (
-        <div className="alert alert-danger small p-2 mb-2" role="alert">
-          {error}
-          <button 
-            type="button" 
-            className="btn-close btn-sm float-end" 
-            aria-label="Close"
-            onClick={() => setError('')}
-          />
-        </div>
-      )}
-      
+      {error && <div className="alert alert-danger small">{error}</div>}
       <div 
         id="google-signin-button" 
-        className="d-flex justify-content-center"
-        style={{ minHeight: '40px' }}
-        aria-label="Iniciar sesión con Google"
+        className={`d-flex justify-content-center ${isDarkMode ? 'google-btn-dark' : 'google-btn-light'}`}
+        data-theme={isDarkMode ? 'dark' : 'light'}
       ></div>
-      
-      {!scriptLoaded && (
-        <div className="text-center mt-2">
-          <div className="spinner-border spinner-border-sm text-primary" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
-          <small className="text-muted ms-2">Cargando inicio de sesión con Google...</small>
-        </div>
-      )}
     </div>
   );
 };

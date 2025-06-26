@@ -74,31 +74,14 @@ export async function resetPassword(token, password) {
 
 // Iniciar sesión con Google (o iniciar proceso de registro)
 export async function googleLogin(tokenId) {
-  try {
-    if (!tokenId) {
-      throw new Error('Token de Google no proporcionado');
-    }
-    
-    const res = await fetch(`${API_BASE_URL}/auth/google`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tokenId }),
-      credentials: 'include' // Incluir cookies para evitar problemas CORS si es necesario
-    });
-    
-    const data = await res.json();
-    
-    if (!res.ok) {
-      const errorMessage = data.message || 'Error al autenticar con Google';
-      console.error('Google auth API error:', errorMessage);
-      throw new Error(errorMessage);
-    }
-    
-    return data;
-  } catch (error) {
-    console.error('Google login error:', error);
-    throw error;
-  }
+  const res = await fetch(`${API_BASE_URL}/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tokenId }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al autenticar con Google');
+  return data;
 }
 
 // Completar registro con Google (añadiendo campos adicionales)
