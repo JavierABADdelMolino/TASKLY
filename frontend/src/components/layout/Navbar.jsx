@@ -27,6 +27,12 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
     '/dashboard': 'Panel de tareas',
     '/profile': 'Mi perfil',
     '/': 'Inicio',
+    '/about': 'Acerca de',
+    '/contact': 'Contacto',
+    '/faq': 'Preguntas frecuentes',
+    '/privacy': 'Privacidad',
+    '/terms': 'Términos',
+    '/cookies': 'Cookies'
   };
 
   const matching = Object.entries(pageTitles)
@@ -77,8 +83,8 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
               </button>
             )}
 
-            {/* Login / Registro: solo cuando NO hay usuario y estás en la home */}
-            {!user && path === '/' && (
+            {/* Login / Registro: mostrar en cualquier página cuando NO hay usuario logueado */}
+            {!user && (
               <>
                 <button
                   className="btn btn-outline-primary me-2"
@@ -99,7 +105,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
               </>
             )}
 
-            {/* Menú usuario (avatar) */}
+            {/* Menú usuario (avatar): mostrar en cualquier página cuando hay usuario logueado */}
             {user && (
               <div
                 className={`dropdown ms-3 ${showUserMenu ? 'show' : ''}`}
@@ -133,6 +139,13 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                       Mi perfil
                     </button>
                   </li>
+                  {user && (
+                    <li>
+                      <button className="dropdown-item" onClick={() => navigate('/dashboard')}>
+                        Panel de tareas
+                      </button>
+                    </li>
+                  )}
                   <li>
                     <button className="dropdown-item text-danger" onClick={handleLogout}>
                       Cerrar sesión
@@ -156,7 +169,6 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
                 onChange={() => {
                   const newTheme = theme === 'dark' ? 'light' : 'dark';
                   setTheme(newTheme);
-                  // El ThemeContext ya se encarga de guardar en localStorage
                 }}
                 aria-label={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
               />
@@ -177,7 +189,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
           onClose={() => setShowCreateModal(false)}
           onBoardCreated={(board) => {
             setShowCreateModal(false);
-            onBoardCreated(board);   // notifica al Dashboard/Layout
+            onBoardCreated(board);
           }}
         />
       )}
