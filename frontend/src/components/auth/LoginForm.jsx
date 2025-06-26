@@ -148,9 +148,11 @@ const LoginForm = () => {
         </button>
         
         <div className="text-center mt-2">
-          <button type="button" className="btn btn-link small text-decoration-none" onClick={() => setShowForgotModal(true)}>
-            ¿Has olvidado tu contraseña?
-          </button>
+          <span>
+            <button type="button" className="btn btn-link p-0" onClick={() => setShowForgotModal(true)}>
+              ¿Has olvidado tu contraseña?
+            </button>
+          </span>
         </div>
 
         {/* Separador y botón de Google */}
