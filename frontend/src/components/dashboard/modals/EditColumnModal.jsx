@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { updateColumn, deleteColumn } from '../../../services/columnService';
+import ConfirmDeleteColumnModal from './ConfirmDeleteColumnModal';
 
 const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDeleted }) => {
   const [title, setTitle] = useState(column.title);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   if (!show) return null;
 
@@ -25,17 +27,28 @@ const EditColumnModal = ({ show, column, onClose, onColumnUpdated, onColumnDelet
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm('¿Eliminar esta columna?')) return;
+  const handleDelete = () => {
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = async () => {
     try {
       await deleteColumn(column._id);
       onColumnDeleted(column._id);
       onClose();
     } catch (err) {
-      // Mostrar error en modal
       setError('Error al eliminar columna: ' + err.message);
+      setShowConfirmDelete(false);
     }
   };
+
+  if (showConfirmDelete) {
+    return <ConfirmDeleteColumnModal
+      show={true}
+      onClose={() => setShowConfirmDelete(false)}
+      onConfirm={confirmDelete}
+    />;
+  }
 
   return (
     <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>

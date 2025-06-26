@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { suggestImportanceForExistingTask, updateTask, deleteTask } from '../../../services/taskService';
+import ConfirmDeleteTaskModal from './ConfirmDeleteTaskModal';
 
 const importanceOptions = [
   { value: 'high', label: 'Alta' },
@@ -18,6 +19,7 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   const [error, setError] = useState('');
   const [suggestedImportance, setSuggestedImportance] = useState(task.importance);
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   if (!show) return null;
 
@@ -65,7 +67,10 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('¿Eliminar esta tarea?')) return;
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = async () => {
     try {
       const data = await deleteTask(task._id);
       if (data.message && !data.suggestedImportance) { /* assuming deletions return only message */ }
@@ -73,8 +78,17 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
       onClose();
     } catch (err) {
       setError('Error al eliminar tarea: ' + err.message);
+      setShowConfirmDelete(false);
     }
   };
+
+  if (showConfirmDelete) {
+    return <ConfirmDeleteTaskModal
+      show={true}
+      onClose={() => setShowConfirmDelete(false)}
+      onConfirm={confirmDelete}
+    />;
+  }
 
   return ReactDOM.createPortal(
     <>
