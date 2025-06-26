@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const cloudinary = require('../services/cloudinaryService');
+const cloudinaryService = require('../services/cloudinaryService');
+const { v2: cloudinary } = require('cloudinary');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
