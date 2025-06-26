@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
-import { CONTACT_EMAILS, APP_INFO } from '../../config/constants';
+import { CONTACT_EMAILS } from '../../config/constants';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -123,93 +123,60 @@ const ContactPage = () => {
     <Layout>
       <div className="container py-5">
         <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="text-center mb-4">
-              <h1 className="fw-bold mb-2">Contacta con nosotros</h1>
-              <p>¿Tienes preguntas o comentarios? Estamos aquí para ayudarte.</p>
+          <div className="col-lg-8 col-md-10">
+            <div className="text-center mb-5">
+              <h1 className="display-5 fw-bold mb-3">Contacta con nosotros</h1>
+              <p className="lead mx-auto" style={{ maxWidth: "700px" }}>
+                ¿Tienes preguntas o comentarios? Estamos aquí para ayudarte.
+              </p>
             </div>
             
-            <div className="row g-4">
-              <div className="col-md-5">
-                <div className="card h-100">
-                  <div className="card-body p-4">
-                    <h3 className="fw-bold mb-3">Información</h3>
-                    
-                    <div className="d-flex mb-3">
-                      <div className="me-3 bg-primary text-white p-2 rounded-circle">
-                        <i className="bi bi-envelope"></i>
-                      </div>
-                      <div>
-                        <h5 className="mb-1">Email</h5>
-                        <p className="mb-0">
-                          <a href={`mailto:${CONTACT_EMAILS.SUPPORT}`} className="text-decoration-none">
-                            {CONTACT_EMAILS.SUPPORT}
-                          </a>
-                        </p>
-                      </div>
+            <div className="card border-0 shadow-sm">
+              <div className="card-body p-4 p-md-5">
+                {submitted ? (
+                  <div className="text-center py-5 my-3">
+                    <div className="mb-4" style={{color: "var(--bs-primary)"}}>
+                      <i className="bi bi-check-circle-fill display-1"></i>
                     </div>
-                    
-                    <div className="d-flex mb-3">
-                      <div className="me-3 bg-primary text-white p-2 rounded-circle">
-                        <i className="bi bi-clock"></i>
-                      </div>
-                      <div>
-                        <h5 className="mb-1">Horario</h5>
-                        <p className="mb-0">Lun - Vie, 9:00 - 18:00</p>
-                      </div>
-                    </div>
-                    
-                    <hr className="my-3" />
-                    
-                    <h5 className="mb-2">Síguenos</h5>
-                    <div className="d-flex gap-2">
-                      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted fs-5">
-                        <i className="bi bi-twitter"></i>
-                      </a>
-                      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted fs-5">
-                        <i className="bi bi-linkedin"></i>
-                      </a>
-                      <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted fs-5">
-                        <i className="bi bi-github"></i>
-                      </a>
-                    </div>
+                    <h3 className="mb-3 fw-bold">¡Mensaje enviado con éxito!</h3>
+                    <p className="mb-4 text-muted">
+                      Hemos recibido tu mensaje y te responderemos lo antes posible en el correo que nos has proporcionado.
+                    </p>
+                    <button 
+                      className="btn btn-primary px-4 py-2"
+                      onClick={() => setSubmitted(false)}
+                    >
+                      <i className="bi bi-envelope-plus me-2"></i>
+                      Enviar otro mensaje
+                    </button>
                   </div>
-                </div>
-              </div>
-              
-              <div className="col-md-7">
-                <div className="card">
-                  <div className="card-body p-4">
-                    {submitted ? (
-                      <div className="text-center py-5">
-                        <div className="display-1 text-success mb-4">
-                          <i className="bi bi-check-circle-fill"></i>
-                        </div>
-                        <h3 className="mb-3 fw-bold">¡Mensaje enviado con éxito!</h3>
-                        <p className="mb-4 text-secondary">
-                          Gracias por contactar con {APP_INFO.NAME}. Hemos recibido tu mensaje y
-                          te responderemos lo antes posible en el correo que nos has proporcionado.
-                        </p>
-                        <button 
-                          className="btn btn-primary btn-lg px-5 py-2"
-                          onClick={() => setSubmitted(false)}
-                        >
-                          <i className="bi bi-envelope-plus me-2"></i>
-                          Enviar otro mensaje
-                        </button>
+                ) : (
+                  <>
+                    <div className="row mb-4 align-items-center">
+                      <div className="col-lg-8">
+                        <h3 className="fw-bold mb-2">Envíanos un mensaje</h3>
+                        <p className="text-muted mb-0">Completa el formulario y nos pondremos en contacto contigo pronto.</p>
                       </div>
-                    ) : (
-                      <form onSubmit={handleSubmit} noValidate>
-                        <h4 className="mb-3 fw-bold">Envíanos un mensaje</h4>
-                        
-                        <div className="mb-3">
-                          <label htmlFor="name" className="form-label">
-                            Nombre <span className="text-danger">*</span>
-                          </label>
-                          <div className="input-group">
-                            <span className="input-group-text">
-                              <i className="bi bi-person"></i>
-                            </span>
+                      <div className="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                        <div className="d-flex align-items-center justify-content-lg-end">
+                          <div className="me-3" style={{color: "var(--bs-primary)"}}>
+                            <i className="bi bi-envelope-fill fs-4"></i>
+                          </div>
+                          <div>
+                            <a href={`mailto:${CONTACT_EMAILS.SUPPORT}`} className="text-decoration-none">
+                              {CONTACT_EMAILS.SUPPORT}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <hr className="mb-4" />
+                    
+                    <form onSubmit={handleSubmit} noValidate>
+                      <div className="row g-3">
+                        <div className="col-md-6 mb-3">
+                          <div className="form-floating">
                             <input
                               type="text"
                               className={`form-control ${fieldErrors.name ? 'is-invalid' : ''}`}
@@ -221,6 +188,7 @@ const ContactPage = () => {
                               autoComplete="name"
                               required
                             />
+                            <label htmlFor="name">Nombre</label>
                             {fieldErrors.name && (
                               <div className="invalid-feedback">
                                 {fieldErrors.name}
@@ -229,14 +197,8 @@ const ContactPage = () => {
                           </div>
                         </div>
                         
-                        <div className="mb-3">
-                          <label htmlFor="email" className="form-label">
-                            Email <span className="text-danger">*</span>
-                          </label>
-                          <div className="input-group">
-                            <span className="input-group-text">
-                              <i className="bi bi-envelope"></i>
-                            </span>
+                        <div className="col-md-6 mb-3">
+                          <div className="form-floating">
                             <input
                               type="email"
                               className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
@@ -244,10 +206,11 @@ const ContactPage = () => {
                               name="email"
                               value={formData.email}
                               onChange={handleChange}
-                              placeholder="tu.email@ejemplo.com"
+                              placeholder="nombre@ejemplo.com"
                               autoComplete="email"
                               required
                             />
+                            <label htmlFor="email">Email</label>
                             {fieldErrors.email && (
                               <div className="invalid-feedback">
                                 {fieldErrors.email}
@@ -255,98 +218,89 @@ const ContactPage = () => {
                             )}
                           </div>
                         </div>
-                        
-                        <div className="mb-3">
-                          <label htmlFor="subject" className="form-label">
-                            Asunto <span className="text-danger">*</span>
-                          </label>
-                          <div className="input-group">
-                            <span className="input-group-text">
-                              <i className="bi bi-chat-left-text"></i>
-                            </span>
-                            <input
-                              type="text"
-                              className={`form-control ${fieldErrors.subject ? 'is-invalid' : ''}`}
-                              id="subject"
-                              name="subject"
-                              value={formData.subject}
-                              onChange={handleChange}
-                              placeholder="¿Sobre qué quieres hablar?"
-                              required
-                            />
-                            {fieldErrors.subject && (
-                              <div className="invalid-feedback">
-                                {fieldErrors.subject}
-                              </div>
-                            )}
-                          </div>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <div className="form-floating">
+                          <input
+                            type="text"
+                            className={`form-control ${fieldErrors.subject ? 'is-invalid' : ''}`}
+                            id="subject"
+                            name="subject"
+                            value={formData.subject}
+                            onChange={handleChange}
+                            placeholder="Asunto"
+                            required
+                          />
+                          <label htmlFor="subject">Asunto</label>
+                          {fieldErrors.subject && (
+                            <div className="invalid-feedback">
+                              {fieldErrors.subject}
+                            </div>
+                          )}
                         </div>
-                        
-                        <div className="mb-3">
-                          <label htmlFor="message" className="form-label">
-                            Mensaje <span className="text-danger">*</span>
-                          </label>
-                          <div className="input-group">
-                            <span className="input-group-text">
-                              <i className="bi bi-chat-quote"></i>
-                            </span>
-                            <textarea
-                              className={`form-control ${fieldErrors.message ? 'is-invalid' : ''}`}
-                              id="message"
-                              name="message"
-                              rows="5"
-                              value={formData.message}
-                              onChange={handleChange}
-                              placeholder="Escribe aquí tu mensaje..."
-                              required
-                            ></textarea>
-                            {fieldErrors.message && (
-                              <div className="invalid-feedback">
-                                {fieldErrors.message}
-                              </div>
-                            )}
-                          </div>
-                          <small className="text-muted d-block text-end mt-1">
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="form-floating">
+                          <textarea
+                            className={`form-control ${fieldErrors.message ? 'is-invalid' : ''}`}
+                            id="message"
+                            name="message"
+                            style={{ height: "160px" }}
+                            value={formData.message}
+                            onChange={handleChange}
+                            placeholder="Tu mensaje"
+                            required
+                          ></textarea>
+                          <label htmlFor="message">Mensaje</label>
+                          {fieldErrors.message && (
+                            <div className="invalid-feedback">
+                              {fieldErrors.message}
+                            </div>
+                          )}
+                        </div>
+                        <div className="d-flex justify-content-end mt-1">
+                          <small className="text-muted">
                             {formData.message.length}/5000 caracteres
                           </small>
                         </div>
-                        
-                        {error && (
-                          <div className="alert alert-danger d-flex align-items-center mt-4" role="alert">
-                            <i className="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
-                            <div>{error}</div>
-                          </div>
-                        )}
-                        
-                        <div className="d-grid mt-4">
-                          <button 
-                            type="submit" 
-                            className="btn btn-primary py-3"
-                            disabled={submitting}
-                          >
-                            {submitting ? (
-                              <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                Enviando mensaje...
-                              </>
-                            ) : (
-                              <>
-                                <i className="bi bi-send-fill me-2"></i>
-                                Enviar mensaje
-                              </>
-                            )}
-                          </button>
+                      </div>
+                      
+                      {error && (
+                        <div className="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                          <i className="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                          <div>{error}</div>
                         </div>
-                        
-                        <div className="text-center mt-3">
-                          <small className="text-muted">
-                            Al enviar este formulario, aceptas nuestra <a href="/privacy">Política de Privacidad</a>
-                          </small>
-                        </div>
-                      </form>
-                    )}
-                  </div>
-                </div>
+                      )}
+                      
+                      <div className="d-grid mb-2">
+                        <button 
+                          type="submit" 
+                          className="btn btn-primary"
+                          disabled={submitting}
+                        >
+                          {submitting ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                              Enviando mensaje...
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-send me-2"></i>
+                              Enviar mensaje
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <div className="text-center">
+                        <small className="text-muted">
+                          Al enviar este formulario, aceptas nuestra <a href="/privacy">Política de Privacidad</a>
+                        </small>
+                      </div>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
           </div>
