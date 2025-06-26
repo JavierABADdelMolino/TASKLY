@@ -58,12 +58,12 @@ exports.sendContactEmail = async (req, res) => {
     
     // Configurar opciones del correo
     const mailOptions = {
-      from: `"Formulario Web Taskly" <${process.env.EMAIL_USER}>`,
+      from: `"Taskly - Formulario de Contacto" <${process.env.EMAIL_USER}>`,
       to: process.env.SUPPORT_EMAIL,
-      subject: `[Contacto Web] ${subject}`,
+      subject: `${name} te ha enviado un mensaje: "${subject}"`,
       replyTo: email,
       text: `
-Nuevo mensaje de contacto en Taskly
+Mensaje de ${name} desde el formulario web
 --------------------------------------
 Fecha: ${dateTime}
 Nombre: ${name}
@@ -74,29 +74,51 @@ MENSAJE:
 ${message}
 
 --------------------------------------
+Para responder directamente, simplemente contesta a este correo.
 Este mensaje fue enviado desde el formulario de contacto en taskly.es
 `,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-color.svg" alt="Taskly" width="120" />
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-color.svg" alt="Taskly" width="140" style="margin-bottom: 10px;" />
+            <h1 style="color: #4a6cf7; margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
           </div>
-          <h2 style="color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Nuevo mensaje de contacto</h2>
-          <p style="color: #666; font-size: 14px;">Recibido el: ${dateTime}</p>
-          <div style="background-color: #f9f9f9; border-radius: 5px; padding: 15px; margin: 15px 0;">
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Asunto:</strong> ${subject}</p>
+          
+          <div style="background-color: #f9f9f9; border-left: 4px solid #4a6cf7; padding: 15px 20px; margin: 20px 0; border-radius: 5px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+              <tr>
+                <td style="padding: 8px 0; vertical-align: top; width: 100px;"><strong>De:</strong></td>
+                <td style="padding: 8px 0;"><strong>${name}</strong></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; vertical-align: top;"><strong>Email:</strong></td>
+                <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #4a6cf7; text-decoration: none;">${email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; vertical-align: top;"><strong>Fecha:</strong></td>
+                <td style="padding: 8px 0;">${dateTime}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; vertical-align: top;"><strong>Asunto:</strong></td>
+                <td style="padding: 8px 0;">${subject}</td>
+              </tr>
+            </table>
           </div>
-          <div style="margin-top: 20px;">
-            <h3 style="color: #333;">Mensaje:</h3>
-            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-top: 5px; white-space: pre-line;">
+          
+          <div style="margin-top: 25px;">
+            <h3 style="color: #333; margin-bottom: 15px; font-size: 18px;">Mensaje:</h3>
+            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 6px; margin-top: 10px; white-space: pre-line; line-height: 1.6; font-size: 15px;">
               ${sanitizedMessage.replace(/\n/g, '<br>')}
             </div>
           </div>
-          <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #777; text-align: center;">
+          
+          <div style="margin-top: 35px; background-color: #f0f4ff; padding: 15px; border-radius: 6px; text-align: center;">
+            <p style="margin: 0; color: #4a6cf7; font-weight: 500;">Para responder a ${name}, simplemente contesta a este correo.</p>
+          </div>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 13px; color: #777; text-align: center;">
             Este mensaje fue enviado desde el formulario de contacto en 
-            <a href="${process.env.FRONTEND_URL || process.env.CLIENT_URL}" style="color: #4a6cf7;">taskly.es</a>
+            <a href="${process.env.FRONTEND_URL || process.env.CLIENT_URL}" style="color: #4a6cf7; text-decoration: none; font-weight: 500;">taskly.es</a>
           </div>
         </div>
       `
