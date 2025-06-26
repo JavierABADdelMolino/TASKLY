@@ -45,7 +45,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
             <div className="modal-body px-4 pt-2">
               <p>
                 Hemos detectado que ya existe una cuenta con el email <strong>{data.email}</strong> que 
-                usa nombre y contraseña para iniciar sesión.
+                usa correo electrónico y contraseña para iniciar sesión.
               </p>
               
               <p>
@@ -54,8 +54,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
               
               <div className="alert alert-warning py-3">
                 <i className="bi bi-exclamation-triangle me-2"></i>
-                <strong>Importante:</strong> Si enlazas las cuentas, ya no podrás iniciar sesión con 
-                contraseña y deberás usar siempre Google para acceder.
+                <strong>Importante:</strong> Si enlazas las cuentas, deberás utilizar siempre Google como forma de acceso.
               </div>
               
               {error && (
