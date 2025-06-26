@@ -44,7 +44,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
             
             <div className="modal-body px-4 pt-2">
               <p>
-                Ya existe una cuenta asociada a <strong>{data.email}</strong> que utiliza email y contraseña.
+                Ya existe una cuenta asociada a <strong>{data.email}</strong> que utiliza email y contraseña para iniciar sesión.
               </p>
               
               <p className="fw-semibold">
