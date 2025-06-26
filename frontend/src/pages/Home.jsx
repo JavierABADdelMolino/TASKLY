@@ -111,7 +111,7 @@ const Home = () => {
 
       {/* Resto del contenido de la página de inicio */}
       <div className="container my-5">
-        <h2 className="text-center mb-4">Funcionalidades principales</h2>
+        <h2 className="text-center mb-4 fw-bold">Funcionalidades principales</h2>
         <div className="row">
           <div className="col-md-4 mb-4">
             <div className="card h-100 border-0 shadow-sm">

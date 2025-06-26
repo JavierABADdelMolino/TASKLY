@@ -93,7 +93,7 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
         ">
           <div style="text-align: center; margin-bottom: 25px;">
             <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-color.svg" alt="Taskly" width="140" style="margin-bottom: 10px;" />
-            <h1 style="color: var(--bs-primary, #1abc9c); margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
+            <h1 style="color: var(--bs-body-color, #212529); margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
           </div>
           
           <div style="
@@ -124,7 +124,6 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
           </div>
           
           <div style="margin-top: 25px;">
-            <h3 style="color: var(--bs-heading-color, #333); margin-bottom: 15px; font-size: 18px;">Mensaje:</h3>
             <div style="
               background-color: var(--bs-tertiary-bg, #f5f5f5); 
               padding: 20px; 
@@ -138,15 +137,7 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
             </div>
           </div>
           
-          <div style="
-            margin-top: 35px; 
-            background-color: rgba(var(--bs-primary-rgb, 26, 188, 156), 0.1); 
-            padding: 15px; 
-            border-radius: 6px; 
-            text-align: center;
-          ">
-            <p style="margin: 0; color: var(--bs-primary, #1abc9c); font-weight: 500;">Para responder a ${name}, simplemente contesta a este correo.</p>
-          </div>
+          <!-- Se eliminó la sección de "Para responder a..." como se solicitó -->
           
           <div style="
             margin-top: 30px; 
