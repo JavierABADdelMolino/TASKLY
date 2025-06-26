@@ -16,3 +16,23 @@ input[type="time"] {
     border-color: var(--bs-border-color);
   }
 }
+
+/* Estilos para inputs de fecha y hora en la misma fila */
+.row .col-md-6 {
+  input[type="date"],
+  input[type="time"] {
+    width: 100%;
+  }
+  
+  /* Ajustes adicionales para mantener la consistencia visual */
+  .form-floating {
+    margin-bottom: 0;
+    
+    label {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

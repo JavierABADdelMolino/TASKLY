@@ -134,37 +134,43 @@ const EditTaskModal = ({ show, onClose, task, onTaskUpdated }) => {
                   <label htmlFor="description">Descripción</label>
                 </div>
                 {/* Fecha de vencimiento (opcional) */}
-                <div className="mb-3 form-floating">
-                  <input
-                    type="date"
-                    id="dueDate"
-                    className="form-control"
-                    value={dueDate}
-                    onChange={(e) => {
-                      setDueDate(e.target.value);
-                      setError('');
-                    }}
-                    onBlur={fetchSuggestion}
-                    placeholder="Fecha de vencimiento"
-                  />
-                  <label htmlFor="dueDate">Fecha de vencimiento</label>
-                </div>
-                {/* Hora de vencimiento (opcional, requiere fecha) */}
-                <div className="mb-3 form-floating">
-                  <input
-                    type="time"
-                    id="dueTime"
-                    className="form-control"
-                    value={dueTime}
-                    onChange={(e) => {
-                      setDueTime(e.target.value);
-                      setError('');
-                    }}
-                    disabled={!dueDate}
-                    onBlur={fetchSuggestion}
-                    placeholder="Hora de vencimiento"
-                  />
-                  <label htmlFor="dueTime">Hora de vencimiento</label>
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <div className="form-floating">
+                      <input
+                        type="date"
+                        id="dueDate"
+                        className="form-control"
+                        value={dueDate}
+                        onChange={(e) => {
+                          setDueDate(e.target.value);
+                          setError('');
+                        }}
+                        onBlur={fetchSuggestion}
+                        placeholder="Fecha de vencimiento"
+                      />
+                      <label htmlFor="dueDate">Fecha de vencimiento</label>
+                    </div>
+                  </div>
+                  {/* Hora de vencimiento (opcional, requiere fecha) */}
+                  <div className="col-md-6">
+                    <div className="form-floating">
+                      <input
+                        type="time"
+                        id="dueTime"
+                        className="form-control"
+                        value={dueTime}
+                        onChange={(e) => {
+                          setDueTime(e.target.value);
+                          setError('');
+                        }}
+                        disabled={!dueDate}
+                        onBlur={fetchSuggestion}
+                        placeholder="Hora de vencimiento"
+                      />
+                      <label htmlFor="dueTime">Hora de vencimiento</label>
+                    </div>
+                  </div>
                 </div>
                 {/* Importancia debe ir al final */}
                 <div className="mb-3 form-floating">
