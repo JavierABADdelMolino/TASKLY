@@ -1,6 +1,6 @@
 // src/components/profile/AvatarUploader.jsx
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 export default function AvatarUploader({
@@ -14,28 +14,68 @@ export default function AvatarUploader({
   const [preview, setPreview] = useState('');
   const [isDefaultAvatar, setIsDefaultAvatar] = useState(false);
 
+  // Función para determinar si es un avatar predeterminado
+  const checkIfDefaultAvatar = useCallback((avatarUrl) => {
+    // Verificar todas las posibles variantes de rutas de avatares predeterminados
+    if (!avatarUrl) return false;
+    
+    return (
+      avatarUrl.includes('/avatars/default-avatar-') || 
+      avatarUrl.includes('/public/avatars/default-avatar-')
+    );
+  }, []);
+
+  // Función para obtener la URL del avatar predeterminado según el género
+  const getDefaultAvatarUrl = useCallback(() => {
+    const defaultPath = gender === 'female'
+      ? '/public/avatars/default-avatar-female.png'
+      : '/public/avatars/default-avatar-male.png';
+    
+    // Usar URL completa con el dominio de la API si está disponible
+    if (process.env.REACT_APP_URL) {
+      return `${process.env.REACT_APP_URL}${defaultPath}`;
+    }
+    
+    // En desarrollo podemos usar la URL relativa con el PUBLIC_URL
+    return `${process.env.PUBLIC_URL || ''}${defaultPath}`;
+  }, [gender]);
+  
   useEffect(() => {
     // Determina la URL de la imagen (Cloudinary o local)
-    const defaultPath = gender === 'female'
-      ? '/avatars/default-avatar-female.png'
-      : '/avatars/default-avatar-male.png';
-    const defaultUrl = `${process.env.PUBLIC_URL || ''}${defaultPath}`;
+    const defaultUrl = getDefaultAvatarUrl();
     let src;
+    
     if (deleted) {
+      // Si el avatar fue eliminado, mostrar el predeterminado
       src = defaultUrl;
       setIsDefaultAvatar(true);
     } else if (url) {
-      src = url.startsWith('http')
-        ? url
-        : `${process.env.REACT_APP_URL}${url}`;
-      setIsDefaultAvatar(url.includes('/avatars/default-avatar-'));
+      // Si hay una URL proporcionada
+      const isDefault = checkIfDefaultAvatar(url);
+      
+      if (isDefault) {
+        // Si es un avatar predeterminado, asegurarse de usar la URL completa
+        src = defaultUrl;
+      } else {
+        // Si es un avatar personalizado (Cloudinary o ruta relativa)
+        // Asegurarse de que la URL es absoluta
+        src = url.startsWith('http')
+          ? url
+          : `${process.env.REACT_APP_URL}${url}`;
+      }
+      
+      setIsDefaultAvatar(isDefault);
     } else {
+      // Si no hay URL, usar el predeterminado
       src = defaultUrl;
       setIsDefaultAvatar(true);
     }
+    
+    console.log("URL de avatar configurada:", src); // Para debug
     setPreview(src);
-  }, [url, deleted, gender]);
+  }, [url, deleted, gender, getDefaultAvatarUrl, checkIfDefaultAvatar]);
 
+  // Actualiza cuando se selecciona un nuevo archivo
   const handleChange = e => {
     const file = e.target.files[0];
     if (file) {
@@ -43,6 +83,19 @@ export default function AvatarUploader({
       setPreview(URL.createObjectURL(file));
       setIsDefaultAvatar(false);
     }
+  };
+  
+  // Implementa una función para manejar la eliminación directamente
+  const handleDeleteAvatar = () => {
+    // Establecer el avatar predeterminado inmediatamente usando la URL completa
+    const defaultUrl = getDefaultAvatarUrl();
+    console.log("Avatar predeterminado al eliminar:", defaultUrl); // Para debug
+    
+    setPreview(defaultUrl);
+    setIsDefaultAvatar(true);
+    
+    // Llamar a la función onDelete del padre
+    onDelete();
   };
 
   return (
@@ -55,6 +108,14 @@ export default function AvatarUploader({
         alt="Avatar"
         className="rounded-circle border"
         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        onError={(e) => {
+          // Si hay un error al cargar la imagen, mostrar el avatar predeterminado
+          e.target.onerror = null; // Evita bucles infinitos
+          const defaultUrl = getDefaultAvatarUrl();
+          e.target.src = defaultUrl;
+          setPreview(defaultUrl); // También actualizar el estado
+          setIsDefaultAvatar(true);
+        }}
       />
 
       {!disabled && (
@@ -63,7 +124,7 @@ export default function AvatarUploader({
           {!isDefaultAvatar && (
             <button
               type="button"
-              onClick={onDelete}
+              onClick={handleDeleteAvatar}
               style={{
                 position: 'absolute',
                 top: -6,

@@ -278,9 +278,10 @@ exports.googleLogin = async (req, res) => {
       // Si existe un usuario con el mismo email pero sin googleId,
       // es un usuario registrado normalmente que intenta usar Google
       if (existingUser && !existingUser.googleId) {
-        // Devolver que necesita enlazar cuentas
+        // Devolver que necesita enlazar cuentas con un código específico
         return res.json({
           needsLinking: true,
+          code: 'LINK_GOOGLE',
           email: email,
           firstName: existingUser.firstName,
           lastName: existingUser.lastName,
@@ -310,6 +311,7 @@ exports.googleLogin = async (req, res) => {
       // Se requerirá completar con datos adicionales
       return res.json({
         needsCompletion: true,
+        code: 'NEEDS_COMPLETION',
         email: email,
         firstName: given_name || '',
         lastName: family_name || '',

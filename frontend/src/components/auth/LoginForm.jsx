@@ -77,9 +77,19 @@ const LoginForm = () => {
   // Manejar el inicio de sesión con Google
   const handleGoogleLogin = async (googleData) => {
     try {
-      // Si necesita completar registro o enlazar cuenta
-      if (googleData.needsCompletion || googleData.needsLinking) {
-        console.log('Usuario de Google necesita completar registro o enlazar cuenta', googleData);
+      // Si necesita enlazar cuenta (email existe pero no está vinculado a Google)
+      if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE') {
+        console.log('Usuario necesita enlazar cuenta de Google', googleData);
+        // Guardamos los datos en sessionStorage y navegamos a Home con los datos,
+        // especificando que debe mostrar el modal de enlace
+        sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
+        navigate('/', { state: { openGoogleRegister: true, googleData, showLinkGoogleModal: true } });
+        return;
+      }
+      
+      // Si necesita completar registro (nuevo usuario con Google)
+      if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
+        console.log('Usuario de Google necesita completar registro', googleData);
         // Guardamos los datos en sessionStorage y navegamos a Home con los datos
         sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
         navigate('/', { state: { openGoogleRegister: true, googleData } });
@@ -138,9 +148,11 @@ const LoginForm = () => {
         </button>
         
         <div className="text-center mt-2">
-          <button type="button" className="btn btn-link small text-decoration-none" onClick={() => setShowForgotModal(true)}>
-            ¿Has olvidado tu contraseña?
-          </button>
+          <span>
+            <button type="button" className="btn btn-link p-0" onClick={() => setShowForgotModal(true)}>
+              ¿Has olvidado tu contraseña?
+            </button>
+          </span>
         </div>
 
         {/* Separador y botón de Google */}

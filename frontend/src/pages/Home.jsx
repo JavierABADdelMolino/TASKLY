@@ -7,7 +7,8 @@ import ResetPasswordModal from '../components/auth/modals/ResetPasswordModal';
 import LinkGoogleAccountModal from '../components/auth/modals/LinkGoogleAccountModal';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
-import { FiCheckSquare, FiClock, FiBell } from 'react-icons/fi';
+import { FiCheckSquare, FiClock } from 'react-icons/fi';
+import { RiBrainLine } from 'react-icons/ri';
 import { Carousel } from 'react-bootstrap';
 
 const Home = () => {
@@ -47,13 +48,13 @@ const Home = () => {
       const googleData = location.state.googleData;
       
       // Si necesita enlazar cuenta (email existe como cuenta normal)
-      if (googleData.needsLinking) {
+      if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE' || location.state?.showLinkGoogleModal) {
         console.log('Home: Usuario necesita enlazar cuenta Google', googleData);
         setGoogleRegisterData(googleData);
         setShowLinkGoogleModal(true);
       } 
       // Si necesita completar registro (email nuevo con Google)
-      else if (googleData.needsCompletion) {
+      else if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
         console.log('Home: Usuario necesita completar registro Google', googleData);
         setAuthMode('register');
         setGoogleRegisterData(googleData);
@@ -162,11 +163,10 @@ const Home = () => {
               width: '100%',
             }}
           >
-            <h2 className="fw-bold mb-4 text-center">Todo en un solo lugar</h2>
-            <div className="d-flex justify-content-center gap-5 mb-3">
+            <h2 className="fw-bold mb-4 text-center">Todo en un solo lugar</h2>              <div className="d-flex justify-content-center gap-5 mb-3">
               <FiCheckSquare size={48} className="text-primary" />
               <FiClock size={48} className="text-primary" />
-              <FiBell size={48} className="text-primary" />
+              <RiBrainLine size={48} className="text-primary" />
             </div>
             <p className="mt-3 text-center">Características intuitivas, seguimiento de tiempo y recordatorios automáticos.</p>
             <div className="mt-4 d-flex gap-3 justify-content-center">
@@ -203,9 +203,9 @@ const Home = () => {
               <p>Controla plazos y recibe notificaciones antes de las fechas de entrega.</p>
             </div>
             <div className="col-md-4 text-center">
-              <FiBell size={48} className="text-primary mb-3" />
-              <h5>Recordatorios</h5>
-              <p>No olvides nada gracias a los recordatorios automáticos.</p>
+              <RiBrainLine size={48} className="text-primary mb-3" />
+              <h5>Sugerencias inteligentes</h5>
+              <p>Prioriza lo importante gracias a las recomendaciones basadas en IA.</p>
             </div>
           </div>
         </div>

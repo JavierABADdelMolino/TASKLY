@@ -31,8 +31,15 @@ const Profile = () => {
   const [showDelModal, setShowDelModal] = useState(false);
   const [originalTheme] = useState(theme);
 
-  const isDefaultAvatar = (url) =>
-    url?.includes('/public/avatars/default-avatar-');
+  const isDefaultAvatar = (url) => {
+    // Verificar todas las posibles variantes de rutas de avatares predeterminados
+    if (!url) return false;
+    
+    return (
+      url.includes('/avatars/default-avatar-') || 
+      url.includes('/public/avatars/default-avatar-')
+    );
+  };
 
   const fetchUser = useCallback(async () => {
     try {
@@ -72,10 +79,15 @@ const Profile = () => {
   // Actualiza avatar por defecto si cambia el género y tiene un avatar por defecto
   useEffect(() => {
     if (!newAvatarFile && isDefaultAvatar(formData.avatarUrl)) {
-      const newDefault =
-        formData.gender === 'female'
-          ? '/public/avatars/default-avatar-female.png'
-          : '/public/avatars/default-avatar-male.png';
+      // Usar la URL completa para el avatar predeterminado
+      const defaultPath = formData.gender === 'female'
+        ? '/public/avatars/default-avatar-female.png'
+        : '/public/avatars/default-avatar-male.png';
+      
+      // Construir la URL completa con el dominio de la API
+      const newDefault = `${process.env.REACT_APP_URL}${defaultPath}`;
+      
+      console.log("Avatar predeterminado actualizado por cambio de género:", newDefault);
       setFormData((prev) => ({ ...prev, avatarUrl: newDefault }));
     }
   }, [formData.gender, formData.avatarUrl, newAvatarFile]);
@@ -112,10 +124,16 @@ const Profile = () => {
   const handleAvatarDelete = () => {
     setAvatarDeleted(true);
     setNewAvatarFile(null);
-    const newDefault =
-      formData.gender === 'female'
-        ? '/public/avatars/default-avatar-female.png'
-        : '/public/avatars/default-avatar-male.png';
+    
+    // Usar la URL completa para el avatar predeterminado
+    const defaultPath = formData.gender === 'female'
+      ? '/public/avatars/default-avatar-female.png'
+      : '/public/avatars/default-avatar-male.png';
+    
+    // Construir la URL completa con el dominio de la API
+    const newDefault = `${process.env.REACT_APP_URL}${defaultPath}`;
+    
+    console.log("Asignando avatar predeterminado:", newDefault);
     setFormData((prev) => ({ ...prev, avatarUrl: newDefault }));
   };
 
