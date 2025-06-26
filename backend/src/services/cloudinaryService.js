@@ -26,7 +26,7 @@ const cloudinaryService = {
       // Crear un stream de subida a Cloudinary
       const uploadStream = cloudinary.uploader.upload_stream(
         { 
-          folder: "taskly/avatars",
+          folder: "avatars",
           transformation: [
             { width: 250, height: 250, crop: "fill", gravity: "face" },
           ],
