@@ -126,8 +126,6 @@ exports.updateUserProfile = async (req, res) => {
 
       user.avatarUrl = defaultAvatar;
       updated = true;
-      
-      console.log(`Avatar cambiado al predeterminado para usuario ${user.email}: ${defaultAvatar}`);
     }
 
     // Si el avatar actual es uno por defecto del género anterior y ha cambiado el género
