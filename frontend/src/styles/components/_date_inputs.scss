@@ -1,5 +1,6 @@
-/* Estilos para inputs de fecha */
-input[type="date"] {
+/* Estilos para inputs de fecha y hora */
+input[type="date"],
+input[type="time"] {
   &::-webkit-calendar-picker-indicator {
     filter: var(--calendar-icon-filter) !important;
     cursor: pointer;

@@ -44,4 +44,7 @@ $theme-colors: (
 
   /* Border radius */
   --bs-border-radius: 0.25rem;
+  
+  /* Calendar & time icons */
+  --calendar-icon-filter: none; /* Default for light mode, será sobreescrito según el tema */
 }

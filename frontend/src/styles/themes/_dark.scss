@@ -2,6 +2,8 @@
   /* Base overrides */
   --bs-body-bg: #121212;
   --bs-body-color: #e0e0e0;
+  /* Date/time picker icons */
+  --calendar-icon-filter: invert(1) brightness(1.8);
   --bs-card-bg: #1e1e1e;
   --bs-card-border-color: #2c2c2c;
   --bs-navbar-bg: #1f1f1f;
@@ -363,9 +365,11 @@
     color: var(--bs-body-bg) !important;
   }
 
-  /* Date picker icon color in dark mode */
+  /* Date and time picker icon color in dark mode */
   input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="date"].form-control::-webkit-calendar-picker-indicator {
+  input[type="date"].form-control::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="time"].form-control::-webkit-calendar-picker-indicator {
     filter: invert(1) brightness(1.8) !important;
   }
 }
