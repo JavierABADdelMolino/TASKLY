@@ -12,6 +12,7 @@ export default function AvatarUploader({
   deleted
 }) {
   const [preview, setPreview] = useState('');
+  const [isDefaultAvatar, setIsDefaultAvatar] = useState(false);
 
   useEffect(() => {
     // Determina la URL de la imagen (Cloudinary o local)
@@ -22,12 +23,15 @@ export default function AvatarUploader({
     let src;
     if (deleted) {
       src = defaultUrl;
+      setIsDefaultAvatar(true);
     } else if (url) {
       src = url.startsWith('http')
         ? url
         : `${process.env.REACT_APP_URL}${url}`;
+      setIsDefaultAvatar(url.includes('/avatars/default-avatar-'));
     } else {
       src = defaultUrl;
+      setIsDefaultAvatar(true);
     }
     setPreview(src);
   }, [url, deleted, gender]);
@@ -37,6 +41,7 @@ export default function AvatarUploader({
     if (file) {
       onFile(file);
       setPreview(URL.createObjectURL(file));
+      setIsDefaultAvatar(false);
     }
   };
 
@@ -54,28 +59,30 @@ export default function AvatarUploader({
 
       {!disabled && (
         <>
-          {/* Botón “X” para eliminar */}
-          <button
-            type="button"
-            onClick={onDelete}
-            style={{
-              position: 'absolute',
-              top: -6,
-              right: -6,
-              background: '#dc3545',
-              border: 'none',
-              color: 'white',
-              borderRadius: '50%',
-              width: 20,
-              height: 20,
-              lineHeight: '20px',
-              padding: 0,
-              cursor: 'pointer'
-            }}
-            title="Eliminar avatar"
-          >
-            ×
-          </button>
+          {/* Botón "X" para eliminar - solo visible si no es un avatar por defecto */}
+          {!isDefaultAvatar && (
+            <button
+              type="button"
+              onClick={onDelete}
+              style={{
+                position: 'absolute',
+                top: -6,
+                right: -6,
+                background: '#dc3545',
+                border: 'none',
+                color: 'white',
+                borderRadius: '50%',
+                width: 20,
+                height: 20,
+                lineHeight: '20px',
+                padding: 0,
+                cursor: 'pointer'
+              }}
+              title="Eliminar avatar"
+            >
+              ×
+            </button>
+          )}
 
           {/* Botón personalizado para seleccionar archivo */}
           <input
