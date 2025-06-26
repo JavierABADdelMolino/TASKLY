@@ -7,7 +7,7 @@ const ConfirmDeleteBoardModal = ({ show, onClose, onConfirm }) => {
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content shadow-sm">
           <div className="modal-header border-bottom-0">
-            <h5 className="modal-title text-danger text-center w-100 fw-bold">Eliminar pizarra</h5>
+            <h5 className="modal-title text-center w-100 fw-bold">Eliminar pizarra</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body pt-0">
