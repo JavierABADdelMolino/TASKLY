@@ -47,13 +47,13 @@ const Home = () => {
       const googleData = location.state.googleData;
       
       // Si necesita enlazar cuenta (email existe como cuenta normal)
-      if (googleData.needsLinking) {
+      if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE' || location.state?.showLinkGoogleModal) {
         console.log('Home: Usuario necesita enlazar cuenta Google', googleData);
         setGoogleRegisterData(googleData);
         setShowLinkGoogleModal(true);
       } 
       // Si necesita completar registro (email nuevo con Google)
-      else if (googleData.needsCompletion) {
+      else if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
         console.log('Home: Usuario necesita completar registro Google', googleData);
         setAuthMode('register');
         setGoogleRegisterData(googleData);

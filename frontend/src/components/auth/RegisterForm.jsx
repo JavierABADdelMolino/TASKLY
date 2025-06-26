@@ -71,6 +71,15 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
 
   // Manejador para los datos de Google
   const handleGoogleSignIn = (data) => {
+    // Si es un caso de vinculación de cuenta (email ya existe)
+    if (data.needsLinking || data.code === 'LINK_GOOGLE') {
+      console.log('Usuario necesita enlazar cuenta de Google desde RegisterForm');
+      // Redirigir a Home con los datos para mostrar modal de enlace
+      navigate('/', { state: { openGoogleRegister: true, googleData: data, showLinkGoogleModal: true } });
+      return;
+    }
+    
+    // Si es completar registro con Google (nuevo usuario)
     setGoogleData(data);
     setStep('google-complete');
   };
