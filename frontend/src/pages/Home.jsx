@@ -1,10 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+// src/pages/Home.jsx
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoginForm from '../components/auth/LoginForm';
-import RegisterForm from '../components/auth/RegisterForm';
-import ResetPasswordModal from '../components/auth/modals/ResetPasswordModal';
-import LinkGoogleAccountModal from '../components/auth/modals/LinkGoogleAccountModal';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
 import { FiCheckSquare, FiClock } from 'react-icons/fi';
@@ -12,15 +9,11 @@ import { RiBrainLine } from 'react-icons/ri';
 import { Carousel } from 'react-bootstrap';
 
 const Home = () => {
-  const [authMode, setAuthMode] = useState(null);
-  const [googleRegisterData, setGoogleRegisterData] = useState(null);
-  const [showLinkGoogleModal, setShowLinkGoogleModal] = useState(false);
   // Capturar token de URL para reset
   const { token } = useParams();
   const { user } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (user) {
@@ -29,95 +22,16 @@ const Home = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    const handleAuthModal = (e) => {
-      setAuthMode(e.detail);
-    };
-    window.addEventListener('openAuthModal', handleAuthModal);
-    return () => window.removeEventListener('openAuthModal', handleAuthModal);
-  }, []);
-  useEffect(() => {
-    // abrir modal de reset al navegar a /reset-password/:token
+    // En caso de token de reset, abrir modal correspondiente
     if (token) {
-      setAuthMode('reset');
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('openAuthModal', { detail: 'reset' }));
+      }, 100);
     }
   }, [token]);
-  
-  // Revisar si hay data de Google en el estado de navegación
-  useEffect(() => {
-    if (location.state?.openGoogleRegister && location.state?.googleData) {
-      const googleData = location.state.googleData;
-      
-      // Si necesita enlazar cuenta (email existe como cuenta normal)
-      if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE' || location.state?.showLinkGoogleModal) {
-        console.log('Home: Usuario necesita enlazar cuenta Google', googleData);
-        setGoogleRegisterData(googleData);
-        setShowLinkGoogleModal(true);
-      } 
-      // Si necesita completar registro (email nuevo con Google)
-      else if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
-        console.log('Home: Usuario necesita completar registro Google', googleData);
-        setAuthMode('register');
-        setGoogleRegisterData(googleData);
-      }
-    }
-  }, [location.state]);
-
-  const handleCloseAuth = () => {
-    setAuthMode(null);
-    // Si estamos en ruta de reset, volvemos al home para restaurar la navbar
-    if (token) {
-      navigate('/');
-    }
-  };
 
   return (
     <Layout>
-      {/* Modal de autenticación */}
-      {authMode && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}
-        >
-          <div
-            className={`card shadow p-4 position-relative ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
-            style={{ width: '100%', maxWidth: '460px' }}
-          >
-            {/* Close button in top-right */}
-            <button
-              type="button"
-              className={`btn-close position-absolute top-0 end-0 m-3 ${theme === 'dark' ? 'btn-close-white' : ''}`}
-              aria-label="Cerrar"
-              onClick={handleCloseAuth}
-            />
-            {/* Login, Register o Reset forms */}
-            {authMode === 'login' && <LoginForm />}
-            {authMode === 'register' && <RegisterForm googleData={googleRegisterData} />}
-            {authMode === 'reset' && <ResetPasswordModal />}
-            {/* Switch between modes */}
-            {(authMode === 'login' || authMode === 'register') && (
-              <div className="mt-3 text-center">
-                {authMode === 'login' && (
-                  <span>
-                    ¿No tienes cuenta?{' '}
-                    <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('register')}>
-                      Registrarse
-                    </button>
-                  </span>
-                )}
-                {authMode === 'register' && (
-                  <span>
-                    ¿Ya tienes cuenta?{' '}
-                    <button type="button" className="btn btn-link p-0" onClick={() => setAuthMode('login')}>
-                      Iniciar sesión
-                    </button>
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Hero Carousel */}
       <Carousel
         interval={4000}
@@ -163,7 +77,8 @@ const Home = () => {
               width: '100%',
             }}
           >
-            <h2 className="fw-bold mb-4 text-center">Todo en un solo lugar</h2>              <div className="d-flex justify-content-center gap-5 mb-3">
+            <h2 className="fw-bold mb-4 text-center">Todo en un solo lugar</h2>              
+            <div className="d-flex justify-content-center gap-5 mb-3">
               <FiCheckSquare size={48} className="text-primary" />
               <FiClock size={48} className="text-primary" />
               <RiBrainLine size={48} className="text-primary" />
@@ -176,58 +91,102 @@ const Home = () => {
               >
                 Ver características
               </button>
-              <button
-                className="btn btn-primary text-white"
-                onClick={() => window.dispatchEvent(new CustomEvent('openAuthModal', { detail: 'register' }))}
-              >
-                Empieza ahora
-              </button>
             </div>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
 
-      {/* Features Section */}
-      <section id="features" className={`features py-5 ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-        <div className="container">
-          <h2 className="text-center mb-5">Características destacadas</h2>
-          <div className="row gy-4">
-            <div className="col-md-4 text-center">
-              <FiCheckSquare size={48} className="text-primary mb-3" />
-              <h5>Gestión intuitiva</h5>
-              <p>Arrastra y organiza tus tareas y columnas con sencillos clicks.</p>
+      {/* Resto del contenido de la página de inicio */}
+      <div className="container my-5">
+        <div className="row">
+          <div className="col-md-4 mb-4">
+            <div className="card h-100 border-0 shadow-sm">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <FiCheckSquare size={36} className="text-primary" />
+                </div>
+                <h3>Gestión de tareas</h3>
+                <p className="text-muted">
+                  Organiza tus tareas en columnas personalizables y muévelas según avanzas en tu trabajo.
+                </p>
+              </div>
             </div>
-            <div className="col-md-4 text-center">
-              <FiClock size={48} className="text-primary mb-3" />
-              <h5>Seguimiento de tiempos</h5>
-              <p>Controla plazos y recibe notificaciones antes de las fechas de entrega.</p>
+          </div>
+          <div className="col-md-4 mb-4">
+            <div className="card h-100 border-0 shadow-sm">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <FiClock size={36} className="text-primary" />
+                </div>
+                <h3>Control de tiempo</h3>
+                <p className="text-muted">
+                  Establece fechas límite y recibe recordatorios para mantenerte al día con tus compromisos.
+                </p>
+              </div>
             </div>
-            <div className="col-md-4 text-center">
-              <RiBrainLine size={48} className="text-primary mb-3" />
-              <h5>Sugerencias inteligentes</h5>
-              <p>Prioriza lo importante gracias a las recomendaciones basadas en IA.</p>
+          </div>
+          <div className="col-md-4 mb-4">
+            <div className="card h-100 border-0 shadow-sm">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <RiBrainLine size={36} className="text-primary" />
+                </div>
+                <h3>Simple y poderoso</h3>
+                <p className="text-muted">
+                  Una interfaz intuitiva que no requiere formación especial. Empieza a usarlo en segundos.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Call to Action */}
-      
-      {/* Modal para enlazar cuenta de Google */}
-      {showLinkGoogleModal && googleRegisterData && (
-        <LinkGoogleAccountModal 
-          data={googleRegisterData} 
-          onCancel={() => {
-            setShowLinkGoogleModal(false);
-            // Limpiar estado de navegación
-            navigate('/', { replace: true });
-          }} 
-        />
-      )}
-      <section className="cta bg-primary text-white text-center py-5">
-        <h3 className="mb-4">Listo para empezar?</h3>
-        {/* Botón de registro eliminado: usar Navbar */}
-      </section>
+      {/* Sección de características */}
+      <div id="features" className="bg-light py-5">
+        <div className="container">
+          <h2 className="text-center mb-5 fw-bold">Por qué elegir Taskly</h2>
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="d-flex">
+                <div className="flex-shrink-0">
+                  <span className="badge rounded-circle p-3 bg-primary">
+                    <i className="bi bi-check-lg fs-5"></i>
+                  </span>
+                </div>
+                <div className="flex-grow-1 ms-3">
+                  <h4 className="mb-2">Interfaz intuitiva</h4>
+                  <p className="text-muted">
+                    Diseño limpio y sencillo que te permite centrarte en tus tareas sin distracciones.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="d-flex">
+                <div className="flex-shrink-0">
+                  <span className="badge rounded-circle p-3 bg-primary">
+                    <i className="bi bi-check-lg fs-5"></i>
+                  </span>
+                </div>
+                <div className="flex-grow-1 ms-3">
+                  <h4 className="mb-2">Personalización completa</h4>
+                  <p className="text-muted">
+                    Adapta tus tableros y columnas según tus necesidades específicas.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-5">
+            <button
+              className="btn btn-lg btn-primary"
+              onClick={() => window.dispatchEvent(new CustomEvent('openAuthModal', { detail: 'register' }))}
+            >
+              Empieza gratis ahora
+            </button>
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

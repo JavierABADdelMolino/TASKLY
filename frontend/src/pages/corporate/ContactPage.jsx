@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import { CONTACT_EMAILS } from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
 
 const ContactPage = () => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +15,22 @@ const ContactPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  
+  // Autocompletar campos si el usuario está logueado
+  useEffect(() => {
+    if (user) {
+      // Crear el nombre completo a partir de firstName y lastName
+      const fullName = user.firstName && user.lastName 
+        ? `${user.firstName} ${user.lastName}` 
+        : user.firstName || user.lastName || '';
+      
+      setFormData(prev => ({
+        ...prev,
+        name: fullName,
+        email: user.email || ''
+      }));
+    }
+  }, [user]);
   
   // Resetear errores al cambiar un campo
   const handleChange = (e) => {
@@ -100,7 +118,16 @@ const ContactPage = () => {
       
       // Si todo está bien, indicar éxito y resetear el formulario
       setSubmitted(true);
-      setFormData({name: '', email: '', subject: '', message: ''});
+      
+      // Resetear el formulario pero mantener datos del usuario si está autenticado
+      setFormData({
+        name: user ? (user.firstName && user.lastName 
+          ? `${user.firstName} ${user.lastName}` 
+          : user.firstName || user.lastName || '') : '',
+        email: user ? user.email || '' : '',
+        subject: '', 
+        message: ''
+      });
       
       // Scroll a la parte superior para mostrar el mensaje de éxito
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -144,7 +171,22 @@ const ContactPage = () => {
                     </p>
                     <button 
                       className="btn btn-primary px-4 py-2"
-                      onClick={() => setSubmitted(false)}
+                      onClick={() => {
+                        setSubmitted(false);
+                        // Asegurarse de que los campos de usuario permanecen rellenados si está autenticado
+                        if (user) {
+                          // Crear el nombre completo a partir de firstName y lastName
+                          const fullName = user.firstName && user.lastName 
+                            ? `${user.firstName} ${user.lastName}` 
+                            : user.firstName || user.lastName || '';
+                          
+                          setFormData(prev => ({
+                            ...prev,
+                            name: fullName,
+                            email: user.email || ''
+                          }));
+                        }
+                      }}
                     >
                       <i className="bi bi-envelope-plus me-2"></i>
                       Enviar otro mensaje
@@ -155,7 +197,12 @@ const ContactPage = () => {
                     <div className="row mb-4 align-items-center">
                       <div className="col-lg-8">
                         <h3 className="fw-bold mb-2">Envíanos un mensaje</h3>
-                        <p className="text-muted mb-0">Completa el formulario y nos pondremos en contacto contigo pronto.</p>
+                        <p className="text-muted mb-0">
+                          {user 
+                            ? 'Se han autocompletado tus datos. Completa el resto del formulario y te responderemos pronto.' 
+                            : 'Completa el formulario y nos pondremos en contacto contigo pronto.'
+                          }
+                        </p>
                       </div>
                       <div className="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <div className="d-flex align-items-center justify-content-lg-end">
@@ -188,7 +235,14 @@ const ContactPage = () => {
                               autoComplete="name"
                               required
                             />
-                            <label htmlFor="name">Nombre</label>
+                            <label htmlFor="name">
+                              Nombre
+                              {user && user.firstName && formData.name === `${user.firstName} ${user.lastName}`.trim() && (
+                                <span className="ms-1 text-muted" style={{fontSize: "0.8em", fontWeight: "normal"}}>
+                                  (tu perfil)
+                                </span>
+                              )}
+                            </label>
                             {fieldErrors.name && (
                               <div className="invalid-feedback">
                                 {fieldErrors.name}
@@ -210,7 +264,14 @@ const ContactPage = () => {
                               autoComplete="email"
                               required
                             />
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">
+                              Email
+                              {user && user.email && formData.email === user.email && (
+                                <span className="ms-1 text-muted" style={{fontSize: "0.8em", fontWeight: "normal"}}>
+                                  (tu perfil)
+                                </span>
+                              )}
+                            </label>
                             {fieldErrors.email && (
                               <div className="invalid-feedback">
                                 {fieldErrors.email}
