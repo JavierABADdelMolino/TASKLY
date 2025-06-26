@@ -36,29 +36,38 @@ export default function ConfirmDeleteModal({ onClose }) {
       backgroundColor: 'rgba(0,0,0,0.5)',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      padding: 0
     }}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title text-danger">Eliminar cuenta</h5>
+      <div className="modal-dialog modal-dialog-centered" role="document">
+        <div className="modal-content shadow-sm">
+          <div className="modal-header border-bottom-0">
+            <h5 className="modal-title text-danger text-center w-100 fw-bold">Eliminar cuenta</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
-          <div className="modal-body">
-            <p>
+          <div className="modal-body pt-0">
+            <p className="text-center">
               Esta acción es <strong>irreversible</strong>. Escribe <strong>ELIMINAR</strong> para confirmar:
             </p>
-            <input
-              type="text"
-              className="form-control mb-2"
-              value={confirmText}
-              onChange={e => setConfirmText(e.target.value)}
-            />
-            {error && <small className="text-danger">{error}</small>}
+            <div className="mb-3 form-floating">
+              <input
+                id="confirmText"
+                type="text"
+                className={`form-control ${error ? 'is-invalid' : ''}`}
+                value={confirmText}
+                onChange={e => {
+                  setConfirmText(e.target.value);
+                  setError('');
+                }}
+                placeholder="ELIMINAR"
+              />
+              <label htmlFor="confirmText">ELIMINAR</label>
+              {error && <small className="text-danger d-block mt-1 fade-in">{error}</small>}
+            </div>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-            <button type="button" className="btn btn-danger" onClick={handleDelete}>Eliminar cuenta</button>
+          <div className="modal-footer border-top-0 pt-0">
+            <button type="button" className="btn btn-secondary px-3 py-2" onClick={onClose}>Cancelar</button>
+            <button type="button" className="btn btn-danger px-4 py-2" onClick={handleDelete}>Eliminar cuenta</button>
           </div>
         </div>
       </div>
