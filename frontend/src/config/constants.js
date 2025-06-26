@@ -13,3 +13,17 @@ export const APP_INFO = {
   VERSION: '1.0.0',
   COPYRIGHT_YEAR: new Date().getFullYear(),
 };
+
+// Enlaces sociales del autor
+export const AUTHOR_LINKS = {
+  GITHUB: 'https://github.com/JavierABADdelMolino',
+  LINKEDIN: 'https://www.linkedin.com/in/javier-abad-del-molino',
+};
+
+// Información del autor
+export const AUTHOR_INFO = {
+  NAME: 'Javier Abad del Molino',
+  ROLE: 'Desarrollador Full Stack',
+  PROFILE_IMAGE: '/img/author/javier-abad.jpg',
+  BIO: 'Estudiante de Desarrollo de Aplicaciones Multiplataforma especializado en tecnologías web modernas. Taskly representa mi proyecto de fin de grado, donde he aplicado mis conocimientos para crear una aplicación intuitiva con excelente experiencia de usuario.',
+};
