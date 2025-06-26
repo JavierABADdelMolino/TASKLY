@@ -78,13 +78,31 @@ Para responder directamente, simplemente contesta a este correo.
 Este mensaje fue enviado desde el formulario de contacto en taskly.es
 `,
       html: `
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
+        <!-- Definimos variables CSS para usar el sistema de diseño del proyecto -->
+        <div style="
+          /* Estilos generales */
+          font-family: 'Segoe UI', Arial, sans-serif; 
+          max-width: 650px; 
+          margin: 0 auto; 
+          padding: 25px; 
+          border: 1px solid var(--bs-border-color, #e0e0e0); 
+          border-radius: 10px; 
+          box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+          color: var(--bs-body-color, #212529);
+          background-color: var(--bs-body-bg, #ffffff);
+        ">
           <div style="text-align: center; margin-bottom: 25px;">
             <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-color.svg" alt="Taskly" width="140" style="margin-bottom: 10px;" />
-            <h1 style="color: #4a6cf7; margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
+            <h1 style="color: var(--bs-primary, #1abc9c); margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
           </div>
           
-          <div style="background-color: #f9f9f9; border-left: 4px solid #4a6cf7; padding: 15px 20px; margin: 20px 0; border-radius: 5px;">
+          <div style="
+            background-color: var(--bs-tertiary-bg, #f9f9f9); 
+            border-left: 4px solid var(--bs-primary, #1abc9c); 
+            padding: 15px 20px; 
+            margin: 20px 0; 
+            border-radius: 5px;
+          ">
             <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
               <tr>
                 <td style="padding: 8px 0; vertical-align: top; width: 100px;"><strong>De:</strong></td>
@@ -92,7 +110,7 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
               </tr>
               <tr>
                 <td style="padding: 8px 0; vertical-align: top;"><strong>Email:</strong></td>
-                <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #4a6cf7; text-decoration: none;">${email}</a></td>
+                <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: var(--bs-primary, #1abc9c); text-decoration: none;">${email}</a></td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; vertical-align: top;"><strong>Fecha:</strong></td>
@@ -106,19 +124,40 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
           </div>
           
           <div style="margin-top: 25px;">
-            <h3 style="color: #333; margin-bottom: 15px; font-size: 18px;">Mensaje:</h3>
-            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 6px; margin-top: 10px; white-space: pre-line; line-height: 1.6; font-size: 15px;">
+            <h3 style="color: var(--bs-heading-color, #333); margin-bottom: 15px; font-size: 18px;">Mensaje:</h3>
+            <div style="
+              background-color: var(--bs-tertiary-bg, #f5f5f5); 
+              padding: 20px; 
+              border-radius: 6px; 
+              margin-top: 10px; 
+              white-space: pre-line; 
+              line-height: 1.6; 
+              font-size: 15px;
+            ">
               ${sanitizedMessage.replace(/\n/g, '<br>')}
             </div>
           </div>
           
-          <div style="margin-top: 35px; background-color: #f0f4ff; padding: 15px; border-radius: 6px; text-align: center;">
-            <p style="margin: 0; color: #4a6cf7; font-weight: 500;">Para responder a ${name}, simplemente contesta a este correo.</p>
+          <div style="
+            margin-top: 35px; 
+            background-color: rgba(var(--bs-primary-rgb, 26, 188, 156), 0.1); 
+            padding: 15px; 
+            border-radius: 6px; 
+            text-align: center;
+          ">
+            <p style="margin: 0; color: var(--bs-primary, #1abc9c); font-weight: 500;">Para responder a ${name}, simplemente contesta a este correo.</p>
           </div>
           
-          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 13px; color: #777; text-align: center;">
+          <div style="
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid var(--bs-border-color, #e0e0e0); 
+            font-size: 13px; 
+            color: var(--bs-secondary-color, #777); 
+            text-align: center;
+          ">
             Este mensaje fue enviado desde el formulario de contacto en 
-            <a href="${process.env.FRONTEND_URL || process.env.CLIENT_URL}" style="color: #4a6cf7; text-decoration: none; font-weight: 500;">taskly.es</a>
+            <a href="${process.env.FRONTEND_URL || process.env.CLIENT_URL}" style="color: var(--bs-primary, #1abc9c); text-decoration: none; font-weight: 500;">taskly.es</a>
           </div>
         </div>
       `
