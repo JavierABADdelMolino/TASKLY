@@ -106,13 +106,29 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
 
   const handleGoogleResponse = useCallback(async (response) => {
     try {
-      if (!response || !response.credential) {
-        console.error('Error: respuesta de Google incompleta', response);
+      // Mejor manejo de errores y respuestas incompletas
+      if (!response) {
+        console.error('Error: no se recibió respuesta de Google');
+        return;
+      }
+      
+      // Manejar diferentes tipos de respuestas de Google
+      let credential;
+      
+      if (response.credential) {
+        credential = response.credential;
+      } else if (response.select_by && response.credential_id) {
+        // Formato alternativo que Google puede devolver
+        console.log('Formato alternativo de respuesta de Google detectado');
+        credential = response.credential_id;
+      } else {
+        console.error('Error: formato de respuesta de Google no reconocido', response);
+        setShowFallback(true);
         return;
       }
       
       console.log('Google response received, sending to server...');
-      const result = await googleLogin(response.credential);
+      const result = await googleLogin(credential);
       
       if (!result) {
         console.error('Error: respuesta vacía del servidor');
@@ -198,10 +214,11 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         window.google.accounts.id.initialize({
           client_id: clientId,
           callback: handleGoogleResponse,
-          ux_mode: 'popup',  // Evita problemas CORS
+          ux_mode: 'standard',  // Cambiado de 'popup' a 'standard' para evitar problemas COOP
           context: 'signin',
           auto_select: false,
           cancel_on_tap_outside: true,
+          itp_support: true,    // Mejorar soporte para Safari
         });
       }
       
@@ -274,29 +291,44 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     }
   }, [scriptLoaded, handleGoogleResponse, isDarkMode, buttonRendered]);
   
-  // Manejador optimizado para el botón de respaldo
+  // Manejador optimizado para el botón de respaldo con mejor compatibilidad
   const handleFallbackButtonClick = () => {
-    // Mostrar un mensaje para que el usuario sepa que estamos intentando cargar el botón
-    console.log('Intentando cargar el botón oficial de Google...');
+    console.log('Intentando proceso alternativo de autenticación con Google...');
     
     if (window.google && window.google.accounts && window.google.accounts.id) {
-      // Si el SDK ya está disponible, solo reiniciamos los estados
-      setButtonRendered(false);
-      setShowFallback(false);
-      setScriptLoaded(true);
+      // Si el SDK ya está disponible, usamos el método prompt() para mostrar directamente
+      // la interfaz de selección de cuenta sin depender del botón renderizado
+      window.google.accounts.id.prompt((notification) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // Si no se pudo mostrar el prompt, usar el enfoque de redirección
+          console.log('No se pudo mostrar el selector de cuentas de Google, usando redirección...');
+          
+          // Reintentar renderizando el botón
+          setButtonRendered(false);
+          setShowFallback(false);
+          setScriptLoaded(true);
+        }
+      });
     } else {
-      // Intentamos simular un click en el botón de fallback
-      // que invocará directamente el flujo de autenticación con Google
+      // Enfoque de redirección directa (OAuth2) como último recurso
       const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
       
-      // Redirigir al usuario a la página de autenticación de Google
       if (clientId) {
-        const redirectUri = window.location.origin + '/auth/google/callback';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=email%20profile`;
+        // Usamos el endpoint de autorización OAuth2 estándar
+        const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
+        const scope = encodeURIComponent('profile email');
+        const state = encodeURIComponent(Math.random().toString(36).substring(2));
         
+        // Guardar state para verificación de CSRF
+        sessionStorage.setItem('googleAuthState', state);
+        
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}&prompt=select_account`;
+        
+        // Abrir en la misma ventana para evitar problemas de bloqueo de popups
         window.location.href = authUrl;
       } else {
         console.error('No se puede iniciar autenticación: falta el Client ID');
+        alert('No se pudo conectar con Google. Por favor, intenta iniciar sesión con correo y contraseña.');
       }
     }
   };
