@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RegisterStep1 from './RegisterStep1';
 import RegisterStep2 from './RegisterStep2';
@@ -6,6 +6,7 @@ import GoogleLoginButton from './GoogleLoginButton';
 import GoogleRegisterComplete from './GoogleRegisterComplete';
 import { useAuth } from '../../context/AuthContext';
 import { register, getCurrentUser } from '../../services/authService';
+import Separator from '../common/Separator';
 
 const RegisterForm = ({ googleData: googleDataProp }) => {
   const navigate = useNavigate();
@@ -26,6 +27,35 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
   // Estado para el registro con Google - inicializar con los datos recibidos como prop si existen
   const [googleData, setGoogleData] = useState(googleDataProp || null);
   const [serverErrors, setServerErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Efecto para reaccionar a cambios en googleDataProp
+  useEffect(() => {
+    if (googleDataProp) {
+      setGoogleData(googleDataProp);
+      setStep('google-complete');
+    }
+  }, [googleDataProp]);
+
+  // Intentar recuperar datos de Google del sessionStorage si no vienen como props
+  useEffect(() => {
+    if (!googleDataProp) {
+      try {
+        const storedData = sessionStorage.getItem('googleAuthData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          if (parsedData.needsCompletion || parsedData.code === 'NEEDS_COMPLETION') {
+            setGoogleData(parsedData);
+            setStep('google-complete');
+            // Limpiamos después de usarlo
+            sessionStorage.removeItem('googleAuthData');
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing Google data from sessionStorage:", error);
+      }
+    }
+  }, [googleDataProp]);
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
@@ -36,6 +66,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
   };
 
   const onRegister = async () => {
+    setLoading(true);
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       form.append(key, value);
@@ -66,6 +97,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
       } else {
         setServerErrors(prev => ({ ...prev, general: err.message || 'Error en la petición al servidor' }));
       }
+      setLoading(false);
     }
   };
 
@@ -74,8 +106,9 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
     // Si es un caso de vinculación de cuenta (email ya existe)
     if (data.needsLinking || data.code === 'LINK_GOOGLE') {
       console.log('Usuario necesita enlazar cuenta de Google desde RegisterForm');
-      // Redirigir a Home con los datos para mostrar modal de enlace
-      navigate('/', { state: { openGoogleRegister: true, googleData: data, showLinkGoogleModal: true } });
+      // Guardar datos en sessionStorage y luego enviar evento para abrir modal
+      sessionStorage.setItem('googleAuthData', JSON.stringify(data));
+      window.dispatchEvent(new CustomEvent('openLinkGoogleModal', { detail: data }));
       return;
     }
     
@@ -88,6 +121,8 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
   const handleCancelGoogle = () => {
     setGoogleData(null);
     setStep(1);
+    // Limpiamos también el sessionStorage
+    sessionStorage.removeItem('googleAuthData');
   };
 
   return (
@@ -99,12 +134,11 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
             onChange={handleChange}
             onNext={nextStep}
             errors={serverErrors}
+            loading={loading}
           />
           
-          <div className="text-center mt-4 mb-2">
-            <div className="separator">
-              <span>O</span>
-            </div>
+          <div className="mt-4 mb-2">
+            <Separator text="O" />
             <GoogleLoginButton onGoogleSignIn={handleGoogleSignIn} />
           </div>
         </>
@@ -116,6 +150,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
           onBack={prevStep}
           onSubmit={onRegister}
           errors={serverErrors}
+          loading={loading}
         />
       )}
       {step === 'google-complete' && googleData && (

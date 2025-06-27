@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { login, getCurrentUser, forgotPassword } from '../../services/authService';
 import GoogleLoginButton from './GoogleLoginButton';
+import Separator from '../common/Separator';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const LoginForm = () => {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMsg, setForgotMsg] = useState('');
   const [forgotError, setForgotError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -34,8 +36,12 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
+    setLoading(true);
 
-    if (!validate()) return;
+    if (!validate()) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const data = await login(email, password);
@@ -55,6 +61,7 @@ const LoginForm = () => {
       } else {
         setServerError(err.message || 'Error de conexión con el servidor');
       }
+      setLoading(false);
     }
   };
 
@@ -80,19 +87,21 @@ const LoginForm = () => {
       // Si necesita enlazar cuenta (email existe pero no está vinculado a Google)
       if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE') {
         console.log('Usuario necesita enlazar cuenta de Google', googleData);
-        // Guardamos los datos en sessionStorage y navegamos a Home con los datos,
-        // especificando que debe mostrar el modal de enlace
+        // Guardamos los datos en sessionStorage para que persistan entre redirecciones
         sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
-        navigate('/', { state: { openGoogleRegister: true, googleData, showLinkGoogleModal: true } });
+        // Enviamos evento para abrir el modal de enlace desde cualquier página
+        window.dispatchEvent(new CustomEvent('openLinkGoogleModal', { detail: googleData }));
         return;
       }
       
       // Si necesita completar registro (nuevo usuario con Google)
       if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
         console.log('Usuario de Google necesita completar registro', googleData);
-        // Guardamos los datos en sessionStorage y navegamos a Home con los datos
+        // Guardamos los datos en sessionStorage para que persistan entre redirecciones
         sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
-        navigate('/', { state: { openGoogleRegister: true, googleData } });
+        setServerError(''); // Limpiar cualquier error previo
+        // Abrir modal de registro directamente con los datos de Google
+        window.dispatchEvent(new CustomEvent('openAuthModal', { detail: 'register' }));
         return;
       }
       
@@ -112,7 +121,8 @@ const LoginForm = () => {
         <h3 className="mb-4 text-center fw-bold">Iniciar sesión</h3>
 
         {serverError && (
-          <div className="alert alert-danger text-center small mb-3 fade-in">
+          <div className="alert alert-danger text-center small mb-3 fade-in shadow-sm border">
+            <i className="bi bi-exclamation-circle me-1"></i>
             {serverError}
           </div>
         )}
@@ -125,6 +135,7 @@ const LoginForm = () => {
             placeholder="nombre@ejemplo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
           />
           <label htmlFor="email">Correo electrónico</label>
           {errors.email && <small className="text-danger d-block mt-1">{errors.email}</small>}
@@ -138,28 +149,41 @@ const LoginForm = () => {
             placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
           />
           <label htmlFor="password">Contraseña</label>
           {errors.password && <small className="text-danger d-block mt-1">{errors.password}</small>}
         </div>
 
-        <button type="submit" className="btn btn-primary w-100 py-2">
-          Entrar
+        <button 
+          type="submit" 
+          className="btn btn-primary w-100 py-2"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Accediendo...
+            </>
+          ) : 'Entrar'}
         </button>
         
         <div className="text-center mt-2">
           <span>
-            <button type="button" className="btn btn-link p-0" onClick={() => setShowForgotModal(true)}>
+            <button 
+              type="button" 
+              className="btn btn-link p-0" 
+              onClick={() => setShowForgotModal(true)}
+              disabled={loading}
+            >
               ¿Has olvidado tu contraseña?
             </button>
           </span>
         </div>
 
         {/* Separador y botón de Google */}
-        <div className="text-center mt-4 mb-2">
-          <div className="separator">
-            <span>O</span>
-          </div>
+        <div className="mt-4 mb-2">
+          <Separator text="O" />
           <GoogleLoginButton onGoogleSignIn={handleGoogleLogin} />
         </div>
       </form>
@@ -184,14 +208,14 @@ const LoginForm = () => {
                     )}
                     
                     {forgotMsg && (
-                      <div className="alert alert-success text-center small py-3 fade-in">
+                      <div className="alert alert-success text-center small py-3 fade-in shadow-sm border">
                         <i className="bi bi-check-circle me-2"></i>
                         {forgotMsg}
                       </div>
                     )}
                     
                     {forgotError && (
-                      <div className="alert alert-danger text-center small py-3 fade-in">
+                      <div className="alert alert-danger text-center small py-3 fade-in shadow-sm border">
                         <i className="bi bi-exclamation-circle me-2"></i>
                         {
                           forgotError === 'Email no registrado' 
@@ -231,8 +255,6 @@ const LoginForm = () => {
           </div>
         </>
       )}
-
-
     </>
   );
 };

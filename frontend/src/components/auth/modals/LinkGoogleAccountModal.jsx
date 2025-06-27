@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { linkGoogleAccount } from '../../../services/authService';
 
-const LinkGoogleAccountModal = ({ data, onCancel }) => {
+const LinkGoogleAccountModal = ({ googleData, onClose }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
@@ -14,12 +14,19 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
       setLoading(true);
       setError('');
       
+      if (!googleData || !googleData.email || !googleData.googleId || !googleData.tokenId) {
+        throw new Error('Datos de Google incompletos');
+      }
+      
       // Enlazar la cuenta de Google con la cuenta existente
-      const result = await linkGoogleAccount(data.email, data.googleId, data.tokenId);
+      const result = await linkGoogleAccount(googleData.email, googleData.googleId, googleData.tokenId);
       
       // Guardar el token y establecer el usuario actual
       sessionStorage.setItem('token', result.token);
       setUser(result.user);
+      
+      // Limpiar datos de Google del sessionStorage si existen
+      sessionStorage.removeItem('googleAuthData');
       
       // Redirigir a dashboard
       navigate('/dashboard');
@@ -34,24 +41,24 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
   return (
     <>
       <div className="modal-backdrop show"></div>
-      <div className="modal show d-block position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" tabIndex="-1" aria-modal="true">
+      <div className="modal show d-block position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" tabIndex="-1" aria-modal="true" style={{ zIndex: 1050 }}>
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
+          <div className="modal-content shadow-sm border">
             <div className="modal-header border-0 pb-0">
               <h5 className="modal-title fw-bold text-center w-100">Enlazar cuenta con Google</h5>
-              <button type="button" className="btn-close shadow-none" onClick={onCancel} disabled={loading}></button>
+              <button type="button" className="btn-close shadow-none" onClick={onClose} disabled={loading}></button>
             </div>
             
             <div className="modal-body px-4 pt-2">
               <p>
-                Ya existe una cuenta asociada a <strong>{data.email}</strong> que utiliza correo electrónico y contraseña para iniciar sesión.
+                Ya existe una cuenta asociada a <strong>{googleData?.email}</strong> que utiliza correo electrónico y contraseña para iniciar sesión.
               </p>
               
               <p className="fw-semibold">
                 ¿Quieres vincular tu perfil de Google a esta cuenta?
               </p>
               
-              <div className="alert alert-warning py-3 d-flex align-items-start">
+              <div className="alert alert-warning py-3 d-flex align-items-start shadow-sm border">
                 <i className="bi bi-exclamation-triangle me-2 fs-4"></i>
                 <div>
                   <strong>Atención:</strong> a partir de ahora deberás iniciar sesión siempre con Google.
@@ -59,7 +66,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
               </div>
               
               {error && (
-                <div className="alert alert-danger my-3 d-flex align-items-start">
+                <div className="alert alert-danger my-3 d-flex align-items-start shadow-sm border">
                   <i className="bi bi-exclamation-circle me-2 fs-4"></i>
                   <div>{error}</div>
                 </div>
@@ -70,7 +77,7 @@ const LinkGoogleAccountModal = ({ data, onCancel }) => {
               <button 
                 type="button" 
                 className="btn btn-link text-decoration-none" 
-                onClick={onCancel}
+                onClick={onClose}
                 disabled={loading}
               >
                 Cancelar

@@ -6,6 +6,7 @@ import LoginForm from '../LoginForm';
 import RegisterForm from '../RegisterForm';
 import ResetPasswordModal from './ResetPasswordModal';
 import LinkGoogleAccountModal from './LinkGoogleAccountModal';
+import { useAuth } from '../../../context/AuthContext';
 
 const AuthModals = () => {
   const [authMode, setAuthMode] = useState(null);
@@ -13,25 +14,53 @@ const AuthModals = () => {
   const [showLinkGoogleModal, setShowLinkGoogleModal] = useState(false);
   
   const { theme } = useTheme();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Capturar eventos para abrir modales
   useEffect(() => {
     const handleAuthModal = (e) => {
+      // Si el usuario ya ha iniciado sesión, redirigir al dashboard
+      if (user) {
+        navigate('/dashboard');
+        return;
+      }
       setAuthMode(e.detail);
     };
+    
+    // Manejador específico para modal de enlace de cuenta Google
+    const handleLinkGoogleModal = (e) => {
+      if (user) {
+        navigate('/dashboard');
+        return;
+      }
+      const googleData = e.detail;
+      setGoogleRegisterData(googleData);
+      setShowLinkGoogleModal(true);
+    };
+    
     window.addEventListener('openAuthModal', handleAuthModal);
-    return () => window.removeEventListener('openAuthModal', handleAuthModal);
-  }, []);
+    window.addEventListener('openLinkGoogleModal', handleLinkGoogleModal);
+    
+    return () => {
+      window.removeEventListener('openAuthModal', handleAuthModal);
+      window.removeEventListener('openLinkGoogleModal', handleLinkGoogleModal);
+    };
+  }, [user, navigate]);
 
   const handleCloseAuth = () => {
     setAuthMode(null);
   };
 
-  // Verificar si hay datos del estado de Google auth
+  // Verificar datos de Google tanto en el state de navegación como en sessionStorage
   useEffect(() => {
-    if (location.state?.openGoogleRegister && location.state?.googleData) {
+    // Primero check en location.state
+    const hasGoogleDataInState = 
+      location.state?.openGoogleRegister && 
+      location.state?.googleData;
+    
+    if (hasGoogleDataInState) {
       const googleData = location.state.googleData;
       
       // Si necesita enlazar cuenta (email existe como cuenta normal)
@@ -43,6 +72,32 @@ const AuthModals = () => {
       else if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
         setAuthMode('register');
         setGoogleRegisterData(googleData);
+      }
+      return;
+    }
+    
+    // Si no hay en el state, chequeamos sessionStorage como respaldo
+    const storedGoogleData = sessionStorage.getItem('googleAuthData');
+    if (storedGoogleData) {
+      try {
+        const googleData = JSON.parse(storedGoogleData);
+        
+        // Si necesita enlazar cuenta (email existe como cuenta normal)
+        if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE') {
+          setGoogleRegisterData(googleData);
+          setShowLinkGoogleModal(true);
+        } 
+        // Si necesita completar registro (email nuevo con Google)
+        else if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
+          setAuthMode('register');
+          setGoogleRegisterData(googleData);
+        }
+        
+        // Limpiamos la sessionStorage después de procesarla
+        sessionStorage.removeItem('googleAuthData');
+      } catch (error) {
+        console.error("Error parsing Google data from sessionStorage:", error);
+        sessionStorage.removeItem('googleAuthData');
       }
     }
   }, [location.state]);
@@ -56,8 +111,8 @@ const AuthModals = () => {
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}
         >
           <div
-            className={`card shadow p-4 position-relative ${theme === 'dark' ? 'text-white' : 'text-dark'}`}
-            style={{ width: '100%', maxWidth: '460px' }}
+            className={`card shadow p-4 position-relative ${theme === 'dark' ? 'text-white bg-dark' : 'text-dark'}`}
+            style={{ width: '100%', maxWidth: '460px', borderRadius: '0.5rem' }}
           >
             <button
               type="button"
@@ -67,7 +122,7 @@ const AuthModals = () => {
             />
             {authMode === 'login' && <LoginForm />}
             {authMode === 'register' && <RegisterForm googleData={googleRegisterData} />}
-            {authMode === 'reset' && <ResetPasswordModal />}
+            {authMode === 'reset' && <ResetPasswordModal onClose={handleCloseAuth} />}
             
             {/* Switch between modes */}
             {(authMode === 'login' || authMode === 'register') && (
@@ -107,7 +162,8 @@ const AuthModals = () => {
           onClose={() => {
             setShowLinkGoogleModal(false);
             setGoogleRegisterData(null);
-            // Limpiar el estado de la URL
+            // Limpiar el estado de la URL y sessionStorage
+            sessionStorage.removeItem('googleAuthData');
             if (location.state?.openGoogleRegister) {
               navigate(location.pathname, { replace: true });
             }
