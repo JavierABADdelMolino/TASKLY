@@ -1,51 +1,160 @@
 // src/components/layout/Footer.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { APP_INFO } from '../../config/constants';
+import { FiInfo, FiMessageCircle, FiHelpCircle, FiShield, FiFileText, FiArrowUp } from 'react-icons/fi';
+import { useTheme } from '../../context/ThemeContext';
+import { useState, useEffect } from 'react';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
+  const [showScrollTop, setShowScrollTop] = useState(false);
   
-  // Función para navegar a la página de inicio (igual que el navbar)
+  // Controlar cuándo mostrar el botón de volver arriba
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Función para navegar a la página de inicio
   const navigateToHome = () => {
     navigate('/');
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   // Función para hacer scroll hacia arriba al navegar
   const handleNavigation = () => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  // Scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   return (
-    <footer className="footer mt-auto py-4 bg-body-tertiary border-top">
-      <div className="container">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
-          <div className="d-flex align-items-center mb-3 mb-md-0">
-            <img 
-              src="/logo-color.svg" 
-              alt="Taskly Logo" 
-              height="32" 
-              className="me-2" 
-              style={{ cursor: 'pointer' }} 
-              onClick={navigateToHome}
-            />
-            <span className="fw-bold fs-5">{APP_INFO.NAME}</span>
+    <>
+      {showScrollTop && (
+        <button 
+          className="btn btn-primary btn-sm rounded-circle position-fixed"
+          style={{
+            bottom: '70px',
+            right: '20px',
+            width: '40px',
+            height: '40px',
+            zIndex: 1030,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 10px rgba(var(--bs-primary-rgb), 0.3)',
+            transition: 'all 0.3s ease'
+          }}
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+        >
+          <FiArrowUp />
+        </button>
+      )}
+      <footer className={`footer mt-auto py-3 ${theme === 'dark' ? 'bg-dark border-dark-subtle' : 'bg-light'} border-top`}>
+        <div className="container">
+          <div className="row align-items-center justify-content-between">
+            <div className="col-auto">
+              <div className="d-flex align-items-center">
+                <img 
+                  src="/logo-color.svg"
+                  alt="Taskly Logo" 
+                  height="28" 
+                  style={{ cursor: 'pointer', transition: 'transform 0.3s ease' }} 
+                  onClick={navigateToHome}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                />
+              </div>
+            </div>
+            
+            <div className="col-auto">
+              <div className="d-flex flex-wrap justify-content-center gap-4">
+                <Link 
+                  to="/about" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiInfo className="me-1" />
+                  <span>Acerca de</span>
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiMessageCircle className="me-1" />
+                  <span>Contacto</span>
+                </Link>
+                <Link 
+                  to="/faq" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiHelpCircle className="me-1" />
+                  <span>FAQ</span>
+                </Link>
+                <Link 
+                  to="/privacy" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiShield className="me-1" />
+                  <span>Privacidad</span>
+                </Link>
+                <Link 
+                  to="/terms" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease', fontSize: '0.95rem' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiFileText className="me-1" />
+                  <span>Términos</span>
+                </Link>
+              </div>
+            </div>
+            
+            <div className="col-auto">
+              <p className="small mb-0">
+                &copy; {APP_INFO.COPYRIGHT_YEAR} {APP_INFO.NAME}. Todos los derechos reservados.
+              </p>
+            </div>
           </div>
-          <nav>
-            <ul className="nav justify-content-center gap-2">
-              <li className="nav-item"><Link to="/about" className="nav-link p-0 text-muted" onClick={handleNavigation}>Acerca de</Link></li>
-              <li className="nav-item"><Link to="/contact" className="nav-link p-0 text-muted" onClick={handleNavigation}>Contacto</Link></li>
-              <li className="nav-item"><Link to="/faq" className="nav-link p-0 text-muted" onClick={handleNavigation}>FAQ</Link></li>
-              <li className="nav-item"><Link to="/privacy" className="nav-link p-0 text-muted" onClick={handleNavigation}>Privacidad</Link></li>
-              <li className="nav-item"><Link to="/terms" className="nav-link p-0 text-muted" onClick={handleNavigation}>Términos</Link></li>
-            </ul>
-          </nav>
         </div>
-        <div className="border-top pt-3 mt-2">
-          <p className="mb-0 text-center text-muted small">&copy; {APP_INFO.COPYRIGHT_YEAR} {APP_INFO.NAME}. Todos los derechos reservados.</p>
-        </div>
-      </div>
-    </footer>
+      </footer>
+      
+      <style jsx="true">{`
+        footer a {
+          font-size: 0.95rem;
+          color: var(--bs-body-color);
+        }
+        footer a:hover {
+          color: var(--bs-primary);
+        }
+      `}</style>
+    </>
   );
 };
 
