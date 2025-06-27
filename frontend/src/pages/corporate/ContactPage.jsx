@@ -162,14 +162,21 @@ const ContactPage = () => {
               <div className="card-body p-4 p-md-5">
                 {submitted ? (
                   <div className="text-center py-5 my-3">
-                    <div className="bg-light rounded-4 p-4 shadow-sm border border-1 border-success-subtle mx-auto" style={{ maxWidth: "500px" }}>
-                      <div className="mb-3" style={{ color: "var(--bs-primary)" }}>
-                        <div className="bg-success-subtle rounded-circle mx-auto d-flex align-items-center justify-content-center" style={{ width: "80px", height: "80px" }}>
+                    <div className="card border-0 rounded-4 p-4 shadow-sm mx-auto" style={{ maxWidth: "500px" }}>
+                      <div className="mb-3">
+                        <div className="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                          style={{ 
+                            width: "80px", 
+                            height: "80px", 
+                            backgroundColor: "var(--bs-primary-bg-subtle)",
+                            color: "var(--bs-primary)" 
+                          }}
+                        >
                           <i className="bi bi-check-circle-fill display-4"></i>
                         </div>
                       </div>
                       <h3 className="mb-3 fw-bold">¡Mensaje enviado con éxito!</h3>
-                      <p className="mb-4 text-muted">
+                      <p className="mb-4">
                         Hemos recibido tu mensaje y te responderemos lo antes posible en el correo que nos has proporcionado.
                       </p>
                       <button 
