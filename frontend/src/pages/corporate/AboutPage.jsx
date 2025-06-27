@@ -22,8 +22,8 @@ const AboutPage = () => {
         <div className="row align-items-center mb-5">
           <div className="col-lg-6">
             <h2 className="fw-bold mb-3">La historia de Taskly</h2>
-            <p>Taskly nació en 2023 como proyecto final de un estudiante que buscaba crear una herramienta de gestión de tareas realmente intuitiva y adaptada a las necesidades modernas.</p>
-            <p>Lo que comenzó como un proyecto académico evolucionó para convertirse en una plataforma completa para la organización personal y profesional, con el objetivo de simplificar la vida digital de sus usuarios.</p>
+            <p>Taskly nació en 2025 como Trabajo Final de Grado (TFG) en el ciclo de Desarrollo de Aplicaciones Multiplataforma. La idea inicial era crear una herramienta de gestión de tareas intuitiva y moderna que mostrara las capacidades del desarrollador.</p>
+            <p>Aunque el plan original era dejarlo como un proyecto de código abierto autoalojable en GitHub, el afán por seguir aprendiendo llevó a afrontar el reto del despliegue completo. Lo que comenzó como un proyecto académico evolucionó hasta convertirse en una plataforma web totalmente funcional, combinando el aprendizaje técnico con una visión práctica para simplificar la organización personal y profesional.</p>
           </div>
           <div className="col-lg-6 text-center">
             <img 
