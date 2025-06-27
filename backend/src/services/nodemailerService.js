@@ -49,7 +49,7 @@ async function sendMail(to, subject, html, replyTo = supportEmail) {
     const transporter = createTransporter();
     
     const emailConfig = {
-      from: process.env.EMAIL_FROM || 'Taskly <no-reply@taskly.es>',
+      from: process.env.EMAIL_FROM || 'Taskly <taskly@taskly.es>',
       to,
       subject,
       html,
@@ -154,7 +154,7 @@ function getEmailTemplate(content, preheader = '') {
       transition: all 0.15s ease-in-out;
     }
     .btn-primary:hover {
-      background-color: #16a085;
+      opacity: 0.9;
     }
     .btn-danger {
       background-color: #e74c3c;
@@ -275,7 +275,7 @@ function getEmailTemplate(content, preheader = '') {
  */
 async function sendWelcomeEmail(to, firstName, userEmail) {
   const content = `
-    <h1>¡Bienvenido a Taskly, ${firstName}! 🎉</h1>
+    <h1>¡Bienvenido a Taskly, ${firstName}!</h1>
     <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros y ayudarte a ser más productivo.</p>
     
     <div class="info-card">
@@ -315,11 +315,11 @@ async function sendPasswordResetEmail(to, resetUrl) {
   const link = resetUrl.startsWith('http') ? resetUrl : `${getBaseUrl()}/reset-password/${resetUrl}`;
   
   const content = `
-    <h1>🔒 Restablecimiento de contraseña</h1>
+    <h1>Restablecimiento de contraseña</h1>
     <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Taskly.</p>
     
     <div class="info-card">
-      <p><span class="highlight">⏱️ Importante:</span> Este enlace caducará en <span class="highlight">1 hora</span> por motivos de seguridad.</p>
+      <p><span class="highlight">Importante:</span> Este enlace caducará en <span class="highlight">1 hora</span> por motivos de seguridad.</p>
       <p class="text-small">Si no has solicitado este cambio, puedes ignorar este correo y tu cuenta seguirá segura.</p>
     </div>
     
@@ -348,7 +348,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
  */
 async function sendGoogleLinkEmail(to, firstName, userEmail) {
   const content = `
-    <h1>✅ Cuenta vinculada con Google</h1>
+    <h1>Cuenta vinculada con Google</h1>
     <p>Hola ${firstName},</p>
     
     <p>Tu cuenta de Taskly ha sido vinculada correctamente con Google. Esto aumenta la seguridad y simplifica tu experiencia de inicio de sesión.</p>

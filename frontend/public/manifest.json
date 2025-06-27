@@ -1,7 +1,7 @@
 {
   "name": "Taskly – Gestor de Tareas",
   "short_name": "Taskly",
-  "description": "Aplicación web progresiva para gestionar tareas (TFG)",
+  "description": "Gestiona tus tareas de forma eficiente y segura con Taskly. Organiza, prioriza y termina tus tareas con facilidad.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
