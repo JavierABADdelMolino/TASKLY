@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
-import { FiCheckSquare, FiClock, FiZap, FiSliders, FiCloud, FiArrowRightCircle, FiInfo } from 'react-icons/fi';
-import { RiBrainLine } from 'react-icons/ri';
+import { FiZap, FiSliders, FiCloud, FiArrowRightCircle, FiInfo, FiLayout, FiTrendingUp, FiClock } from 'react-icons/fi';
+import { RiBrainFill } from 'react-icons/ri';
 import { Carousel } from 'react-bootstrap';
 
 const Home = () => {
@@ -92,11 +92,11 @@ const Home = () => {
           >
             <h2 className="fw-bold mb-4 text-center">Todo en un solo lugar</h2>              
             <div className="d-flex justify-content-center gap-5 mb-3">
-              <FiCheckSquare size={48} className="text-primary" />
-              <FiClock size={48} className="text-primary" />
-              <RiBrainLine size={48} className="text-primary" />
+              <FiLayout size={48} className="text-primary" />
+              <FiTrendingUp size={48} className="text-primary" />
+              <RiBrainFill size={48} className="text-primary" />
             </div>
-            <p className="mt-3 text-center">Características intuitivas, seguimiento de tiempo y recordatorios automáticos.</p>
+            <p className="mt-3 text-center">Organización visual, análisis de rendimiento e inteligencia artificial personalizada para tus tareas.</p>
             <div className="mt-4 d-flex gap-3 justify-content-center">
               <button
                 className="btn btn-outline-primary"
@@ -117,11 +117,11 @@ const Home = () => {
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center p-4">
                 <div className="mb-3">
-                  <FiCheckSquare size={36} className="text-primary" />
+                  <FiLayout size={36} className="text-primary" />
                 </div>
                 <h3>Tableros Kanban</h3>
                 <p className="text-muted">
-                  Visualiza tu flujo de trabajo con tableros interactivos y arrastra tareas entre columnas.
+                  Visualiza tu flujo de trabajo con tableros personalizables y organiza tareas mediante arrastrar y soltar.
                 </p>
               </div>
             </div>
@@ -130,11 +130,11 @@ const Home = () => {
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center p-4">
                 <div className="mb-3">
-                  <FiClock size={36} className="text-primary" />
+                  <FiTrendingUp size={36} className="text-primary" />
                 </div>
-                <h3>Recordatorios</h3>
+                <h3>Seguimiento de Progreso</h3>
                 <p className="text-muted">
-                  Recibe alertas antes de que lleguen las fechas límite y mantén todo bajo control.
+                  Control efectivo de tus tareas que te mantiene enfocado en tus objetivos y mejora tu organización personal.
                 </p>
               </div>
             </div>
@@ -143,11 +143,11 @@ const Home = () => {
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center p-4">
                 <div className="mb-3">
-                  <RiBrainLine size={36} className="text-primary" />
+                  <RiBrainFill size={36} className="text-primary" />
                 </div>
-                <h3>Colaboración</h3>
+                <h3>IA para Prioridades</h3>
                 <p className="text-muted">
-                  Comparte tableros y asigna tareas a compañeros para trabajar en equipo eficientemente.
+                  Análisis inteligente que sugiere prioridades óptimas basadas en tus fechas límite y patrones de trabajo personal.
                 </p>
               </div>
             </div>
