@@ -3,6 +3,7 @@ import Layout from '../../components/layout/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { AUTHOR_LINKS, AUTHOR_INFO } from '../../config/constants';
+import { FiArrowRightCircle, FiMessageSquare } from 'react-icons/fi';
 
 const AboutPage = () => {
   return (
@@ -116,11 +117,11 @@ const AboutPage = () => {
           <p className="lead mb-4">Prueba Taskly gratis y descubre cómo puede ayudarte a mantener tu vida en orden.</p>
           <div className="d-flex justify-content-center gap-3">
             <a href="/" className="btn btn-primary px-4 py-2">
-              <i className="bi bi-arrow-right-circle me-2"></i>
+              <FiArrowRightCircle className="me-2" />
               Comenzar ahora
             </a>
             <a href="/contact" className="btn btn-outline-primary px-4 py-2">
-              <i className="bi bi-chat-left-text me-2"></i>
+              <FiMessageSquare className="me-2" />
               Contactar
             </a>
           </div>
