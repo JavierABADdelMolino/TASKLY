@@ -9,18 +9,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  * @param {string} html Contenido en HTML
  * @param {string} replyTo Correo para respuestas (opcional)
  */
-async function sendMail(to, subject, html, replyTo = null) {
+async function sendMail(to, subject, html, replyTo = supportEmail) {
   const emailConfig = {
     from: process.env.EMAIL_FROM || 'Taskly <no-reply@taskly.es>',
     to,
     subject,
-    html
+    html,
+    reply_to: replyTo || supportEmail // Siempre configurar reply_to para que las respuestas vayan a support
   };
-
-  // Añadir correo de respuesta si está configurado
-  if (replyTo) {
-    emailConfig.reply_to = replyTo;
-  }
 
   await resend.emails.send(emailConfig);
 }
@@ -219,7 +215,7 @@ async function sendWelcomeEmail(to, firstName, userEmail) {
     <div class="info-card">
       <p><strong>Datos de acceso:</strong></p>
       <p>Email: <strong>${userEmail}</strong></p>
-      <p class="text-small">Tu contraseña es la que estableciste durante el registro.</p>
+      <p class="text-small">Para iniciar sesión, utiliza la contraseña que creaste durante el proceso de registro.</p>
     </div>
     
     <div class="text-center">
@@ -242,7 +238,7 @@ async function sendWelcomeEmail(to, firstName, userEmail) {
   `;
   
   const html = getEmailTemplate(content, `¡Bienvenido a Taskly, ${firstName}! Tu cuenta ha sido creada correctamente.`);
-  await sendMail(to, `¡Bienvenido a Taskly, ${firstName}!`, html, supportEmail);
+  await sendMail(to, `¡Bienvenido a Taskly, ${firstName}!`, html);
 }
 
 /**
@@ -267,16 +263,13 @@ async function sendPasswordResetEmail(to, resetUrl) {
     
     <div class="divider"></div>
     
-    <p>Si tienes problemas con el botón, también puedes copiar y pegar este enlace en tu navegador:</p>
-    <p class="text-small"><a href="${link}">${link}</a></p>
-    
     <p>Por motivos de seguridad, nunca compartimos tu contraseña ni te pedimos que la envíes por correo electrónico.</p>
     
     <p>¿No has sido tú? Por favor, <a href="mailto:${supportEmail}">contáctanos</a> inmediatamente.</p>
   `;
   
   const html = getEmailTemplate(content, '🔒 Solicitud para restablecer tu contraseña en Taskly');
-  await sendMail(to, 'Restablece tu contraseña en Taskly', html, supportEmail);
+  await sendMail(to, 'Restablece tu contraseña en Taskly', html);
 }
 
 /**
@@ -306,7 +299,7 @@ async function sendGoogleLinkEmail(to, firstName, userEmail) {
   `;
   
   const html = getEmailTemplate(content, `Tu cuenta de Taskly ha sido vinculada con Google`);
-  await sendMail(to, 'Cuenta vinculada con Google', html, supportEmail);
+  await sendMail(to, 'Cuenta vinculada con Google', html);
 }
 
 module.exports = { 
