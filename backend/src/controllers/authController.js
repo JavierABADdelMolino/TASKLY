@@ -2,7 +2,12 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
-const { sendMail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/mailService');
+const { 
+  sendMail, 
+  sendWelcomeEmail, 
+  sendPasswordResetEmail,
+  sendGoogleLinkEmail 
+} = require('../services/mailService');
 const cloudinaryService = require('../services/cloudinaryService');
 
 // Inicializar el cliente OAuth de Google
@@ -36,8 +41,7 @@ exports.registerUser = async (req, res) => {
     avatarUrl // opcional: por si eliges un avatar sin subir archivo
   } = req.body;
 
-  // Guardar contraseña original para el email
-  const originalPassword = password;
+  // Ya no guardamos la contraseña original para el email - mejora de seguridad
 
   try {
     const existingUser = await User.findOne({ email });
@@ -74,9 +78,9 @@ exports.registerUser = async (req, res) => {
 
     const token = generateToken(user);
 
-    // Enviar email de bienvenida con plantilla HTML
+    // Enviar email de bienvenida moderno (sin compartir la contraseña por seguridad)
     try {
-      await sendWelcomeEmail(email, firstName, email, originalPassword);
+      await sendWelcomeEmail(email, firstName, email);
     } catch (mailErr) {
       console.error('Error enviando email de bienvenida:', mailErr);
     }
@@ -471,6 +475,14 @@ exports.linkGoogleAccount = async (req, res) => {
     user.password = undefined;
     
     await user.save();
+    
+    // Enviar notificación por email sobre la vinculación con Google
+    try {
+      await sendGoogleLinkEmail(user.email, user.firstName, user.email);
+    } catch (mailErr) {
+      console.error('Error enviando email de notificación:', mailErr);
+      // No bloqueamos el flujo por error de email
+    }
     
     // Generar token
     const token = generateToken(user);
