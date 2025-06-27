@@ -80,7 +80,6 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
       // Mostrar fallback después de un tiempo razonable (1.5 segundos)
       const fallbackTimer = setTimeout(() => {
         if (!window.google || !window.google.accounts) {
-          console.info('Google SDK no detectado a tiempo - mostrando botón de respaldo');
           setShowFallback(true);
           clearInterval(checkInterval);
         }
@@ -98,7 +97,7 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         try {
           window.google.accounts.id.cancel();
         } catch (err) {
-          console.error('Error al limpiar Google Sign-In:', err);
+          // Silenciar error al limpiar
         }
       }
     };
@@ -108,7 +107,6 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     try {
       // Mejor manejo de errores y respuestas incompletas
       if (!response) {
-        console.error('Error: no se recibió respuesta de Google');
         return;
       }
       
@@ -119,27 +117,20 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         credential = response.credential;
       } else if (response.select_by && response.credential_id) {
         // Formato alternativo que Google puede devolver
-        console.log('Formato alternativo de respuesta de Google detectado');
         credential = response.credential_id;
       } else {
-        console.error('Error: formato de respuesta de Google no reconocido', response);
         setShowFallback(true);
         return;
       }
       
-      console.log('Google response received, sending to server...');
       const result = await googleLogin(credential);
       
       if (!result) {
-        console.error('Error: respuesta vacía del servidor');
         return;
       }
       
-      console.log('Server response for Google auth:', result);
-      
       // Si requiere enlazar cuenta (código LINK_GOOGLE) 
       if (result.code === 'LINK_GOOGLE' || result.needsLinking) {
-        console.log('Se requiere enlazar cuenta de Google');
         // Llamar a la función que gestionará el enlace de cuenta
         if (onGoogleSignIn) {
           onGoogleSignIn({
@@ -156,7 +147,6 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
       }
       // Si requiere completar registro (código NEEDS_COMPLETION)
       else if (result.code === 'NEEDS_COMPLETION' || result.needsCompletion) {
-        console.log('Se requiere completar registro con Google');
         // Llamar a la función que gestionará el completado de registro
         if (onGoogleSignIn) {
           onGoogleSignIn({
