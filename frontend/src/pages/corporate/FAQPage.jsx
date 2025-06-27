@@ -1,6 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import { Link } from 'react-router-dom';
+import { FiMessageCircle } from 'react-icons/fi';
 
 const FAQPage = () => {
   const faqCategories = [
@@ -114,12 +115,13 @@ const FAQPage = () => {
         </div>
         
         {/* No encontraste tu respuesta */}
-        <div className="card border-0 bg-light p-4 text-center mt-4">
-          <div className="card-body">
-            <h3 className="fw-bold mb-2">¿No encontraste la respuesta que buscabas?</h3>
-            <p className="mb-3">Nuestro equipo estará encantado de ayudarte</p>
-            <Link to="/contact" className="btn btn-primary">Contacta con nosotros</Link>
-          </div>
+        <div className="text-center p-5 bg-primary bg-opacity-10 rounded-4 mt-5 shadow-sm">
+          <h2 className="fw-bold">¿No encontraste la respuesta que buscabas?</h2>
+          <p className="lead mb-4">Nuestro equipo estará encantado de ayudarte</p>
+          <Link to="/contact" className="btn btn-primary px-4 py-2">
+            <FiMessageCircle className="me-2" />
+            Contacta con nosotros
+          </Link>
         </div>
       </div>
     </Layout>
