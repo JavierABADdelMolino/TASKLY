@@ -104,8 +104,9 @@ function getEmailTemplate(content, preheader = '') {
   ${preheader ? `<meta name="description" content="${preheader}">` : ''}
   <title>Taskly</title>
   <style>
+    /* Estilos que coinciden con la plataforma Taskly */
     body {
-      font-family: 'Inter', 'Nunito', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
       line-height: 1.6;
       color: #333333;
       margin: 0;
@@ -117,86 +118,81 @@ function getEmailTemplate(content, preheader = '') {
       max-width: 600px;
       margin: 20px auto;
       background: #ffffff;
-      border-radius: 12px;
+      border-radius: 0.25rem;
       overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     }
     .email-header {
-      background-color: #f9f9f9;
-      padding: 28px;
+      background-color: #f8f9fa;
+      padding: 1.5rem;
       text-align: center;
-      border-bottom: 1px solid #eaeaea;
+      border-bottom: 1px solid #dee2e6;
     }
     .email-body {
-      padding: 36px;
+      padding: 1.5rem;
     }
     .email-footer {
-      background-color: #f9f9f9;
-      padding: 24px;
+      background-color: #f8f9fa;
+      padding: 1rem 1.5rem;
       text-align: center;
-      font-size: 14px;
-      color: #95a5a6;
-      border-top: 1px solid #eaeaea;
+      font-size: 0.875rem;
+      color: #6c757d;
+      border-top: 1px solid #dee2e6;
     }
+    /* Botones consistentes con Bootstrap */
     .btn-primary {
       display: inline-block;
-      padding: 12px 28px;
+      padding: 0.375rem 0.75rem;
       background-color: ${brandColors.primary};
       color: #ffffff !important;
       text-decoration: none;
       font-weight: 600;
-      border-radius: 6px;
-      margin: 20px 0;
+      border-radius: 0.25rem;
+      margin: 1rem 0;
       border: none;
       text-align: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.15s ease-in-out;
     }
     .btn-primary:hover {
-      filter: brightness(0.9);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transform: translateY(-1px);
+      background-color: #16a085;
     }
     .btn-danger {
       background-color: #e74c3c;
     }
     .btn-danger:hover {
-      filter: brightness(0.9);
-      transform: translateY(-1px);
+      background-color: #c0392b;
     }
+    /* Tipografía */
     h1, h2, h3 {
       color: #333333;
       font-weight: 700;
       margin-top: 0;
-      letter-spacing: -0.02em;
     }
     h1 {
-      font-size: 28px;
-      margin-bottom: 24px;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
     }
     h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
     h3 {
-      font-size: 18px;
-      margin-bottom: 16px;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
     }
     p {
-      margin: 18px 0;
-      color: #444444;
+      margin: 1rem 0;
     }
     .text-center {
       text-align: center;
     }
     .text-small {
-      font-size: 14px;
-      color: #666666;
+      font-size: 0.875rem;
     }
     .text-smaller {
-      font-size: 12px;
-      color: #757575;
+      font-size: 0.75rem;
     }
+    /* Enlaces */
     a {
       color: ${brandColors.primary};
       text-decoration: none;
@@ -205,44 +201,43 @@ function getEmailTemplate(content, preheader = '') {
     a:hover {
       text-decoration: underline;
     }
+    /* Componentes */
     .divider {
-      border-top: 1px solid #eaeaea;
-      margin: 28px 0;
+      border-top: 1px solid #dee2e6;
+      margin: 1.5rem 0;
     }
     .info-card {
-      background-color: #f9f9f9;
-      border: 1px solid #eaeaea;
-      border-radius: 8px;
-      padding: 20px;
-      margin: 24px 0;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+      padding: 1rem;
+      margin: 1rem 0;
     }
     .avatar-placeholder {
-      width: 72px;
-      height: 72px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background-color: ${brandColors.primary};
       color: white;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 1.5rem;
       font-weight: bold;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     }
     ul {
-      padding-left: 24px;
-      margin: 20px 0;
+      padding-left: 1.5rem;
+      margin: 1rem 0;
     }
     li {
-      margin-bottom: 10px;
-      color: #444444;
+      margin-bottom: 0.5rem;
     }
     .highlight {
       font-weight: 600;
-      color: #333333;
     }
+    /* Responsive */
     @media only screen and (max-width: 480px) {
       .email-container {
         width: 100% !important;
@@ -250,10 +245,10 @@ function getEmailTemplate(content, preheader = '') {
         border-radius: 0 !important;
       }
       .email-body {
-        padding: 24px !important;
+        padding: 1rem !important;
       }
       h1 {
-        font-size: 24px;
+        font-size: 1.5rem;
       }
     }
   </style>
