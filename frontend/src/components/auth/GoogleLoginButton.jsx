@@ -63,34 +63,39 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
   const navigate = useNavigate();
   const isDarkMode = useDarkMode();
 
-  // Comprobar si el SDK de Google está listo
+  // Comprobar si el SDK de Google está listo - Versión optimizada
   useEffect(() => {
-    // Verificar si el SDK de Google está disponible (cargado desde index.html)
-    const checkGoogleSDK = () => {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        setScriptLoaded(true);
-        console.log('Google SDK detectado correctamente');
-      } else {
-        // Si no está disponible después de 3 segundos, mostrar botón de respaldo
-        setTimeout(() => {
-          if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-            console.info('Google SDK no detectado - mostrando botón de respaldo');
-            setShowFallback(true);
-          } else {
-            setScriptLoaded(true);
-          }
-        }, 3000);
+    // Verificar inmediatamente si el SDK de Google está disponible
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      setScriptLoaded(true);
+    } else {
+      // Configurar un observador para detectar cuando esté disponible
+      const checkInterval = setInterval(() => {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          setScriptLoaded(true);
+          clearInterval(checkInterval);
+        }
+      }, 200); // Verificar cada 200ms
+      
+      // Mostrar fallback después de un tiempo razonable (1.5 segundos)
+      const fallbackTimer = setTimeout(() => {
+        if (!window.google || !window.google.accounts) {
+          console.info('Google SDK no detectado a tiempo - mostrando botón de respaldo');
+          setShowFallback(true);
+          clearInterval(checkInterval);
+        }
+      }, 1500);
+      
+      return () => {
+        clearInterval(checkInterval);
+        clearTimeout(fallbackTimer);
       }
-    };
-    
-    // Esperar un momento para que el script tenga tiempo de cargarse
-    setTimeout(checkGoogleSDK, 1000);
+    }
     
     return () => {
       // Limpiar al desmontar
       if (window.google && window.google.accounts) {
         try {
-          // Cancelar cualquier prompt o UI de Google
           window.google.accounts.id.cancel();
         } catch (err) {
           console.error('Error al limpiar Google Sign-In:', err);
@@ -164,23 +169,12 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
     }
   }, [navigate, setUser, onGoogleSignIn]);
 
-  // Efecto para inicializar y renderizar el botón de Google
+  // Efecto para inicializar y renderizar el botón de Google - Versión optimizada
   useEffect(() => {
     if (!scriptLoaded) return;
     
-    // Verificar que el script de Google se haya cargado correctamente
-    if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-      // En lugar de mostrar un error, programamos un nuevo intento
-      setTimeout(() => {
-        if (!buttonRendered) {
-          setShowFallback(true);
-        }
-      }, 2000);
-      return;
-    }
-    
     try {
-      // Inicializar Google Sign-In con manejo de errores
+      // Inicializar Google Sign-In de forma más directa
       const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
       if (!clientId) {
         console.error('REACT_APP_GOOGLE_CLIENT_ID no está definido');
@@ -188,26 +182,30 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         return;
       }
       
-      // Limpiar cualquier botón previo
+      // Referencia al contenedor
       const container = document.getElementById('google-signin-button');
       if (!container) {
+        console.error('No se encontró el contenedor del botón de Google');
         setShowFallback(true);
         return;
       }
       
+      // Limpiar contenedor
       container.innerHTML = '';
       
-      // Inicializar con el cliente ID
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleGoogleResponse,
-        ux_mode: 'popup',  // Usar popup en lugar de redirect para evitar problemas CORS
-        context: 'signin',  // Especificar el contexto para mejorar UX
-        auto_select: false, // Deshabilitar la selección automática
-        cancel_on_tap_outside: true, // Permitir cerrar haciendo clic fuera
-      });
+      // Inicializar con el cliente ID (una sola vez)
+      if (!buttonRendered) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleResponse,
+          ux_mode: 'popup',  // Evita problemas CORS
+          context: 'signin',
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
+      }
       
-      // Renderizar botón con tema adaptado al modo oscuro/claro
+      // Renderizar botón con tema adaptado
       window.google.accounts.id.renderButton(
         container,
         { 
@@ -215,14 +213,14 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
           theme: isDarkMode ? 'filled_black' : 'outline',
           size: 'large',
           text: 'continue_with',
-          shape: 'pill', // Forma de píldora
-          width: Math.min(container.offsetWidth, 280), // Limitar ancho máximo a 280px
+          shape: 'pill',
+          width: Math.min(container.offsetWidth, 280),
           locale: 'es_ES'
         }
       );
       
-      // Aplicar sombra y estilos adicionales al botón de Google
-      setTimeout(() => {
+      // Aplicar estilos inmediatamente después de renderizar
+      const applyStyles = () => {
         const googleButton = container.querySelector('div[role="button"]');
         if (googleButton) {
           // Estilos base
@@ -232,12 +230,12 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
           googleButton.style.transition = 'all 0.2s ease';
           googleButton.style.margin = '0 auto';
           
-          // Si es modo oscuro, añadir un borde sutil
+          // Borde en modo oscuro
           if (isDarkMode) {
             googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
           }
           
-          // Efecto hover
+          // Efecto hover - usando eventos
           googleButton.addEventListener('mouseover', () => {
             googleButton.style.boxShadow = isDarkMode
               ? '0 4px 8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.2)'
@@ -257,33 +255,50 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
               googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
             }
           });
+          
+          // Marcar como renderizado
+          setButtonRendered(true);
+          setShowFallback(false);
+        } else {
+          // Si no encontramos el botón, intentamos de nuevo en una fracción de segundo
+          setTimeout(applyStyles, 50);
         }
-      }, 100);
+      };
       
-      setButtonRendered(true);
-      setShowFallback(false);
-      console.log('Google button rendered with theme:', isDarkMode ? 'dark' : 'light');
+      // Intentar aplicar estilos inmediatamente
+      applyStyles();
+      
     } catch (err) {
-      console.info('Hubo un problema al inicializar Google Sign-In, mostrando botón de respaldo');
+      console.error('Error al inicializar Google Sign-In:', err);
       setShowFallback(true);
     }
   }, [scriptLoaded, handleGoogleResponse, isDarkMode, buttonRendered]);
   
-  // Manejador para el botón de respaldo
+  // Manejador optimizado para el botón de respaldo
   const handleFallbackButtonClick = () => {
-    // Solo intentar reinicializar el botón de Google sin recargar el script
-    setButtonRendered(false);
-    setShowFallback(false);
-    setScriptLoaded(false);
+    // Mostrar un mensaje para que el usuario sepa que estamos intentando cargar el botón
+    console.log('Intentando cargar el botón oficial de Google...');
     
-    // Revisamos de nuevo si el SDK de Google está disponible
-    setTimeout(() => {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        setScriptLoaded(true);
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      // Si el SDK ya está disponible, solo reiniciamos los estados
+      setButtonRendered(false);
+      setShowFallback(false);
+      setScriptLoaded(true);
+    } else {
+      // Intentamos simular un click en el botón de fallback
+      // que invocará directamente el flujo de autenticación con Google
+      const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+      
+      // Redirigir al usuario a la página de autenticación de Google
+      if (clientId) {
+        const redirectUri = window.location.origin + '/auth/google/callback';
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=email%20profile`;
+        
+        window.location.href = authUrl;
       } else {
-        setShowFallback(true);
+        console.error('No se puede iniciar autenticación: falta el Client ID');
       }
-    }, 1000);
+    }
   };
 
   return (
