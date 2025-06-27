@@ -16,7 +16,14 @@ exports.getTasksByColumn = async (req, res) => {
     if (!board || board.user.toString() !== req.user.id) {
       return res.status(403).json({ message: 'No tienes acceso a estas tareas' });
     }
-    const tasks = await Task.find({ column: columnId }).sort({ order: 1 });
+    
+    // Para ordenar: primero las no completadas por orden y luego las completadas por fecha de completado
+    const tasks = await Task.find({ column: columnId }).sort({ 
+      completed: 1, // false antes que true
+      order: 1, 
+      completedAt: -1 // Las completadas más recientes primero
+    });
+    
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener tareas', error: err.message });
@@ -147,5 +154,82 @@ exports.suggestImportance = async (req, res) => {
     return res.json({ suggestedImportance: result });
   } catch (err) {
     return res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
+  }
+};
+
+// Marcar tarea como completada o no completada
+exports.toggleTaskCompletion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { completed } = req.body;
+    
+    // Validar que el campo completed esté presente y sea booleano
+    if (typeof completed !== 'boolean') {
+      return res.status(400).json({ 
+        message: 'El campo completed es requerido en el body y debe ser un booleano',
+        receivedBody: req.body 
+      });
+    }
+    
+    // Buscar la tarea por ID
+    const task = await Task.findById(id);
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
+    }
+    
+    const column = await Column.findById(task.column);
+    if (!column) {
+      return res.status(404).json({ message: 'Columna no encontrada' });
+    }
+    
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes permiso para modificar esta tarea' });
+    }
+    
+    // Actualizar estado de completado
+    task.completed = completed;
+    task.completedAt = completed ? new Date() : null;
+    
+    const updatedTask = await task.save();
+    
+    return res.status(200).json(updatedTask);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al actualizar estado de tarea', error: err.message });
+  }
+};
+
+// Obtener tareas filtradas por estado de completado
+exports.getFilteredTasksByColumn = async (req, res) => {
+  try {
+    const { columnId } = req.params;
+    const { filter = 'all' } = req.query; // 'all', 'completed', 'pending'
+    
+    const column = await Column.findById(columnId);
+    if (!column) return res.status(404).json({ message: 'Columna no encontrada' });
+    
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes acceso a estas tareas' });
+    }
+    
+    let query = { column: columnId };
+    
+    if (filter === 'completed') {
+      query.completed = true;
+    } else if (filter === 'pending') {
+      query.completed = false;
+    }
+    
+    // Para ordenar: primero las no completadas por orden, luego las completadas por fecha de completado
+    const tasks = await Task.find(query).sort({ 
+      completed: 1, // false antes que true
+      order: 1, 
+      completedAt: -1 // Las completadas más recientes primero
+    });
+    
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al obtener tareas', error: err.message });
   }
 };

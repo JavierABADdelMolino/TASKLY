@@ -10,7 +10,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
+const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange, taskFilter = 'all' }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
@@ -29,7 +29,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
       setLoadingTasks(true);
       setTaskError('');
       try {
-        const data = await getTasksByColumn(column._id);
+        const data = await getTasksByColumn(column._id, taskFilter);
         setTasks(data);
       } catch (err) {
         setTaskError(err.message);
@@ -38,7 +38,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
       }
     };
     loadTasks();
-  }, [column._id, refreshTasks, refreshKey]);
+  }, [column._id, refreshTasks, refreshKey, taskFilter]);
 
   // marcar área de tareas como droppable para recibir tareas
   const { setNodeRef: setTasksDroppableRef } = useDroppable({ id: column._id });
@@ -136,6 +136,18 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           ) : (
             tasks.slice()
               .sort((a, b) => {
+                // Las tareas completadas siempre van al final
+                if (a.completed && !b.completed) return 1; 
+                if (!a.completed && b.completed) return -1;
+                
+                // Si ambas están completadas, ordenar por fecha de completado (más reciente primero)
+                if (a.completed && b.completed) {
+                  const dateA = new Date(a.completedAt);
+                  const dateB = new Date(b.completedAt);
+                  return dateB - dateA;
+                }
+                
+                // Si ninguna está completada, ordenar por importancia
                 const orderMap = { high: 2, medium: 1, low: 0 };
                 return orderMap[b.importance] - orderMap[a.importance];
               })

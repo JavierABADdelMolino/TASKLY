@@ -6,7 +6,7 @@ import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSe
 import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { updateTask } from '../../services/taskService';
 
-const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
+const ColumnList = ({ boardId, refresh, onColumnCountChange, taskFilter = 'all' }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); // Nuevo estado global de refresco
@@ -44,7 +44,30 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
   }, [fetchColumns]);
 
   // Handler global para refrescar todas las columnas/tareas
-  const handleGlobalRefresh = () => setRefreshKey((k) => k + 1);
+  const handleGlobalRefresh = (updatedTask) => {
+    console.log('Actualizando columnas debido a cambios en tarea:', updatedTask ? updatedTask._id : 'desconocido');
+    
+    // Si tenemos una tarea actualizada, actualizar localmente primero
+    if (updatedTask && updatedTask._id) {
+      setColumns(prevColumns => {
+        return prevColumns.map(col => {
+          // Encuentra la columna que contiene la tarea
+          if (col._id === updatedTask.column) {
+            // Actualiza la lista de tareas en esa columna
+            const updatedTasks = col.tasks ? 
+              col.tasks.map(t => t._id === updatedTask._id ? updatedTask : t) :
+              col.tasks;
+            
+            return { ...col, tasks: updatedTasks };
+          }
+          return col;
+        });
+      });
+    }
+    
+    // Refresca todas las columnas desde el servidor
+    setRefreshKey((k) => k + 1);
+  };
 
   // cargar columnas al montar o al cambiar boardId/refresh
   useEffect(() => {
@@ -123,6 +146,7 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
                     onColumnUpdated={handleColumnUpdated}
                     refreshKey={refreshKey}
                     onAnyTaskChange={handleGlobalRefresh}
+                    taskFilter={taskFilter} // Pasar el filtro de tareas a la columna
                   />
                 </div>
               ))

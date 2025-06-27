@@ -303,7 +303,7 @@ html[data-theme="light"] {
   border-radius: 0.25rem;
 }
 
-// 5. Destacar tareas según estado de fecha de finalización
+// 5. Destacar tareas según estado de finalización
 .task-card.today {
   border-left: 4px solid var(--bs-info) !important;
   background-color: rgba(var(--bs-info-rgb), 0.1) !important;
@@ -317,18 +317,80 @@ html[data-theme="light"] {
   background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
 }
 
-// Estado de tareas en modo claro
-[data-theme="light"] .task-card.today {
-  border-left: 4px solid var(--bs-info) !important;
-  background-color: rgba(var(--bs-info-rgb), 0.1) !important;
+// Estilo para tareas completadas
+.task-card.completed {
+  border-left: 4px solid var(--bs-success) !important;
+  background-color: rgba(var(--bs-success-rgb), 0.05) !important;
+  transition: opacity 0.3s ease;
 }
-[data-theme="light"] .task-card.urgent {
-  border-left: 4px solid var(--bs-warning) !important;
-  background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
+
+// Campos de texto de tareas completadas
+.task-card.completed .text-decoration-line-through {
+  opacity: 0.7;
 }
-[data-theme="light"] .task-card.overdue {
-  border-left: 4px solid var(--bs-danger) !important;
-  background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
+
+// Botón de completar tarea mejorado
+.btn-task-complete {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  transition: all 0.2s ease-in-out;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+}
+
+.btn-task-complete:hover {
+  background-color: #f0f1f2;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-task-complete.completed {
+  background-color: rgba(var(--bs-success-rgb), 0.1);
+  border-color: var(--bs-success);
+  color: var(--bs-success);
+}
+
+.btn-task-complete.completed:hover {
+  background-color: rgba(var(--bs-success-rgb), 0.2);
+}
+
+.btn-task-complete .check-icon {
+  color: var(--bs-success);
+}
+
+.btn-task-complete .circle-icon {
+  color: #6c757d;
+}
+
+// Botones de tareas completadas
+.task-card.completed .btn-link {
+  opacity: 0.7;
+}
+
+// Hacer tareas completadas más transparentes en modo oscuro
+[data-theme="dark"] .task-card.completed {
+  background-color: rgba(var(--bs-success-rgb), 0.05) !important;
+}
+
+// Estilos para tema oscuro del botón de completar tarea
+[data-theme="dark"] .btn-task-complete {
+  background-color: #343a40;
+  border-color: #495057;
+  color: #adb5bd;
+}
+
+[data-theme="dark"] .btn-task-complete:hover {
+  background-color: #2b3035;
+}
+
+[data-theme="dark"] .btn-task-complete.completed {
+  background-color: rgba(var(--bs-success-rgb), 0.1);
+  border-color: var(--bs-success);
+  color: var(--bs-success);
 }
 
 // 6. Estilos generales de Column y Task (antes en theme.scss)
@@ -469,5 +531,206 @@ html[data-theme="light"] {
         border: 1px solid #5f6368 !important;
       }
     }
+  }
+}
+
+// Estilos para el filtro de tareas moderno
+.task-filter-container {
+  position: relative;
+  z-index: 100;
+}
+
+.filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 1rem;
+  border-radius: 50px;
+  border: 1px solid var(--bs-border-color);
+  background-color: transparent;
+  font-size: 0.875rem;
+  color: var(--bs-body-color);
+  transition: all 0.2s;
+}
+
+.filter-toggle-btn:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+  border-color: rgba(var(--bs-primary-rgb), 0.3);
+  color: var(--bs-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  width: 220px;
+  background-color: var(--bs-body-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  animation: filterDropIn 0.2s ease-out;
+}
+
+@keyframes filterDropIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.filter-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.filter-header h6 {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--bs-body-color);
+}
+
+.filter-options {
+  padding: 0.5rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.375rem;
+  text-align: left;
+  color: var(--bs-body-color);
+  transition: background-color 0.15s;
+}
+
+.filter-option:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.filter-option.active {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
+}
+
+.option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.option-icon.all {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
+}
+
+.option-icon.pending {
+  background-color: rgba(var(--bs-warning-rgb), 0.1);
+  color: var(--bs-warning);
+}
+
+.option-icon.completed {
+  background-color: rgba(var(--bs-success-rgb), 0.1);
+  color: var(--bs-success);
+}
+
+// Versión para tema oscuro
+[data-theme="dark"] .filter-dropdown {
+  background-color: #343a40;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+[data-theme="dark"] .filter-header {
+  border-bottom: 1px solid #495057;
+}
+
+// Botón para completar tarea - Estilos mejorados
+.btn-task-completion-toggle {
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  border: 1px solid var(--bs-success);
+  background-color: transparent;
+  color: var(--bs-success);
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  min-width: 110px;
+  
+  &:hover, &:focus {
+    background-color: rgba(var(--bs-success-rgb), 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &.completed {
+    background-color: var(--bs-success);
+    color: white;
+    
+    &:hover, &:focus {
+      filter: brightness(0.95);
+      background-color: var(--bs-success);
+    }
+  }
+  
+  .btn-completion-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .icon-check,
+  .icon-circle {
+    flex-shrink: 0;
+  }
+  
+  .btn-text {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  
+  @media (max-width: 576px) {
+    min-width: 40px;
+    
+    .btn-text {
+      display: none;
+    }
+  }
+}
+
+// Versión para tema oscuro
+[data-theme="dark"] .btn-task-completion-toggle {
+  &:not(.completed) {
+    border-color: var(--bs-success);
+    color: var(--bs-success);
+  }
+  
+  &:hover, &:focus {
+    background-color: rgba(var(--bs-success-rgb), 0.15);
+  }
+  
+  &.completed {
+    background-color: var(--bs-success);
+    color: white;
   }
 }
