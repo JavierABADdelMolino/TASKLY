@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/layout/Layout';
 import { useTheme } from '../context/ThemeContext';
-import { FiCheckSquare, FiClock } from 'react-icons/fi';
+import { FiCheckSquare, FiClock, FiZap, FiSliders, FiCloud, FiArrowRightCircle, FiInfo } from 'react-icons/fi';
 import { RiBrainLine } from 'react-icons/ri';
 import { Carousel } from 'react-bootstrap';
 
@@ -183,7 +183,7 @@ const Home = () => {
                         e.currentTarget.style.transform = "scale(1)";
                       }}
                     >
-                      <i className="bi bi-lightning-charge fs-4"></i>
+                      <FiZap size={24} />
                     </div>
                   </div>
                   <div className="flex-grow-1 ms-3 text-start">
@@ -215,7 +215,7 @@ const Home = () => {
                         e.currentTarget.style.transform = "scale(1)";
                       }}
                     >
-                      <i className="bi bi-sliders fs-4"></i>
+                      <FiSliders size={24} />
                     </div>
                   </div>
                   <div className="flex-grow-1 ms-3 text-start">
@@ -250,7 +250,7 @@ const Home = () => {
                         e.currentTarget.style.transform = "scale(1)";
                       }}
                     >
-                      <i className="bi bi-clock-history fs-4"></i>
+                      <FiClock size={24} />
                     </div>
                   </div>
                   <div className="flex-grow-1 ms-3 text-start">
@@ -282,7 +282,7 @@ const Home = () => {
                         e.currentTarget.style.transform = "scale(1)";
                       }}
                     >
-                      <i className="bi bi-cloud-check fs-4"></i>
+                      <FiCloud size={24} />
                     </div>
                   </div>
                   <div className="flex-grow-1 ms-3 text-start">
@@ -301,11 +301,11 @@ const Home = () => {
                   className="btn btn-primary px-4 py-2"
                   onClick={() => window.dispatchEvent(new CustomEvent('openAuthModal', { detail: 'register' }))}
                 >
-                  <i className="bi bi-arrow-right-circle me-2"></i>
+                  <FiArrowRightCircle className="me-2" />
                   Empieza gratis ahora
                 </button>
                 <a href="/about" className="btn btn-outline-primary px-4 py-2">
-                  <i className="bi bi-info-circle me-2"></i>
+                  <FiInfo className="me-2" />
                   Saber más
                 </a>
               </div>
