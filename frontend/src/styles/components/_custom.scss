@@ -389,6 +389,7 @@ html[data-theme="light"] {
   text-align: center;
   margin: 1.5rem 0;
   position: relative;
+  width: 100%;
 }
 
 .separator::before,
@@ -396,33 +397,21 @@ html[data-theme="light"] {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(
-    to var(--direction, right),
-    transparent,
-    rgba(var(--bs-body-color-rgb), 0.3),
-    rgba(var(--bs-body-color-rgb), 0.3)
-  );
+  background-color: rgba(var(--bs-body-color-rgb), 0.2);
 }
 
 .separator::before {
-  --direction: right;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .separator::after {
-  --direction: left;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 }
 
 .separator span {
-  padding: 0 0.8rem;
   font-size: 0.9rem;
-  color: var(--bs-body-color); /* Color neutro según tema */
   font-weight: 500;
-  background-color: var(--bs-body-bg);
-  position: relative;
-  z-index: 1;
-  opacity: 0.8;
+  white-space: nowrap;
 }
 
 // Google Login Button container
