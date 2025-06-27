@@ -139,19 +139,13 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
     // Enviar el correo utilizando el servicio centralizado
     await sendMail(process.env.SUPPORT_EMAIL, `${name} te ha enviado un mensaje: "${subject}"`, html, email);
     
-    // Log para depuración
-    console.log(`Formulario de contacto: Correo enviado a ${process.env.SUPPORT_EMAIL} desde ${email}`);
-    
     // Respuesta exitosa
     res.status(200).json({ 
       success: true,
       message: 'Mensaje enviado con éxito. Gracias por contactarnos.' 
     });
   } catch (error) {
-    // Log detallado del error
-    console.error('Error al enviar email de contacto:', error);
-    
-    // Determinar tipo de error para mensaje apropiado
+    // Determinar tipo de error para mensaje apropiado sin generar logs
     let errorMessage = 'Ha ocurrido un error al enviar tu mensaje. Por favor, inténtalo más tarde.';
     
     if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
@@ -160,8 +154,6 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
     
     if (error.code === 'EAUTH') {
       errorMessage = 'Error de autenticación en el servidor de correo. Contacta al administrador del sitio.';
-      // Además, avisa al administrador sobre este problema crítico
-      console.error('ERROR CRÍTICO: Falló la autenticación SMTP. Revisa las credenciales.');
     }
     
     res.status(500).json({ 

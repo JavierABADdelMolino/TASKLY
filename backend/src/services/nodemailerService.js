@@ -17,20 +17,11 @@ const brandColors = {
  * @returns {object} Transporte de nodemailer configurado
  */
 function createTransporter() {
-  // En modo desarrollo, si no hay credenciales, usar ethereal (correos de prueba)
+  // En modo desarrollo, si no hay credenciales, usar modo simulado silencioso
   if (process.env.NODE_ENV === 'development' && (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD)) {
-    console.log('INFO: Usando modo de prueba para emails (no se enviarán realmente)');
-    // En este caso, creamos un transporte que solo registra en la consola
     return {
       sendMail: (mailOptions) => {
-        console.log('-------------------------');
-        console.log('EMAIL SIMULADO (desarrollo)');
-        console.log('-------------------------');
-        console.log('De:', mailOptions.from);
-        console.log('Para:', mailOptions.to);
-        console.log('Asunto:', mailOptions.subject);
-        console.log('-------------------------');
-        // Simular una respuesta exitosa de nodemailer
+        // Modo silencioso: no mostramos ningún mensaje
         return Promise.resolve({ messageId: 'test-' + Date.now() });
       }
     };
@@ -40,7 +31,7 @@ function createTransporter() {
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT, 10),
-    secure: process.env.EMAIL_PORT === '465', // true solo para puerto 465, false para otros puertos como 587
+    secure: process.env.EMAIL_PORT === '465', // true para 465, false para otros puertos
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD
@@ -57,17 +48,6 @@ function createTransporter() {
  */
 async function sendMail(to, subject, html, replyTo = supportEmail) {
   try {
-    console.log('💌 Iniciando envío de email:');
-    console.log(`  📧 Para: ${to}`);
-    console.log(`  📝 Asunto: ${subject}`);
-    console.log(`  ↩️  Reply-To: ${replyTo}`);
-    console.log('  🔧 Configuración SMTP:');
-    console.log(`    - Host: ${process.env.EMAIL_HOST}`);
-    console.log(`    - Puerto: ${process.env.EMAIL_PORT}`);
-    console.log(`    - Seguro: ${process.env.EMAIL_PORT === '465' ? 'Sí (SSL/TLS)' : 'No (STARTTLS)'}`);
-    console.log(`    - Usuario: ${process.env.EMAIL_USER}`);
-    console.log(`    - Contraseña: ${'*'.repeat(8)}`);
-
     const transporter = createTransporter();
     
     const emailConfig = {
@@ -75,33 +55,14 @@ async function sendMail(to, subject, html, replyTo = supportEmail) {
       to,
       subject,
       html,
-      replyTo: replyTo || supportEmail // Siempre configurar replyTo para que las respuestas vayan a support
+      replyTo: replyTo || supportEmail 
     };
 
-    // Verificar conexión SMTP antes de enviar
-    try {
-      console.log('  🔄 Verificando conexión SMTP...');
-      await transporter.verify();
-      console.log('  ✅ Conexión SMTP verificada correctamente');
-    } catch (verifyError) {
-      console.error('  ❌ Error al verificar la conexión SMTP:', verifyError.message);
-      // Continuamos de todas formas para ver el error específico del envío
-    }
-
-    console.log('  📤 Enviando mensaje...');
     const result = await transporter.sendMail(emailConfig);
-    
-    console.log(`  ✅ Email enviado correctamente a: ${to}`);
-    console.log(`  📋 ID del mensaje: ${result.messageId || 'simulado'}`);
-    console.log(`  📊 Detalles de la respuesta:`, result);
     return result;
   } catch (error) {
-    console.error(`❌ ERROR al enviar email a ${to}:`, error.message);
-    console.error('Detalles del error:', error);
-    
-    // Si estamos en desarrollo, no fallamos la aplicación por errores de email
+    // En desarrollo, no fallamos la aplicación por errores de email
     if (process.env.NODE_ENV === 'development') {
-      console.log('⚠️ En desarrollo: continuando a pesar del error de email');
       return { success: false, error: error.message };
     }
     throw error; // Re-lanzamos el error en producción
@@ -132,7 +93,6 @@ function getBaseUrl() {
  */
 function getEmailTemplate(content, preheader = '') {
   const baseUrl = getBaseUrl();
-  // Usamos la versión PNG para evitar problemas con SVG en clientes de correo
   const logoUrl = `${baseUrl}/logo-240x80-color.png`;
   
   return `<!DOCTYPE html>
@@ -313,7 +273,7 @@ async function sendWelcomeEmail(to, firstName, userEmail) {
   `;
   
   const html = getEmailTemplate(content, `¡Bienvenido a Taskly, ${firstName}! Tu cuenta ha sido creada correctamente.`);
-  await sendMail(to, `¡Bienvenido a Taskly, ${firstName}!`, html);
+  return await sendMail(to, `¡Bienvenido a Taskly, ${firstName}!`, html);
 }
 
 /**
@@ -344,7 +304,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
   `;
   
   const html = getEmailTemplate(content, '🔒 Solicitud para restablecer tu contraseña en Taskly');
-  await sendMail(to, 'Restablece tu contraseña en Taskly', html);
+  return await sendMail(to, 'Restablece tu contraseña en Taskly', html);
 }
 
 /**
@@ -374,7 +334,7 @@ async function sendGoogleLinkEmail(to, firstName, userEmail) {
   `;
   
   const html = getEmailTemplate(content, `Tu cuenta de Taskly ha sido vinculada con Google`);
-  await sendMail(to, 'Cuenta vinculada con Google', html);
+  return await sendMail(to, 'Cuenta vinculada con Google', html);
 }
 
 module.exports = { 
