@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import { CONTACT_EMAILS } from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
+import { FiCheck } from 'react-icons/fi';
 
 const ContactPage = () => {
   const { user } = useAuth();
@@ -162,17 +163,34 @@ const ContactPage = () => {
               <div className="card-body p-4 p-md-5">
                 {submitted ? (
                   <div className="text-center py-5 my-3">
-                    <div className="card border-0 rounded-4 p-4 shadow-sm mx-auto" style={{ maxWidth: "500px" }}>
-                      <div className="mb-3">
-                        <div className="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                    <div 
+                      className="card rounded-4 p-4 shadow-sm mx-auto" 
+                      style={{ 
+                        maxWidth: "500px",
+                        border: "1px solid var(--bs-border-color)",
+                        borderColor: "rgba(var(--bs-primary-rgb), 0.2)",
+                      }}
+                    >
+                      <div className="mb-4">
+                        <div 
+                          className="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
                           style={{ 
                             width: "80px", 
                             height: "80px", 
-                            backgroundColor: "var(--bs-primary-bg-subtle)",
-                            color: "var(--bs-primary)" 
+                            backgroundColor: "rgba(var(--bs-primary-rgb), 0.2)", 
+                            color: "var(--bs-primary)",
+                            transition: "all 0.3s ease"
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "rgba(var(--bs-primary-rgb), 0.3)";
+                            e.currentTarget.style.transform = "scale(1.1)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = "rgba(var(--bs-primary-rgb), 0.2)";
+                            e.currentTarget.style.transform = "scale(1)";
                           }}
                         >
-                          <i className="bi bi-check-circle-fill display-4"></i>
+                          <FiCheck size={44} strokeWidth={3} />
                         </div>
                       </div>
                       <h3 className="mb-3 fw-bold">¡Mensaje enviado con éxito!</h3>
