@@ -63,48 +63,31 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
   const navigate = useNavigate();
   const isDarkMode = useDarkMode();
 
-  // Cargar el SDK de Google
+  // Comprobar si el SDK de Google está listo
   useEffect(() => {
-    const loadGoogleScript = () => {
-      // Verificar si ya está cargado
-      if (document.querySelector('script#google-platform')) {
+    // Verificar si el SDK de Google está disponible (cargado desde index.html)
+    const checkGoogleSDK = () => {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
         setScriptLoaded(true);
-        return;
+        console.log('Google SDK detectado correctamente');
+      } else {
+        // Si no está disponible después de 3 segundos, mostrar botón de respaldo
+        setTimeout(() => {
+          if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+            console.info('Google SDK no detectado - mostrando botón de respaldo');
+            setShowFallback(true);
+          } else {
+            setScriptLoaded(true);
+          }
+        }, 3000);
       }
-
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.id = 'google-platform';
-      script.async = true;
-      script.defer = true;
-      script.crossOrigin = "anonymous";
-      
-      script.onload = () => {
-        setScriptLoaded(true);
-        console.log('Google script loaded successfully');
-      };
-      
-      script.onerror = () => {
-        console.info('Error loading Google script - showing fallback button');
-        // Mostrar botón de respaldo después de unos segundos
-        setTimeout(() => setShowFallback(true), 2000);
-      };
-      
-      document.body.appendChild(script);
     };
     
-    loadGoogleScript();
-    
-    // Configurar un tiempo de espera para mostrar el botón de respaldo si tarda demasiado
-    const fallbackTimer = setTimeout(() => {
-      if (!buttonRendered) {
-        setShowFallback(true);
-      }
-    }, 5000);
+    // Esperar un momento para que el script tenga tiempo de cargarse
+    setTimeout(checkGoogleSDK, 1000);
     
     return () => {
       // Limpiar al desmontar
-      clearTimeout(fallbackTimer);
       if (window.google && window.google.accounts) {
         try {
           // Cancelar cualquier prompt o UI de Google
@@ -288,25 +271,19 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
   
   // Manejador para el botón de respaldo
   const handleFallbackButtonClick = () => {
-    // Intentar recuperar el botón oficial de Google
+    // Solo intentar reinicializar el botón de Google sin recargar el script
     setButtonRendered(false);
     setShowFallback(false);
     setScriptLoaded(false);
     
-    // Eliminar y recargar el script
-    const oldScript = document.querySelector('script#google-platform');
-    if (oldScript) {
-      oldScript.remove();
-    }
-    
-    // Recargar el script de Google
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.id = 'google-platform';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setScriptLoaded(true);
-    document.body.appendChild(script);
+    // Revisamos de nuevo si el SDK de Google está disponible
+    setTimeout(() => {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        setScriptLoaded(true);
+      } else {
+        setShowFallback(true);
+      }
+    }, 1000);
   };
 
   return (
