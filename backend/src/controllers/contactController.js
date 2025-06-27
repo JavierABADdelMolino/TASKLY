@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../services/nodemailerService');
 
 /**
  * @desc    Enviar mensaje de contacto desde el formulario web
@@ -45,24 +45,8 @@ exports.sendContactEmail = async (req, res) => {
       hour: '2-digit', minute: '2-digit'
     });
     
-    // Configurar el transporte de correo con Nodemailer
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT, 10),
-      secure: process.env.EMAIL_PORT === '465', // true solo para puerto 465, false para otros puertos como 587
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-    
-    // Configurar opciones del correo
-    const mailOptions = {
-      from: `"Taskly - Formulario de Contacto" <${process.env.EMAIL_USER}>`,
-      to: process.env.SUPPORT_EMAIL,
-      subject: `${name} te ha enviado un mensaje: "${subject}"`,
-      replyTo: email,
-      text: `
+    // Configurar el contenido del correo
+    const text = `
 Mensaje de ${name} desde el formulario web
 --------------------------------------
 Fecha: ${dateTime}
@@ -76,8 +60,9 @@ ${message}
 --------------------------------------
 Para responder directamente, simplemente contesta a este correo.
 Este mensaje fue enviado desde el formulario de contacto en taskly.es
-`,
-      html: `
+`;
+
+    const html = `
         <!-- Definimos variables CSS para usar el sistema de diseño del proyecto -->
         <div style="
           /* Estilos generales */
@@ -137,8 +122,6 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
             </div>
           </div>
           
-          <!-- Se eliminó la sección de "Para responder a..." como se solicitó -->
-          
           <div style="
             margin-top: 30px; 
             padding-top: 20px; 
@@ -151,11 +134,10 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
             <a href="${process.env.FRONTEND_URL || process.env.CLIENT_URL}" style="color: var(--bs-primary, #1abc9c); text-decoration: none; font-weight: 500;">taskly.es</a>
           </div>
         </div>
-      `
-    };
+    `;
     
-    // Enviar el correo
-    await transporter.sendMail(mailOptions);
+    // Enviar el correo utilizando el servicio centralizado
+    await sendMail(process.env.SUPPORT_EMAIL, `${name} te ha enviado un mensaje: "${subject}"`, html, email);
     
     // Log para depuración
     console.log(`Formulario de contacto: Correo enviado a ${process.env.SUPPORT_EMAIL} desde ${email}`);

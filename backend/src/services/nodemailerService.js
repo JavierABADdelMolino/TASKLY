@@ -1,27 +1,6 @@
-const { Resend } = require('resend');
-// Configurar Resend usando la API key desde env
-const resend = new Resend(process.env.RESEND_API_KEY);
+const nodemailer = require('nodemailer');
 
-/**
- * Envía un email
- * @param {string} to Destinatario
- * @param {string} subject Asunto
- * @param {string} html Contenido en HTML
- * @param {string} replyTo Correo para respuestas (opcional)
- */
-async function sendMail(to, subject, html, replyTo = supportEmail) {
-  const emailConfig = {
-    from: process.env.EMAIL_FROM || 'Taskly <no-reply@taskly.es>',
-    to,
-    subject,
-    html,
-    reply_to: replyTo || supportEmail // Siempre configurar reply_to para que las respuestas vayan a support
-  };
-
-  await resend.emails.send(emailConfig);
-}
-
-// Variables de estilo y configuración para emails
+// Variables de configuración
 const supportEmail = process.env.SUPPORT_EMAIL || 'support@taskly.es';
 const brandColors = {
   primary: '#1abc9c',      // Verde turquesa principal
@@ -32,6 +11,102 @@ const brandColors = {
   light: '#f5f7fa',        // Fondo claro
   border: '#dee2e6'        // Color de bordes
 };
+
+/**
+ * Crea un transporte de nodemailer para enviar correos
+ * @returns {object} Transporte de nodemailer configurado
+ */
+function createTransporter() {
+  // En modo desarrollo, si no hay credenciales, usar ethereal (correos de prueba)
+  if (process.env.NODE_ENV === 'development' && (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD)) {
+    console.log('INFO: Usando modo de prueba para emails (no se enviarán realmente)');
+    // En este caso, creamos un transporte que solo registra en la consola
+    return {
+      sendMail: (mailOptions) => {
+        console.log('-------------------------');
+        console.log('EMAIL SIMULADO (desarrollo)');
+        console.log('-------------------------');
+        console.log('De:', mailOptions.from);
+        console.log('Para:', mailOptions.to);
+        console.log('Asunto:', mailOptions.subject);
+        console.log('-------------------------');
+        // Simular una respuesta exitosa de nodemailer
+        return Promise.resolve({ messageId: 'test-' + Date.now() });
+      }
+    };
+  }
+
+  // Configuración normal para producción o cuando se proporcionan credenciales
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: parseInt(process.env.EMAIL_PORT, 10),
+    secure: process.env.EMAIL_PORT === '465', // true solo para puerto 465, false para otros puertos como 587
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+}
+
+/**
+ * Envía un email
+ * @param {string} to Destinatario
+ * @param {string} subject Asunto
+ * @param {string} html Contenido en HTML
+ * @param {string} replyTo Correo para respuestas (opcional)
+ */
+async function sendMail(to, subject, html, replyTo = supportEmail) {
+  try {
+    console.log('💌 Iniciando envío de email:');
+    console.log(`  📧 Para: ${to}`);
+    console.log(`  📝 Asunto: ${subject}`);
+    console.log(`  ↩️  Reply-To: ${replyTo}`);
+    console.log('  🔧 Configuración SMTP:');
+    console.log(`    - Host: ${process.env.EMAIL_HOST}`);
+    console.log(`    - Puerto: ${process.env.EMAIL_PORT}`);
+    console.log(`    - Seguro: ${process.env.EMAIL_PORT === '465' ? 'Sí (SSL/TLS)' : 'No (STARTTLS)'}`);
+    console.log(`    - Usuario: ${process.env.EMAIL_USER}`);
+    console.log(`    - Contraseña: ${'*'.repeat(8)}`);
+
+    const transporter = createTransporter();
+    
+    const emailConfig = {
+      from: process.env.EMAIL_FROM || 'Taskly <no-reply@taskly.es>',
+      to,
+      subject,
+      html,
+      replyTo: replyTo || supportEmail // Siempre configurar replyTo para que las respuestas vayan a support
+    };
+
+    // Verificar conexión SMTP antes de enviar
+    try {
+      console.log('  🔄 Verificando conexión SMTP...');
+      await transporter.verify();
+      console.log('  ✅ Conexión SMTP verificada correctamente');
+    } catch (verifyError) {
+      console.error('  ❌ Error al verificar la conexión SMTP:', verifyError.message);
+      // Continuamos de todas formas para ver el error específico del envío
+    }
+
+    console.log('  📤 Enviando mensaje...');
+    const result = await transporter.sendMail(emailConfig);
+    
+    console.log(`  ✅ Email enviado correctamente a: ${to}`);
+    console.log(`  📋 ID del mensaje: ${result.messageId || 'simulado'}`);
+    console.log(`  📊 Detalles de la respuesta:`, result);
+    return result;
+  } catch (error) {
+    console.error(`❌ ERROR al enviar email a ${to}:`, error.message);
+    console.error('Detalles del error:', error);
+    
+    // Si estamos en desarrollo, no fallamos la aplicación por errores de email
+    if (process.env.NODE_ENV === 'development') {
+      console.log('⚠️ En desarrollo: continuando a pesar del error de email');
+      return { success: false, error: error.message };
+    }
+    throw error; // Re-lanzamos el error en producción
+  }
+}
 
 /**
  * Función auxiliar para generar la URL base del frontend con dominio custom

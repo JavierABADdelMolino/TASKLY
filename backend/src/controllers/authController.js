@@ -7,7 +7,7 @@ const {
   sendWelcomeEmail, 
   sendPasswordResetEmail,
   sendGoogleLinkEmail 
-} = require('../services/mailService');
+} = require('../services/nodemailerService');
 const cloudinaryService = require('../services/cloudinaryService');
 
 // Inicializar el cliente OAuth de Google
