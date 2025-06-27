@@ -324,14 +324,7 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
           ></div>
         )}
         
-        {/* Mostrar spinner mientras se carga y no hay fallback */}
-        {!scriptLoaded && !showFallback && (
-          <div className="text-center py-2">
-            <div className="spinner-border spinner-border-sm text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        )}
+        {/* Se eliminó el spinner de carga */}
         
         {/* Mostrar botón de respaldo cuando sea necesario */}
         {showFallback && <FallbackGoogleButton onClick={handleFallbackButtonClick} isDarkMode={isDarkMode} />}
