@@ -3,9 +3,7 @@ const nodemailer = require('nodemailer');
 // Variables de configuración
 const supportEmail = process.env.SUPPORT_EMAIL || 'support@taskly.es';
 const brandColors = {
-  primary: '#1abc9c',      // Verde turquesa principal
-  primaryDark: '#16a085',  // Variante oscura del primario
-  secondary: '#e74c3c',    // Rojo secundario
+  primary: '#1abc9c',      // Verde turquesa principal (color principal)
   dark: '#333333',         // Texto oscuro
   gray: '#95a5a6',         // Gris neutro
   light: '#f5f7fa',        // Fondo claro
@@ -94,6 +92,7 @@ function getBaseUrl() {
 function getEmailTemplate(content, preheader = '') {
   const baseUrl = getBaseUrl();
   const logoUrl = `${baseUrl}/logo-240x80-color.png`;
+  const year = new Date().getFullYear();
   
   return `<!DOCTYPE html>
 <html lang="es">
@@ -106,7 +105,7 @@ function getEmailTemplate(content, preheader = '') {
   <title>Taskly</title>
   <style>
     body {
-      font-family: 'Nunito', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Inter', 'Nunito', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.6;
       color: #333333;
       margin: 0;
@@ -118,22 +117,22 @@ function getEmailTemplate(content, preheader = '') {
       max-width: 600px;
       margin: 20px auto;
       background: #ffffff;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
     .email-header {
       background-color: #f9f9f9;
-      padding: 24px;
+      padding: 28px;
       text-align: center;
       border-bottom: 1px solid #eaeaea;
     }
     .email-body {
-      padding: 30px;
+      padding: 36px;
     }
     .email-footer {
       background-color: #f9f9f9;
-      padding: 20px;
+      padding: 24px;
       text-align: center;
       font-size: 14px;
       color: #95a5a6;
@@ -141,83 +140,120 @@ function getEmailTemplate(content, preheader = '') {
     }
     .btn-primary {
       display: inline-block;
-      padding: 12px 24px;
+      padding: 12px 28px;
       background-color: ${brandColors.primary};
       color: #ffffff !important;
       text-decoration: none;
       font-weight: 600;
-      border-radius: 4px;
-      margin: 16px 0;
+      border-radius: 6px;
+      margin: 20px 0;
       border: none;
       text-align: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .btn-primary:hover {
-      background-color: ${brandColors.primaryDark};
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      filter: brightness(0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-1px);
     }
     .btn-danger {
-      background-color: ${brandColors.secondary};
+      background-color: #e74c3c;
     }
     .btn-danger:hover {
-      opacity: 0.9;
+      filter: brightness(0.9);
+      transform: translateY(-1px);
     }
     h1, h2, h3 {
       color: #333333;
       font-weight: 700;
       margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    h3 {
+      font-size: 18px;
+      margin-bottom: 16px;
     }
     p {
-      margin: 16px 0;
+      margin: 18px 0;
+      color: #444444;
     }
     .text-center {
       text-align: center;
     }
     .text-small {
       font-size: 14px;
+      color: #666666;
     }
     .text-smaller {
       font-size: 12px;
+      color: #757575;
     }
     a {
       color: ${brandColors.primary};
       text-decoration: none;
+      font-weight: 500;
     }
     a:hover {
       text-decoration: underline;
     }
     .divider {
       border-top: 1px solid #eaeaea;
-      margin: 24px 0;
+      margin: 28px 0;
     }
     .info-card {
       background-color: #f9f9f9;
       border: 1px solid #eaeaea;
-      border-radius: 6px;
-      padding: 16px;
-      margin: 20px 0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     }
     .avatar-placeholder {
-      width: 64px;
-      height: 64px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background-color: ${brandColors.primary};
       color: white;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    ul {
+      padding-left: 24px;
+      margin: 20px 0;
+    }
+    li {
+      margin-bottom: 10px;
+      color: #444444;
+    }
+    .highlight {
+      font-weight: 600;
+      color: #333333;
     }
     @media only screen and (max-width: 480px) {
       .email-container {
         width: 100% !important;
         margin: 0 !important;
+        border-radius: 0 !important;
       }
       .email-body {
-        padding: 20px !important;
+        padding: 24px !important;
+      }
+      h1 {
+        font-size: 24px;
       }
     }
   </style>
@@ -232,7 +268,7 @@ function getEmailTemplate(content, preheader = '') {
     </div>
     <div class="email-footer">
       <p>¿Necesitas ayuda? <a href="mailto:${supportEmail}">Contáctanos</a></p>
-      <p class="text-smaller">© ${new Date().getFullYear()} Taskly. Todos los derechos reservados.</p>
+      <p class="text-smaller">© ${year} Taskly. Todos los derechos reservados.</p>
     </div>
   </div>
 </body>
@@ -244,31 +280,31 @@ function getEmailTemplate(content, preheader = '') {
  */
 async function sendWelcomeEmail(to, firstName, userEmail) {
   const content = `
-    <h1>¡Bienvenido a Taskly, ${firstName}!</h1>
-    <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros.</p>
+    <h1>¡Bienvenido a Taskly, ${firstName}! 🎉</h1>
+    <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros y ayudarte a ser más productivo.</p>
     
     <div class="info-card">
-      <p><strong>Datos de acceso:</strong></p>
-      <p>Email: <strong>${userEmail}</strong></p>
+      <p><span class="highlight">Datos de acceso:</span></p>
+      <p>Email: <span class="highlight">${userEmail}</span></p>
       <p class="text-small">Para iniciar sesión, utiliza la contraseña que creaste durante el proceso de registro.</p>
     </div>
     
     <div class="text-center">
-      <a href="${getBaseUrl()}/login" class="btn-primary">Iniciar sesión</a>
+      <a href="${getBaseUrl()}/login" class="btn-primary">Comenzar a usar Taskly</a>
     </div>
     
     <div class="divider"></div>
     
-    <p>¿Qué puedes hacer ahora?</p>
+    <h2>Primeros pasos en Taskly</h2>
     <ul>
-      <li>Crear nuevos tableros para organizar tus proyectos</li>
-      <li>Añadir columnas personalizadas a tus tableros</li>
-      <li>Crear tareas y asignarles etiquetas, fechas y prioridades</li>
+      <li><span class="highlight">Crea tu primer tablero</span> para organizar tus proyectos</li>
+      <li><span class="highlight">Personaliza tus columnas</span> según tu flujo de trabajo</li>
+      <li><span class="highlight">Añade tareas y priorízalas</span> para una mejor gestión</li>
     </ul>
     
-    <p>Si necesitas ayuda para comenzar, no dudes en responder a este correo.</p>
+    <p>Nuestro objetivo es ayudarte a organizar tu trabajo de forma efectiva. Si tienes alguna pregunta o necesitas ayuda para comenzar, simplemente responde a este correo.</p>
     
-    <p>¡Esperamos que disfrutes usando Taskly!</p>
+    <p>¡Te deseamos una excelente experiencia con Taskly!</p>
     <p>El equipo de Taskly</p>
   `;
   
@@ -284,23 +320,28 @@ async function sendPasswordResetEmail(to, resetUrl) {
   const link = resetUrl.startsWith('http') ? resetUrl : `${getBaseUrl()}/reset-password/${resetUrl}`;
   
   const content = `
-    <h1>Restablecimiento de contraseña</h1>
+    <h1>🔒 Restablecimiento de contraseña</h1>
     <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Taskly.</p>
     
     <div class="info-card">
-      <p>Por seguridad, este enlace caducará en <strong>1 hora</strong>.</p>
-      <p class="text-small">Si no has solicitado este cambio, puedes ignorar este correo.</p>
+      <p><span class="highlight">⏱️ Importante:</span> Este enlace caducará en <span class="highlight">1 hora</span> por motivos de seguridad.</p>
+      <p class="text-small">Si no has solicitado este cambio, puedes ignorar este correo y tu cuenta seguirá segura.</p>
     </div>
     
     <div class="text-center">
-      <a href="${link}" class="btn-primary btn-danger">Restablecer contraseña</a>
+      <a href="${link}" class="btn-primary btn-danger">Crear nueva contraseña</a>
     </div>
     
     <div class="divider"></div>
     
-    <p>Por motivos de seguridad, nunca compartimos tu contraseña ni te pedimos que la envíes por correo electrónico.</p>
+    <p>Por tu seguridad:</p>
+    <ul>
+      <li>Nunca compartimos tu contraseña</li>
+      <li>Nunca te pediremos información personal por correo</li>
+      <li>Si tienes dudas sobre este mensaje, contáctanos directamente</li>
+    </ul>
     
-    <p>¿No has sido tú? Por favor, <a href="mailto:${supportEmail}">contáctanos</a> inmediatamente.</p>
+    <p>¿No has solicitado este cambio? Por favor, <a href="mailto:${supportEmail}">contacta con nuestro equipo de seguridad</a> inmediatamente.</p>
   `;
   
   const html = getEmailTemplate(content, '🔒 Solicitud para restablecer tu contraseña en Taskly');
@@ -312,25 +353,30 @@ async function sendPasswordResetEmail(to, resetUrl) {
  */
 async function sendGoogleLinkEmail(to, firstName, userEmail) {
   const content = `
-    <h1>Cuenta vinculada con Google</h1>
+    <h1>✅ Cuenta vinculada con Google</h1>
     <p>Hola ${firstName},</p>
     
-    <p>Tu cuenta de Taskly ha sido vinculada correctamente con Google.</p>
+    <p>Tu cuenta de Taskly ha sido vinculada correctamente con Google. Esto aumenta la seguridad y simplifica tu experiencia de inicio de sesión.</p>
     
     <div class="info-card">
-      <p><strong>Cuenta vinculada:</strong> ${userEmail}</p>
-      <p class="text-small">A partir de ahora, podrás iniciar sesión en Taskly usando tu cuenta de Google.</p>
+      <p><span class="highlight">Cuenta Google vinculada:</span> ${userEmail}</p>
+      <p class="text-small">A partir de ahora, podrás iniciar sesión en Taskly con un solo clic usando tu cuenta de Google.</p>
     </div>
     
     <div class="text-center">
-      <a href="${getBaseUrl()}/login" class="btn-primary">Iniciar sesión</a>
+      <a href="${getBaseUrl()}/login" class="btn-primary">Acceder a Taskly</a>
     </div>
     
     <div class="divider"></div>
     
-    <p>Esta vinculación permite un acceso más rápido y seguro a tu cuenta de Taskly.</p>
+    <h3>Ventajas de usar Google para iniciar sesión</h3>
+    <ul>
+      <li><span class="highlight">Mayor seguridad</span> con la autenticación de dos factores de Google</li>
+      <li><span class="highlight">Inicio de sesión más rápido</span> sin necesidad de recordar contraseñas</li>
+      <li><span class="highlight">Acceso sin fricciones</span> entre dispositivos</li>
+    </ul>
     
-    <p><strong>¿No has sido tú?</strong> Si no has autorizado esta acción, por favor <a href="mailto:${supportEmail}">contáctanos</a> inmediatamente para proteger tu cuenta.</p>
+    <p><strong>¿No has sido tú?</strong> Si no has autorizado esta vinculación, por favor <a href="mailto:${supportEmail}">contacta con nuestro equipo de seguridad</a> inmediatamente para proteger tu cuenta.</p>
   `;
   
   const html = getEmailTemplate(content, `Tu cuenta de Taskly ha sido vinculada con Google`);
