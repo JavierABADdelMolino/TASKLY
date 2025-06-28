@@ -2,9 +2,9 @@ const Task = require('../models/Task');
 const Column = require('../models/Column');
 const Board = require('../models/Board');
 
-// Integración OpenAI
-const OpenAI = require('openai');
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Integración Hugging Face
+const { HfInference } = require('@huggingface/inference');
+const hf = new HfInference(process.env.HUGGING_FACE_API_KEY);
 
 // Obtener tareas de una columna
 exports.getTasksByColumn = async (req, res) => {
@@ -102,16 +102,34 @@ exports.suggestImportanceByData = async (req, res) => {
   const { title = '', description = '', dueDateTime = '' } = req.body;
   try {
     const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título, descripción y fecha/hora de entrega. Título: "${title}". Descripción: "${description}". Fecha y hora de entrega: "${dueDateTime || 'No especificada'}". Responde únicamente con "high", "medium" o "low".`;
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0,
-      max_tokens: 1
+    
+    // Usar Hugging Face para la generación de texto
+    const response = await hf.textGeneration({
+      model: 'mistralai/Mistral-7B-Instruct-v0.2',
+      inputs: prompt,
+      parameters: {
+        max_new_tokens: 10,
+        temperature: 0.1,
+        return_full_text: false
+      }
     });
-    const result = response.choices?.[0]?.message?.content?.trim().toLowerCase();
-    if (!['high','medium','low'].includes(result)) {
-      return res.status(500).json({ message: 'Respuesta IA inesperada', suggestion: result });
+    
+    // Procesar la respuesta para extraer "high", "medium" o "low"
+    const fullText = response.generated_text.trim().toLowerCase();
+    let result;
+    
+    if (fullText.includes('high')) {
+      result = 'high';
+    } else if (fullText.includes('medium')) {
+      result = 'medium';
+    } else if (fullText.includes('low')) {
+      result = 'low';
+    } else {
+      // Si no se encuentra ninguna de las palabras clave, usar 'medium' como fallback
+      result = 'medium';
+      console.log('Respuesta no estándar de Hugging Face:', fullText);
     }
+    
     return res.json({ suggestedImportance: result });
   } catch (err) {
     return res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
@@ -134,16 +152,34 @@ exports.suggestImportance = async (req, res) => {
     const description = newDesc !== undefined ? newDesc : task.description;
     const dueInfo = dueDateTime !== undefined ? dueDateTime : (task.dueDateTime ? task.dueDateTime.toISOString() : 'No especificada');
     const prompt = `Eres un asistente amigable y empático que asigna la importancia adecuada a una tarea (alta, media o baja) basándose en su título, descripción y fecha/hora de entrega. Título: "${title}". Descripción: "${description}". Fecha y hora de entrega: "${dueInfo}". Responde únicamente con "high", "medium" o "low".`;
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0,
-      max_tokens: 1
+    
+    // Usar Hugging Face para la generación de texto
+    const response = await hf.textGeneration({
+      model: 'mistralai/Mistral-7B-Instruct-v0.2',
+      inputs: prompt,
+      parameters: {
+        max_new_tokens: 10,
+        temperature: 0.1,
+        return_full_text: false
+      }
     });
-    const result = response.choices?.[0]?.message?.content?.trim().toLowerCase();
-    if (!['high','medium','low'].includes(result)) {
-      return res.status(500).json({ message: 'Respuesta IA inesperada', suggestion: result });
+    
+    // Procesar la respuesta para extraer "high", "medium" o "low"
+    const fullText = response.generated_text.trim().toLowerCase();
+    let result;
+    
+    if (fullText.includes('high')) {
+      result = 'high';
+    } else if (fullText.includes('medium')) {
+      result = 'medium';
+    } else if (fullText.includes('low')) {
+      result = 'low';
+    } else {
+      // Si no se encuentra ninguna de las palabras clave, usar 'medium' como fallback
+      result = 'medium';
+      console.log('Respuesta no estándar de Hugging Face:', fullText);
     }
+    
     return res.json({ suggestedImportance: result });
   } catch (err) {
     return res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
