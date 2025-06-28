@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { FiEdit, FiTrash2, FiCalendar, FiClock } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiCalendar, FiClock, FiCircle, FiCheckCircle } from 'react-icons/fi';
 import EditTaskModal from './modals/EditTaskModal';
 import ConfirmDeleteTaskModal from './modals/ConfirmDeleteTaskModal';
-import { deleteTask } from '../../services/taskService';
+import { deleteTask, markTaskAsCompleted, markTaskAsIncomplete } from '../../services/taskService';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -53,7 +53,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
         zIndex: isDragging ? 1000 : 'auto',
         opacity: isDragging ? 0 : 1,
       }}
-      className={`card task-card ${statusClass}`}
+      className={`card task-card ${statusClass} ${task.completed ? 'task-completed' : ''}`}
     >
       <div className="card-body p-2">
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
@@ -74,8 +74,15 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           >
             <FiEdit size={14} style={{ color: '#ffc107 !important' }} />
           </button>
+          
           <div className="flex-grow-1 text-center mx-2">
-            <h6 className="mb-1" title={task.title} style={{ fontSize: '0.9rem' }}>{task.title}</h6>
+            <h6 
+              className={`mb-1 ${task.completed ? 'text-decoration-line-through text-muted' : ''}`} 
+              title={task.title} 
+              style={{ fontSize: '0.9rem' }}
+            >
+              {task.title}
+            </h6>
           </div>
           <button className="btn btn-link btn-sm p-0 text-danger" onPointerDown={e => e.stopPropagation()} onClick={() => setShowDelete(true)} title="Eliminar tarea">
             <FiTrash2 size={14} />
@@ -96,7 +103,46 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
             )}
           </p>
         )}
-        <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
+        <div className="d-flex align-items-center justify-content-between">
+          <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
+          
+          {/* Botón circular para marcar como completada */}
+          <button
+            className="btn btn-sm p-0 ms-2"
+            onPointerDown={e => e.stopPropagation()}
+            onClick={async (e) => {
+              e.stopPropagation();
+              try {
+                if (task.completed) {
+                  const response = await markTaskAsIncomplete(task._id);
+                  onTaskUpdated && onTaskUpdated(response.task);
+                } else {
+                  const response = await markTaskAsCompleted(task._id);
+                  onTaskUpdated && onTaskUpdated(response.task);
+                }
+              } catch (err) {
+                console.error('Error al cambiar estado de completado:', err);
+              }
+            }}
+            title={task.completed ? "Marcar como incompleta" : "Marcar como completada"}
+            style={{ 
+              backgroundColor: 'transparent',
+              border: 'none',
+              outline: 'none',
+              boxShadow: 'none',
+              padding: '0',
+              color: '#1abc9c', // Siempre verde Taskly
+              opacity: task.completed ? 1 : 0.7, // Un poco más opaco cuando no está completado
+              transition: 'all 0.2s ease',
+              cursor: 'pointer'
+            }}
+          >
+            {task.completed ? 
+              <FiCheckCircle size={20} /> : 
+              <FiCircle size={20} />
+            }
+          </button>
+        </div>
         {/* Drag & Drop de tareas gestiona el movimiento entre columnas */}
         {/* Modal confirmar borrar tarea */}
         <ConfirmDeleteTaskModal

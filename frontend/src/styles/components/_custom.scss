@@ -317,6 +317,27 @@ html[data-theme="light"] {
   background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
 }
 
+// Estilos para tareas completadas
+.task-card.task-completed {
+  border-left: 4px solid #cfd8dc !important; // gris claro
+  /* No cambiar el fondo */
+  opacity: 1;
+}
+.task-card.task-completed h6 {
+  color: #6c757d !important;
+  text-decoration: line-through;
+  text-decoration-thickness: 2.2px;
+  text-decoration-color: #868e96;
+  opacity: 0.98;
+}
+.task-card.task-completed .mb-1 {
+  color: #6c757d !important;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.1px;
+  text-decoration-color: #868e96;
+  opacity: 0.98;
+}
+
 // Estado de tareas en modo claro
 [data-theme="light"] .task-card.today {
   border-left: 4px solid var(--bs-info) !important;

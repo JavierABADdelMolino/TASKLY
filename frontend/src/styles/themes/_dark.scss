@@ -354,6 +354,21 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
   }
 
+  /* Destacar tareas completadas */
+  .task-card.task-completed {
+    border-left: 4px solid #757575 !important; // gris oscuro
+    /* No cambiar el fondo */
+    opacity: 1;
+  }
+  .task-card.task-completed h6,
+  .task-card.task-completed .mb-1 {
+    color: #b0b0b0 !important;
+    text-decoration: line-through;
+    text-decoration-thickness: 2.2px;
+    text-decoration-color: #757575;
+    opacity: 0.92;
+  }
+
   /* Outline dark button for avatar selection visibility */
   .btn-outline-dark {
     color: var(--bs-body-color) !important;

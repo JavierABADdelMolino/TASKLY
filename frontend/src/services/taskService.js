@@ -104,3 +104,27 @@ export async function getTasksByColumn(columnId) {
   if (!res.ok) throw new Error(data.message || 'Error al obtener tareas');
   return data;
 }
+
+// Marcar tarea como completada
+export async function markTaskAsCompleted(taskId) {
+  const headers = await getAuthHeaders();
+  const res = await fetch(
+    `${API_BASE_URL}/tasks/${taskId}/complete`,
+    { method: 'POST', headers }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al marcar como completada');
+  return data;
+}
+
+// Marcar tarea como incompleta
+export async function markTaskAsIncomplete(taskId) {
+  const headers = await getAuthHeaders();
+  const res = await fetch(
+    `${API_BASE_URL}/tasks/${taskId}/incomplete`,
+    { method: 'POST', headers }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error al marcar como incompleta');
+  return data;
+}

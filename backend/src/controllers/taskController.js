@@ -168,8 +168,8 @@ exports.suggestImportance = async (req, res) => {
 // Marcar tarea como completada
 exports.markTaskAsCompleted = async (req, res) => {
   try {
-    const { taskId } = req.params;
-    const task = await Task.findById(taskId);
+    const { id } = req.params;
+    const task = await Task.findById(id);
     
     if (!task) {
       return res.status(404).json({ message: 'Tarea no encontrada' });
@@ -214,8 +214,8 @@ exports.markTaskAsCompleted = async (req, res) => {
 // Desmarcar tarea como completada
 exports.markTaskAsIncomplete = async (req, res) => {
   try {
-    const { taskId } = req.params;
-    const task = await Task.findById(taskId);
+    const { id } = req.params;
+    const task = await Task.findById(id);
     
     if (!task) {
       return res.status(404).json({ message: 'Tarea no encontrada' });
