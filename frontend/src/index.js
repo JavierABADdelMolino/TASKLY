@@ -22,7 +22,7 @@ root.render(
           <BrowserRouter>
             <ThemeProvider>
               <Loader />
-              <RouteChangeLoader /> {/* 👈 Loader al navegar entre páginas */}
+              <RouteChangeLoader /> 
               <App />
             </ThemeProvider>
           </BrowserRouter>

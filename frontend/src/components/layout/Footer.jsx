@@ -1,13 +1,12 @@
 // src/components/layout/Footer.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { APP_INFO } from '../../config/constants';
-import { FiInfo, FiMessageCircle, FiHelpCircle, FiShield, FiFileText, FiArrowUp } from 'react-icons/fi';
-import { useTheme } from '../../context/ThemeContext';
+import { FiInfo, FiMessageCircle, FiHelpCircle, FiShield, FiFileText, FiArrowUp, FiDatabase } from 'react-icons/fi';
 import { useState, useEffect } from 'react';
 
 const Footer = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
+  // Ya no necesitamos theme para las clases, se maneja automáticamente con bg-body-tertiary
   const [showScrollTop, setShowScrollTop] = useState(false);
   
   // Controlar cuándo mostrar el botón de volver arriba
@@ -59,7 +58,7 @@ const Footer = () => {
           <FiArrowUp />
         </button>
       )}
-      <footer className={`footer mt-auto py-3 ${theme === 'dark' ? 'bg-dark border-dark-subtle' : 'bg-light'} border-top`}>
+      <footer className="footer mt-auto py-3 bg-body-tertiary border-bottom">
         <div className="container">
           <div className="row align-items-center justify-content-between">
             <div className="col-auto">
@@ -133,6 +132,17 @@ const Footer = () => {
                   <FiFileText className="me-1" />
                   <span>Términos</span>
                 </Link>
+                <Link 
+                  to="/cookies" 
+                  className="text-decoration-none d-flex align-items-center"
+                  onClick={handleNavigation}
+                  style={{ transition: 'transform 0.3s ease', fontSize: '0.95rem' }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FiDatabase className="me-1" />
+                  <span>Cookies</span>
+                </Link>
               </div>
             </div>
             
@@ -148,7 +158,7 @@ const Footer = () => {
       <style jsx="true">{`
         footer a {
           font-size: 0.95rem;
-          color: var(--bs-body-color);
+          color: inherit; /* Hereda el color del texto del tema */
         }
         footer a:hover {
           color: var(--bs-primary);
