@@ -56,13 +56,24 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
               <img
                 src={`${process.env.PUBLIC_URL}/logo-color.svg`}
                 alt="Taskly Logo"
-                style={{ height: '40px' }}
+                style={{ 
+                  height: '40px',
+                  transition: 'transform 0.3s ease',
+                  cursor: 'pointer' 
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               />
             </button>
             <button
               className="btn btn-sm btn-link text-muted p-0"
               onClick={() => navigate(currentPagePath)}
-              style={{ textDecoration: 'none' }}
+              style={{ 
+                textDecoration: 'none',
+                transition: 'transform 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
               {currentPageName}
             </button>
@@ -135,19 +146,28 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
 
                 <ul className={`dropdown-menu dropdown-menu-end ${showUserMenu ? 'show' : ''}`} aria-labelledby="userMenu" data-bs-auto-close="outside">
                   <li>
-                    <button className="dropdown-item" onClick={() => navigate('/profile')}>
+                    <button 
+                      className="dropdown-item" 
+                      onClick={() => navigate('/profile')}
+                    >
                       Mi perfil
                     </button>
                   </li>
                   {user && (
                     <li>
-                      <button className="dropdown-item" onClick={() => navigate('/dashboard')}>
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => navigate('/dashboard')}
+                      >
                         Panel de tareas
                       </button>
                     </li>
                   )}
                   <li>
-                    <button className="dropdown-item text-danger" onClick={handleLogout}>
+                    <button 
+                      className="dropdown-item text-danger" 
+                      onClick={handleLogout}
+                    >
                       Cerrar sesión
                     </button>
                   </li>
