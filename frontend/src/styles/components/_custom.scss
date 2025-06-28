@@ -492,3 +492,22 @@ html[data-theme="light"] {
     }
   }
 }
+
+// 7. Botón de editar en tareas: color warning y sin borde/foco
+.task-card .btn-link.text-warning {
+  color: var(--bs-warning) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: color 0.2s;
+}
+.task-card .btn-link.text-warning:hover,
+.task-card .btn-link.text-warning:focus,
+.task-card .btn-link.text-warning:active {
+  color: #e0a800 !important; /* tono warning más oscuro */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

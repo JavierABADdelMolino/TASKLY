@@ -387,4 +387,22 @@
   input[type="time"].form-control::-webkit-calendar-picker-indicator {
     filter: invert(1) brightness(1.8) !important;
   }
+
+  /* Botón de editar (warning) en modo oscuro */
+  .task-card .btn-link.text-warning {
+    color: var(--bs-warning) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  .task-card .btn-link.text-warning:hover,
+  .task-card .btn-link.text-warning:focus,
+  .task-card .btn-link.text-warning:active {
+    color: #e0a800 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
 }
