@@ -120,7 +120,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
         </div>
         {/* Botón crear tarea */}
         <div className="d-grid mb-2">
-          <button className="btn btn-sm btn-outline-success" onClick={() => setShowCreateTask(true)}>
+          <button className="btn btn-sm btn-outline-primary" onClick={() => setShowCreateTask(true)}>
             + Añadir tarea
           </button>
         </div>

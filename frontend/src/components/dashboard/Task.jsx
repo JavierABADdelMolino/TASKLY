@@ -59,12 +59,20 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
         {/* Cabecera de tarea: editar a la izquierda, título en el centro, borrar a la derecha */}
         <div className="d-flex align-items-center mb-2">
           <button
-            className="btn btn-link btn-sm p-0 text-body"
+            className="btn btn-sm p-0"
             onPointerDown={e => e.stopPropagation()}
             onClick={e => { e.stopPropagation(); setShowEdit(true); }}
             title="Editar tarea"
+            style={{ 
+              color: '#ffc107 !important',
+              backgroundColor: 'transparent !important',
+              border: 'none !important',
+              outline: 'none !important',
+              boxShadow: 'none !important',
+              padding: '0 !important'
+            }}
           >
-            <FiEdit size={14} />
+            <FiEdit size={14} style={{ color: '#ffc107 !important' }} />
           </button>
           <div className="flex-grow-1 text-center mx-2">
             <h6 className="mb-1" title={task.title} style={{ fontSize: '0.9rem' }}>{task.title}</h6>
