@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 // Variables de configuración
-const supportEmail = process.env.SUPPORT_EMAIL || 'support@taskly.es';
+const supportEmail = process.env.SUPPORT_EMAIL;
 const brandColors = {
   primary: '#1abc9c',      // Verde turquesa principal (color principal)
   dark: '#333333',         // Texto oscuro
@@ -49,11 +49,11 @@ async function sendMail(to, subject, html, replyTo = supportEmail) {
     const transporter = createTransporter();
     
     const emailConfig = {
-      from: process.env.EMAIL_FROM || 'Taskly <taskly@taskly.es>',
+      from: process.env.EMAIL_FROM,
       to,
       subject,
       html,
-      replyTo: replyTo || supportEmail 
+      replyTo: replyTo 
     };
 
     const result = await transporter.sendMail(emailConfig);
@@ -72,16 +72,16 @@ async function sendMail(to, subject, html, replyTo = supportEmail) {
  * @returns {string} URL base del frontend
  */
 function getBaseUrl() {
-  const fallback = (process.env.FRONTEND_URL || process.env.CLIENT_URL || '').replace(/\/$/, '');
+  const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : '';
   if (process.env.APP_DOMAIN) {
     try {
-      const proto = new URL(process.env.FRONTEND_URL || process.env.CLIENT_URL).protocol;
+      const proto = new URL(process.env.FRONTEND_URL).protocol;
       return `${proto}//${process.env.APP_DOMAIN}`;
     } catch {
-      return fallback;
+      return frontendUrl;
     }
   }
-  return fallback;
+  return frontendUrl;
 }
 
 /**
