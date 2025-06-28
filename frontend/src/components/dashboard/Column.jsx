@@ -136,8 +136,24 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           ) : (
             tasks.slice()
               .sort((a, b) => {
-                const orderMap = { high: 2, medium: 1, low: 0 };
-                return orderMap[b.importance] - orderMap[a.importance];
+                // 1. Separar completadas y no completadas
+                if (a.completed && !b.completed) return 1;
+                if (!a.completed && b.completed) return -1;
+                // 2. Si ambas no completadas: prioridad y fecha
+                if (!a.completed && !b.completed) {
+                  const orderMap = { high: 2, medium: 1, low: 0 };
+                  if (orderMap[b.importance] !== orderMap[a.importance]) {
+                    return orderMap[b.importance] - orderMap[a.importance];
+                  }
+                  // Si misma prioridad, ordenar por fecha de vencimiento más próxima
+                  const aDate = a.dueDateTime ? new Date(a.dueDateTime) : new Date(8640000000000000); // muy lejos si no hay fecha
+                  const bDate = b.dueDateTime ? new Date(b.dueDateTime) : new Date(8640000000000000);
+                  return aDate - bDate;
+                }
+                // 3. Si ambas completadas: ordenar por fecha de completado más reciente
+                const aCompleted = a.completedAt ? new Date(a.completedAt) : new Date(0);
+                const bCompleted = b.completedAt ? new Date(b.completedAt) : new Date(0);
+                return bCompleted - aCompleted;
               })
               .map(task => (
                 <Task
