@@ -98,7 +98,17 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
           </p>
         )}
         <div className="d-flex align-items-center justify-content-between">
-          <span className="badge bg-primary text-uppercase" style={{ fontSize: '0.6rem' }}>{task.importance}</span>
+          <span 
+            className="badge text-uppercase"
+            style={{ 
+              fontSize: '0.6rem',
+              backgroundColor: task.completed ? '#cfd8dc' : '#1abc9c', // gris claro si completada, verde Taskly si no
+              color: '#fff', // texto siempre blanco
+              borderColor: 'transparent'
+            }}
+          >
+            {task.importance}
+          </span>
           
           {/* Botón circular para marcar como completada */}
           <button
@@ -126,7 +136,7 @@ const Task = ({ task, column, columns, onTaskMoved, onTaskUpdated, onTaskDeleted
               boxShadow: 'none',
               padding: '0',
               color: '#1abc9c', // Siempre verde Taskly
-              opacity: task.completed ? 1 : 0.7, // Un poco más opaco cuando no está completado
+              opacity: task.completed ? 1 : 0.7,
               transition: 'all 0.2s ease',
               cursor: 'pointer'
             }}
