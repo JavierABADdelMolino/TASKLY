@@ -324,7 +324,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
     </div>
     
     <div class="text-center">
-      <a href="${link}" class="btn-primary btn-danger">Crear nueva contraseña</a>
+      <a href="${link}" class="btn-primary">Crear nueva contraseña</a>
     </div>
     
     <div class="divider"></div>
