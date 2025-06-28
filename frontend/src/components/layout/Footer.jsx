@@ -1,7 +1,8 @@
 // src/components/layout/Footer.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { APP_INFO } from '../../config/constants';
-import { FiInfo, FiMessageCircle, FiHelpCircle, FiShield, FiFileText, FiArrowUp, FiDatabase } from 'react-icons/fi';
+import { FiInfo, FiMessageCircle, FiHelpCircle, FiShield, FiFileText, FiArrowUp } from 'react-icons/fi';
+import { BsCookie } from 'react-icons/bs';
 import { useState, useEffect } from 'react';
 
 const Footer = () => {
@@ -58,7 +59,7 @@ const Footer = () => {
           <FiArrowUp />
         </button>
       )}
-      <footer className="footer mt-auto py-3 bg-body-tertiary border-bottom">
+      <footer className="footer mt-auto py-3 bg-body-tertiary border-top">
         <div className="container">
           <div className="row align-items-center justify-content-between">
             <div className="col-auto">
@@ -140,7 +141,7 @@ const Footer = () => {
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  <FiDatabase className="me-1" />
+                  <BsCookie className="me-1" />
                   <span>Cookies</span>
                 </Link>
               </div>
@@ -156,12 +157,27 @@ const Footer = () => {
       </footer>
       
       <style jsx="true">{`
+        footer {
+          border-top: 1px solid var(--bs-navbar-border-color) !important;
+          border-top-width: 1px !important;
+          border-top-style: solid !important;
+        }
+        
         footer a {
           font-size: 0.95rem;
-          color: inherit; /* Hereda el color del texto del tema */
+          color: var(--bs-body-color) !important; /* Forzar color de texto del tema (blanco en oscuro/negro en claro) */
         }
+        
         footer a:hover {
-          color: var(--bs-primary);
+          color: var(--bs-primary) !important;
+        }
+        
+        [data-bs-theme="light"] footer {
+          border-top-color: rgba(0, 0, 0, 0.175) !important; /* Color más oscuro para modo claro */
+        }
+        
+        [data-bs-theme="dark"] footer {
+          border-top-color: rgba(255, 255, 255, 0.175) !important; /* Color para modo oscuro */
         }
       `}</style>
     </>
