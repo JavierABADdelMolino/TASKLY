@@ -82,6 +82,10 @@ const GoogleButtonRenderer = memo(({ handleGoogleResponse, isDarkMode }) => {
           auto_select: false,
           cancel_on_tap_outside: true,
           itp_support: true,
+          // Desactivar la personalización del botón con la cuenta previamente iniciada
+          use_fedcm_for_prompt: false,
+          prompt_parent_id: 'googleButtonContainer',
+          disable_exponential_cooldown: true
         });
         
         window.google.accounts.id.renderButton(
@@ -93,13 +97,17 @@ const GoogleButtonRenderer = memo(({ handleGoogleResponse, isDarkMode }) => {
             text: 'continue_with',
             shape: 'pill',
             width: Math.min(containerRef.current.offsetWidth, 280),
-            locale: 'es_ES'
+            locale: 'es_ES',
+            // Forzar texto genérico "Continuar con Google" en lugar de personalizado
+            logo_alignment: 'center',
+            // Estas opciones ayudan a evitar que se muestre "Continuar como [usuario]"
+            prompt_parent_id: 'googleButtonContainer'
           }
         );
         
         setIsRendered(true);
         
-        // Aplicar estilos al botón
+        // Aplicar estilos al botón y prevenir cambios automáticos
         setTimeout(() => {
           if (containerRef.current) {
             const googleButton = containerRef.current.querySelector('div[role="button"]');
@@ -111,13 +119,64 @@ const GoogleButtonRenderer = memo(({ handleGoogleResponse, isDarkMode }) => {
               googleButton.style.transition = 'all 0.2s ease';
               googleButton.style.margin = '0 auto';
               
+              // Forzar texto genérico
+              const spans = googleButton.querySelectorAll('span');
+              spans.forEach(span => {
+                // Si contiene el texto del usuario, reemplazarlo
+                if (span.textContent && span.textContent.includes('@')) {
+                  span.textContent = 'Continuar con Google';
+                }
+              });
+
+              // Ocultar imagen del usuario si existe
+              const imgs = googleButton.querySelectorAll('img');
+              imgs.forEach(img => {
+                if (img.src && img.src.includes('googleusercontent.com')) {
+                  img.style.display = 'none';
+                  // Reemplazar con el logo estándar de Google
+                  const googleLogo = document.createElement('div');
+                  googleLogo.className = 'google-logo';
+                  googleLogo.style.backgroundImage = "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBmaWxsPSIjRkZDMTA3IiBkPSJNNDMuNjExLDIwLjA4M0g0MlYyMEgyNHY4aDExLjMwM2MtMS42NDksNC42NTctNi4wOCw4LTExLjMwMyw4Yy02LjYyNywwLTEyLTUuMzczLTEyLTEyYzAtNi42MjcsNS4zNzMtMTIsMTItMTJjMy4wNTksMCw1Ljg0MiwxLjE1NCw3Ljk2MSwzLjAzOWw1LjY1Ny01LjY1N0MzNC4wNDYsNi4wNTMsMjkuMjY4LDQsMjQsNEMxMi45NTUsNCw0LDEyLjk1NSw0LDI0YzAsMTEuMDQ1LDguOTU1LDIwLDIwLDIwYzExLjA0NSwwLDIwLTguOTU1LDIwLTIwQzQ0LDIyLjY1OSw0My44NjIsMjEuMzUsNDMuNjExLDIwLjA4M3oiLz48cGF0aCBmaWxsPSIjRkYzRDAwIiBkPSJNNi4zMDYsMTQuNjkxbDYuNTcxLDQuODE5QzE0LjY1NSwxNS4xMDgsMTguOTYxLDEyLDI0LDEyYzMuMDU5LDAsNS44NDIsMS4xNTQsNy45NjEsMy4wMzlsNS42NTctNS42NTdDMzQuMDQ2LDYuMDUzLDI5LjI2OCw0LDI0LDRDMTYuMzE4LDQsOS42NTYsOC4zMzcsNi4zMDYsMTQuNjkxeiIvPjxwYXRoIGZpbGw9IiM0Q0FGNTAiIGQ9Ik0yNCw0NGM1LjE2NiwwLDkuODYtMS45NzcsMTMuNDA5LTUuMTkybC02LjE5LTUuMjM4QzI5LjIxMSwzNS4wOTEsMjYuNzE1LDM2LDI0LDM2Yy01LjIwMiwwLTkuNjE5LTMuMzE3LTExLjI4My03Ljk0NmwtNi41MjIsNS4wMjVDOS41MDUsMzkuNTU2LDE2LjIyNyw0NCwyNCw0NHoiLz48cGF0aCBmaWxsPSIjMTk3NkQyIiBkPSJNNDMuNjExLDIwLjA4M0g0MlYyMEgyNHY4aDExLjMwM2MtMC43OTIsMi4yMzctMi4yMzEsNC4xNjYtNC4wODcsNS41NzFjMC4wMDEtMC4wMDEsMC4wMDItMC4wMDEsMC4wMDMtMC4wMDJsNi4xOSw1LjIzOEMzNi45NzEsMzkuMjA1LDQ0LDM0LDQ0LDI0QzQ0LDIyLjY1OSw0My44NjIsMjEuMzUsNDMuNjExLDIwLjA4M3oiLz48L3N2Zz4=')";
+                  googleLogo.style.backgroundSize = 'contain';
+                  googleLogo.style.width = '18px';
+                  googleLogo.style.height = '18px';
+                  googleLogo.style.display = 'inline-block';
+                  img.parentNode.insertBefore(googleLogo, img);
+                }
+              });
+              
               // Borde en modo oscuro
               if (isDarkMode) {
                 googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
+                googleButton.style.backgroundColor = 'transparent';
               }
             }
           }
         }, 50);
+        
+        // Observador para seguir forzando el botón como "Continuar con Google"
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach(() => {
+            const googleButton = containerRef.current?.querySelector('div[role="button"]');
+            if (googleButton) {
+              const spans = googleButton.querySelectorAll('span');
+              spans.forEach(span => {
+                if (span.textContent && span.textContent.includes('@')) {
+                  span.textContent = 'Continuar con Google';
+                }
+              });
+            }
+          });
+        });
+        
+        if (containerRef.current) {
+          observer.observe(containerRef.current, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            characterData: true
+          });
+        }
       }
     } catch (err) {
       console.error('Error al renderizar botón de Google:', err);
