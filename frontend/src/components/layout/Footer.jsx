@@ -40,23 +40,23 @@ const Footer = () => {
     <>
       {showScrollTop && (
         <button 
-          className="btn btn-primary btn-sm rounded-circle position-fixed"
+          className="btn btn-primary btn-sm rounded-circle position-fixed scroll-to-top-btn"
           style={{
             bottom: '70px',
             right: '20px',
-            width: '40px',
-            height: '40px',
+            width: '48px',
+            height: '48px',
             zIndex: 1030,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 10px rgba(var(--bs-primary-rgb), 0.3)',
-            transition: 'all 0.3s ease'
+            boxShadow: '0 2px 10px rgba(var(--bs-primary-rgb), 0.15)',
+            transition: 'all 0.16s cubic-bezier(.4,0,.2,1)'
           }}
           onClick={scrollToTop}
           aria-label="Scroll to top"
         >
-          <FiArrowUp />
+          <FiArrowUp size={26} style={{ strokeWidth: 2.7 }} />
         </button>
       )}
       <footer className="footer mt-auto py-3 bg-body-tertiary border-top">
