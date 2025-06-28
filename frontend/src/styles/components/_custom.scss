@@ -545,3 +545,37 @@ html[data-theme="light"] {
   background: #159c86;
   color: #fff;
 }
+
+// Botones globales redondeados y sutiles
+button,
+.btn,
+.btn-sm,
+.btn-lg,
+.btn-primary,
+.btn-outline-primary,
+.btn-secondary,
+.btn-outline-secondary,
+.btn-warning,
+.btn-outline-warning,
+.btn-danger,
+.btn-outline-danger,
+.btn-link {
+  border-radius: 1.5rem !important;
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  padding-top: 0.45em;
+  padding-bottom: 0.45em;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.btn-sm {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  font-size: 0.95em;
+}
+.btn-lg {
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+  font-size: 1.15em;
+}
