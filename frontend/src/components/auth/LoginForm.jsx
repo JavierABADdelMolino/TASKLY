@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { login, getCurrentUser, forgotPassword } from '../../services/authService';
@@ -81,8 +81,8 @@ const LoginForm = () => {
     }
   };
 
-  // Manejar el inicio de sesión con Google
-  const handleGoogleLogin = async (googleData) => {
+  // Manejar el inicio de sesión con Google - memorizado con useCallback para evitar re-renderizados
+  const handleGoogleLogin = useCallback(async (googleData) => {
     try {
       // Si necesita enlazar cuenta (email existe pero no está vinculado a Google)
       if (googleData.needsLinking || googleData.code === 'LINK_GOOGLE') {
@@ -97,7 +97,6 @@ const LoginForm = () => {
       // Si necesita completar registro (nuevo usuario con Google)
       if (googleData.needsCompletion || googleData.code === 'NEEDS_COMPLETION') {
         console.log('Usuario de Google necesita completar registro', googleData);
-        // Guardamos los datos en sessionStorage para que persistan entre redirecciones
         sessionStorage.setItem('googleAuthData', JSON.stringify(googleData));
         setServerError(''); // Limpiar cualquier error previo
         // Abrir modal de registro directamente con los datos de Google
@@ -113,7 +112,7 @@ const LoginForm = () => {
       console.error('Error en inicio de sesión con Google:', err);
       setServerError(err.message || 'Error al iniciar sesión con Google');
     }
-  };
+  }, [setUser, navigate, setServerError]);
 
   return (
     <> 

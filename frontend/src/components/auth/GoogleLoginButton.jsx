@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, memo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { googleLogin } from '../../services/authService';
 import useDarkMode from '../../hooks/useDarkMode';
 
-// Componente de botón de respaldo personalizado
-const FallbackGoogleButton = ({ onClick, isDarkMode }) => {
+// Componente de botón de respaldo personalizado memorizado para evitar re-renderizados
+const FallbackGoogleButton = memo(({ onClick, isDarkMode }) => {
   return (
     <button 
       className="btn w-100 rounded-pill mt-2 d-flex align-items-center justify-content-center gap-2"
@@ -53,17 +53,95 @@ const FallbackGoogleButton = ({ onClick, isDarkMode }) => {
       <span>Continuar con Google</span>
     </button>
   );
-};
+});
 
-const GoogleLoginButton = ({ onGoogleSignIn }) => {
+// Componente interno para renderizar el botón de Google
+// Este componente solo se renderiza una vez y no se vuelve a renderizar con cambios en el form
+const GoogleButtonRenderer = memo(({ handleGoogleResponse, isDarkMode }) => {
+  const containerRef = useRef(null);
+  const [isRendered, setIsRendered] = useState(false);
+  
+  // Este efecto solo se ejecuta una vez al montar el componente
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      console.error('REACT_APP_GOOGLE_CLIENT_ID no está definido');
+      return;
+    }
+    
+    try {
+      // Solo inicializamos una vez
+      if (!isRendered && window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleResponse,
+          ux_mode: 'standard',
+          context: 'signin',
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          itp_support: true,
+        });
+        
+        window.google.accounts.id.renderButton(
+          containerRef.current,
+          { 
+            type: 'standard',
+            theme: isDarkMode ? 'filled_black' : 'outline',
+            size: 'large',
+            text: 'continue_with',
+            shape: 'pill',
+            width: Math.min(containerRef.current.offsetWidth, 280),
+            locale: 'es_ES'
+          }
+        );
+        
+        setIsRendered(true);
+        
+        // Aplicar estilos al botón
+        setTimeout(() => {
+          if (containerRef.current) {
+            const googleButton = containerRef.current.querySelector('div[role="button"]');
+            if (googleButton) {
+              // Estilos base
+              googleButton.style.boxShadow = isDarkMode 
+                ? '0 2px 5px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1)' 
+                : '0 1px 3px rgba(0,0,0,0.15)';
+              googleButton.style.transition = 'all 0.2s ease';
+              googleButton.style.margin = '0 auto';
+              
+              // Borde en modo oscuro
+              if (isDarkMode) {
+                googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
+              }
+            }
+          }
+        }, 50);
+      }
+    } catch (err) {
+      console.error('Error al renderizar botón de Google:', err);
+    }
+  }, [handleGoogleResponse, isDarkMode, isRendered]);
+  
+  return (
+    <div 
+      ref={containerRef}
+      className="d-flex justify-content-center"
+      style={{ minHeight: '42px' }}
+      aria-label="Iniciar sesión con Google"
+    />
+  );
+});
+
+const GoogleLoginButton = memo(({ onGoogleSignIn }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [buttonRendered, setButtonRendered] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
   const isDarkMode = useDarkMode();
-
-  // Comprobar si el SDK de Google está listo - Versión optimizada
+  
+  // Solo comprueba la disponibilidad del SDK una vez al montar el componente
   useEffect(() => {
     // Verificar inmediatamente si el SDK de Google está disponible
     if (window.google && window.google.accounts && window.google.accounts.id) {
@@ -101,7 +179,7 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         }
       }
     };
-  }, [buttonRendered]);
+  }, []);
 
   const handleGoogleResponse = useCallback(async (response) => {
     try {
@@ -174,115 +252,9 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
       console.error('Error en autenticación con Google:', err);
     }
   }, [navigate, setUser, onGoogleSignIn]);
-
-  // Efecto para inicializar y renderizar el botón de Google - Versión optimizada
-  useEffect(() => {
-    if (!scriptLoaded) return;
-    
-    try {
-      // Inicializar Google Sign-In de forma más directa
-      const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-      if (!clientId) {
-        console.error('REACT_APP_GOOGLE_CLIENT_ID no está definido');
-        setShowFallback(true);
-        return;
-      }
-      
-      // Referencia al contenedor
-      const container = document.getElementById('google-signin-button');
-      if (!container) {
-        console.error('No se encontró el contenedor del botón de Google');
-        setShowFallback(true);
-        return;
-      }
-      
-      // Limpiar contenedor
-      container.innerHTML = '';
-      
-      // Inicializar con el cliente ID (una sola vez)
-      if (!buttonRendered) {
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: handleGoogleResponse,
-          ux_mode: 'standard',  // Cambiado de 'popup' a 'standard' para evitar problemas COOP
-          context: 'signin',
-          auto_select: false,
-          cancel_on_tap_outside: true,
-          itp_support: true,    // Mejorar soporte para Safari
-        });
-      }
-      
-      // Renderizar botón con tema adaptado
-      window.google.accounts.id.renderButton(
-        container,
-        { 
-          type: 'standard',
-          theme: isDarkMode ? 'filled_black' : 'outline',
-          size: 'large',
-          text: 'continue_with',
-          shape: 'pill',
-          width: Math.min(container.offsetWidth, 280),
-          locale: 'es_ES'
-        }
-      );
-      
-      // Aplicar estilos inmediatamente después de renderizar
-      const applyStyles = () => {
-        const googleButton = container.querySelector('div[role="button"]');
-        if (googleButton) {
-          // Estilos base
-          googleButton.style.boxShadow = isDarkMode 
-            ? '0 2px 5px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1)' 
-            : '0 1px 3px rgba(0,0,0,0.15)';
-          googleButton.style.transition = 'all 0.2s ease';
-          googleButton.style.margin = '0 auto';
-          
-          // Borde en modo oscuro
-          if (isDarkMode) {
-            googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
-          }
-          
-          // Efecto hover - usando eventos
-          googleButton.addEventListener('mouseover', () => {
-            googleButton.style.boxShadow = isDarkMode
-              ? '0 4px 8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.2)'
-              : '0 2px 4px rgba(0,0,0,0.25)';
-            
-            if (isDarkMode) {
-              googleButton.style.border = '1px solid rgba(255,255,255,0.2)';
-            }
-          });
-          
-          googleButton.addEventListener('mouseout', () => {
-            googleButton.style.boxShadow = isDarkMode 
-              ? '0 2px 5px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1)' 
-              : '0 1px 3px rgba(0,0,0,0.15)';
-              
-            if (isDarkMode) {
-              googleButton.style.border = '1px solid rgba(255,255,255,0.1)';
-            }
-          });
-          
-          // Marcar como renderizado
-          setButtonRendered(true);
-          setShowFallback(false);
-        } else {
-          // Si no encontramos el botón, intentamos de nuevo en una fracción de segundo
-          setTimeout(applyStyles, 50);
-        }
-      };
-      
-      // Intentar aplicar estilos inmediatamente
-      applyStyles();
-      
-    } catch (err) {
-      console.error('Error al inicializar Google Sign-In:', err);
-      setShowFallback(true);
-    }
-  }, [scriptLoaded, handleGoogleResponse, isDarkMode, buttonRendered]);
   
   // Manejador optimizado para el botón de respaldo con mejor compatibilidad
-  const handleFallbackButtonClick = () => {
+  const handleFallbackButtonClick = useCallback(() => {
     console.log('Intentando proceso alternativo de autenticación con Google...');
     
     if (window.google && window.google.accounts && window.google.accounts.id) {
@@ -293,10 +265,16 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
           // Si no se pudo mostrar el prompt, usar el enfoque de redirección
           console.log('No se pudo mostrar el selector de cuentas de Google, usando redirección...');
           
-          // Reintentar renderizando el botón
-          setButtonRendered(false);
-          setShowFallback(false);
-          setScriptLoaded(true);
+          // Reintentar con redirección
+          const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+          if (clientId) {
+            const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
+            const scope = encodeURIComponent('profile email');
+            const state = encodeURIComponent(Math.random().toString(36).substring(2));
+            sessionStorage.setItem('googleAuthState', state);
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}&prompt=select_account`;
+            window.location.href = authUrl;
+          }
         }
       });
     } else {
@@ -321,30 +299,27 @@ const GoogleLoginButton = ({ onGoogleSignIn }) => {
         alert('No se pudo conectar con Google. Por favor, intenta iniciar sesión con correo y contraseña.');
       }
     }
-  };
+  }, []);
 
   return (
     <div className="mt-3 mb-3 d-flex justify-content-center">
       <div className="w-100" style={{ maxWidth: '280px' }}>
-        {!showFallback && (
-          <div 
-            id="google-signin-button" 
-            className="d-flex justify-content-center"
-            style={{ 
-              minHeight: '42px',
-              display: showFallback ? 'none' : 'flex'
-            }}
-            aria-label="Iniciar sesión con Google"
-          ></div>
+        {scriptLoaded && !showFallback && (
+          <GoogleButtonRenderer 
+            handleGoogleResponse={handleGoogleResponse}
+            isDarkMode={isDarkMode}
+          />
         )}
         
-        {/* Se eliminó el spinner de carga */}
-        
-        {/* Mostrar botón de respaldo cuando sea necesario */}
-        {showFallback && <FallbackGoogleButton onClick={handleFallbackButtonClick} isDarkMode={isDarkMode} />}
+        {showFallback && (
+          <FallbackGoogleButton 
+            onClick={handleFallbackButtonClick} 
+            isDarkMode={isDarkMode} 
+          />
+        )}
       </div>
     </div>
   );
-};
+});
 
 export default GoogleLoginButton;

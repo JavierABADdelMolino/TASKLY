@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RegisterStep1 from './RegisterStep1';
 import RegisterStep2 from './RegisterStep2';
@@ -102,7 +102,8 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
   };
 
   // Manejador para los datos de Google
-  const handleGoogleSignIn = (data) => {
+  // Manejar la autenticación con Google, memorizada para evitar re-renderizados
+  const handleGoogleSignIn = useCallback((data) => {
     // Si es un caso de vinculación de cuenta (email ya existe)
     if (data.needsLinking || data.code === 'LINK_GOOGLE') {
       console.log('Usuario necesita enlazar cuenta de Google desde RegisterForm');
@@ -115,7 +116,7 @@ const RegisterForm = ({ googleData: googleDataProp }) => {
     // Si es completar registro con Google (nuevo usuario)
     setGoogleData(data);
     setStep('google-complete');
-  };
+  }, []);
   
   // Cancelar el registro con Google
   const handleCancelGoogle = () => {
