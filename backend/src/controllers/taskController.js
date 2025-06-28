@@ -55,7 +55,7 @@ exports.createTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, importance, column: newColumnId, order, dueDateTime } = req.body;
+    const { title, description, importance, column: newColumnId, order, dueDateTime, completed } = req.body;
     const task = await Task.findById(id);
     if (!task) return res.status(404).json({ message: 'Tarea no encontrada' });
     const column = await Column.findById(task.column);
@@ -68,10 +68,25 @@ exports.updateTask = async (req, res) => {
     if (importance) task.importance = importance;
     if (newColumnId) task.column = newColumnId;
     if (order !== undefined) task.order = order;
+    
     // Actualizar fecha y hora de vencimiento
     if (dueDateTime !== undefined) {
       task.dueDateTime = dueDateTime ? new Date(dueDateTime) : null;
     }
+    
+    // Manejar el estado de completado
+    if (completed !== undefined && task.completed !== completed) {
+      task.completed = completed;
+      
+      // Si se marca como completada, establecer la fecha de completado
+      if (completed) {
+        task.completedAt = new Date();
+      } else {
+        // Si se desmarca como completada, eliminar la fecha de completado
+        task.completedAt = null;
+      }
+    }
+    
     await task.save();
     res.json(task);
   } catch (err) {
@@ -147,5 +162,97 @@ exports.suggestImportance = async (req, res) => {
     return res.json({ suggestedImportance: result });
   } catch (err) {
     return res.status(500).json({ message: 'Error al sugerir importancia', error: err.message });
+  }
+};
+
+// Marcar tarea como completada
+exports.markTaskAsCompleted = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const task = await Task.findById(taskId);
+    
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
+    }
+    
+    // Verificar que el usuario tiene acceso a esta tarea
+    const column = await Column.findById(task.column);
+    if (!column) {
+      return res.status(404).json({ message: 'Columna no encontrada' });
+    }
+    
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes permiso para modificar esta tarea' });
+    }
+    
+    // Si la tarea ya está completada, devolver un mensaje informativo
+    if (task.completed) {
+      return res.status(200).json({ 
+        message: 'La tarea ya estaba marcada como completada',
+        task
+      });
+    }
+    
+    // Actualizar la tarea
+    task.completed = true;
+    task.completedAt = new Date();
+    await task.save();
+    
+    res.status(200).json({
+      message: 'Tarea marcada como completada',
+      task
+    });
+  } catch (err) {
+    res.status(500).json({ 
+      message: 'Error al marcar la tarea como completada', 
+      error: err.message 
+    });
+  }
+};
+
+// Desmarcar tarea como completada
+exports.markTaskAsIncomplete = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const task = await Task.findById(taskId);
+    
+    if (!task) {
+      return res.status(404).json({ message: 'Tarea no encontrada' });
+    }
+    
+    // Verificar que el usuario tiene acceso a esta tarea
+    const column = await Column.findById(task.column);
+    if (!column) {
+      return res.status(404).json({ message: 'Columna no encontrada' });
+    }
+    
+    const board = await Board.findById(column.board);
+    if (!board || board.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'No tienes permiso para modificar esta tarea' });
+    }
+    
+    // Si la tarea ya está incompleta, devolver un mensaje informativo
+    if (!task.completed) {
+      return res.status(200).json({ 
+        message: 'La tarea ya estaba marcada como incompleta',
+        task
+      });
+    }
+    
+    // Actualizar la tarea
+    task.completed = false;
+    task.completedAt = null;
+    await task.save();
+    
+    res.status(200).json({
+      message: 'Tarea marcada como incompleta',
+      task
+    });
+  } catch (err) {
+    res.status(500).json({ 
+      message: 'Error al marcar la tarea como incompleta', 
+      error: err.message 
+    });
   }
 };

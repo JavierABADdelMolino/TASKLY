@@ -13,7 +13,9 @@ const {
   updateTask,
   deleteTask,
   suggestImportance,  // IA stub/real for existing tasks
-  suggestImportanceByData  // nueva sugerencia IA antes de creación
+  suggestImportanceByData,  // nueva sugerencia IA antes de creación
+  markTaskAsCompleted,
+  markTaskAsIncomplete
 } = require('../controllers/taskController');
 
 // GET /api/tasks/columns/:columnId - Obtener tareas de una columna específica
@@ -25,6 +27,11 @@ router.post('/columns/:columnId', verifyToken, verifyColumnOwnership, createTask
 router.put('/:id', verifyToken, verifyTaskOwnership, updateTask);
 // DELETE /api/tasks/:id - Eliminar tarea por ID
 router.delete('/:id', verifyToken, verifyTaskOwnership, deleteTask);
+
+// POST /api/tasks/:id/complete - Marcar tarea como completada
+router.post('/:id/complete', verifyToken, verifyTaskOwnership, markTaskAsCompleted);
+// POST /api/tasks/:id/incomplete - Marcar tarea como incompleta
+router.post('/:id/incomplete', verifyToken, verifyTaskOwnership, markTaskAsIncomplete);
 
 // POST /api/tasks/columns/:columnId/suggest-importance - Sugerir importancia antes de crear tarea en columna específica
 router.post(
