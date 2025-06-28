@@ -336,7 +336,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
       <li>Si tienes dudas sobre este mensaje, contáctanos directamente</li>
     </ul>
     
-    <p>¿No has solicitado este cambio? Por favor, <a href="mailto:${supportEmail}">contacta con nuestro equipo de seguridad</a> inmediatamente.</p>
+    <p>¿No has solicitado este cambio? Por favor, <a href="mailto:${supportEmail}">contacta con nuestro equipo de soporte</a> inmediatamente.</p>
   `;
   
   const html = getEmailTemplate(content, '🔒 Solicitud para restablecer tu contraseña en Taskly');
@@ -371,7 +371,7 @@ async function sendGoogleLinkEmail(to, firstName, userEmail) {
       <li><span class="highlight">Acceso sin fricciones</span> entre dispositivos</li>
     </ul>
     
-    <p><strong>¿No has sido tú?</strong> Si no has autorizado esta vinculación, por favor <a href="mailto:${supportEmail}">contacta con nuestro equipo de seguridad</a> inmediatamente para proteger tu cuenta.</p>
+    <p><strong>¿No has sido tú?</strong> Si no has autorizado esta vinculación, por favor <a href="mailto:${supportEmail}">contacta con nuestro equipo de soporte</a> inmediatamente para proteger tu cuenta.</p>
   `;
   
   const html = getEmailTemplate(content, `Tu cuenta de Taskly ha sido vinculada con Google`);
