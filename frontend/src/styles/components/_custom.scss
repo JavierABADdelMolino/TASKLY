@@ -511,3 +511,37 @@ html[data-theme="light"] {
   box-shadow: none !important;
   outline: none !important;
 }
+
+// Filtro de tareas moderno
+.task-filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(26, 188, 156, 0.08);
+  border-radius: 2rem;
+  padding: 0.15rem 0.5rem;
+  margin-left: 0.5rem;
+}
+.task-filter-btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: #6c757d; // gris neutro por defecto
+  font-weight: 500;
+  border-radius: 1.5rem;
+  padding: 0.25rem 0.7rem;
+  transition: background 0.18s, color 0.18s;
+  outline: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.task-filter-btn.active, .task-filter-btn:hover, .task-filter-btn:focus {
+  background: #1abc9c;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26,188,156,0.08);
+}
+.task-filter-btn:active {
+  background: #159c86;
+  color: #fff;
+}

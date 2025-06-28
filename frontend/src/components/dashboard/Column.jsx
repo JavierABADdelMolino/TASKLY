@@ -10,7 +10,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange }) => {
+const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated, allColumns, refreshKey, onAnyTaskChange, taskFilter = 'all' }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
@@ -53,6 +53,14 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
     zIndex: colIsDragging ? 1000 : 'auto',
     opacity: colIsDragging ? 0 : 1,      // hide original during drag
   };
+
+  // Filtrar tareas según el filtro global
+  const filteredTasks = tasks.filter(task => {
+    if (taskFilter === 'all') return true;
+    if (taskFilter === 'completed') return task.completed;
+    if (taskFilter === 'pending') return !task.completed;
+    return true;
+  });
 
   return (
     <div ref={setColNodeRef} className="card shadow-sm column-card" style={{ width: '280px', position: 'relative', ...colStyle }}>
@@ -131,10 +139,10 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
             <div className="text-center text-muted small">Cargando tareas...</div>
           ) : taskError ? (
             <div className="text-danger small">{taskError}</div>
-          ) : tasks.length === 0 ? (
-            <div className="text-muted small text-center">No hay tareas en esta columna.</div>
+          ) : filteredTasks.length === 0 ? (
+            <div className="text-muted small text-center">No hay tareas que coincidan con el filtro.</div>
           ) : (
-            tasks.slice()
+            filteredTasks.slice()
               .sort((a, b) => {
                 // 1. Separar completadas y no completadas
                 if (a.completed && !b.completed) return 1;

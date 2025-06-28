@@ -3,12 +3,14 @@ import CreateColumnModal from './modals/CreateColumnModal';
 import EditBoardModal from './modals/EditBoardModal';
 import ColumnList from './ColumnList';
 import { FaStar } from 'react-icons/fa';
+import BoardTaskFilter from './BoardTaskFilter';
 
 const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [showEditBoard, setShowEditBoard] = useState(false);
   const [columnCount, setColumnCount] = useState(0);
+  const [taskFilter, setTaskFilter] = useState('all');
 
   const handleColumnCreated = () => {
     setShowColumnModal(false);
@@ -27,6 +29,8 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         >
           <FaStar color={board.favorite ? 'gold' : 'gray'} size={20} />
         </button>
+        {/* Filtro de tareas al lado del favorito */}
+        <BoardTaskFilter value={taskFilter} onChange={setTaskFilter} />
         {/* Botones añadir columna y eliminar pizarra alineados a la derecha */}
         <div className="ms-auto d-flex gap-2">
           <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
@@ -43,6 +47,7 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         boardId={board._id}
         refresh={refreshFlag}
         onColumnCountChange={setColumnCount}
+        taskFilter={taskFilter}
       />
 
       {/* Modal crear columna */}

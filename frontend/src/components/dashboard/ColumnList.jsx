@@ -6,7 +6,7 @@ import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSe
 import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { updateTask } from '../../services/taskService';
 
-const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
+const ColumnList = ({ boardId, refresh, onColumnCountChange, taskFilter = 'all' }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); // Nuevo estado global de refresco
@@ -123,6 +123,7 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange }) => {
                     onColumnUpdated={handleColumnUpdated}
                     refreshKey={refreshKey}
                     onAnyTaskChange={handleGlobalRefresh}
+                    taskFilter={taskFilter}
                   />
                 </div>
               ))
