@@ -56,7 +56,13 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
               <img
                 src={`${process.env.PUBLIC_URL}/logo-color.svg`}
                 alt="Taskly Logo"
-                style={{ height: '40px' }}
+                style={{ 
+                  height: '40px',
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               />
             </button>
             <button
