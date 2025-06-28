@@ -100,52 +100,61 @@ export default function AvatarUploader({
 
   return (
     <div
-      className="text-center mb-4"
-      style={{ position: 'relative', width: 100, height: 100, margin: '0 auto' }}
+      className="d-flex flex-column align-items-center justify-content-center mb-4"
+      style={{ position: 'relative', width: 120, margin: '0 auto' }}
     >
-      <img
-        src={preview}
-        alt="Avatar"
-        className="rounded-circle border"
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        onError={(e) => {
-          // Si hay un error al cargar la imagen, mostrar el avatar predeterminado
-          e.target.onerror = null; // Evita bucles infinitos
-          const defaultUrl = getDefaultAvatarUrl();
-          e.target.src = defaultUrl;
-          setPreview(defaultUrl); // También actualizar el estado
-          setIsDefaultAvatar(true);
-        }}
-      />
-
+      <div style={{ width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <img
+          src={preview}
+          alt="Avatar"
+          className="rounded-circle border"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          onError={(e) => {
+            // Si hay un error al cargar la imagen, mostrar el avatar predeterminado
+            e.target.onerror = null; // Evita bucles infinitos
+            const defaultUrl = getDefaultAvatarUrl();
+            e.target.src = defaultUrl;
+            setPreview(defaultUrl); // También actualizar el estado
+            setIsDefaultAvatar(true);
+          }}
+        />
+        {/* Botón "X" para eliminar - solo visible si no es un avatar por defecto */}
+        {!disabled && !isDefaultAvatar && (
+          <button
+            type="button"
+            onClick={handleDeleteAvatar}
+            style={{
+              position: 'absolute',
+              top: 2,
+              right: 2,
+              background: '#dc3545',
+              border: 'none',
+              color: 'white',
+              borderRadius: '50%',
+              width: 22,
+              height: 22,
+              lineHeight: '22px',
+              padding: 0,
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: 18,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.10)'
+            }}
+            title="Eliminar avatar"
+          >
+            ×
+          </button>
+        )}
+      </div>
+      {/* Botón personalizado para seleccionar archivo */}
       {!disabled && (
-        <>
-          {/* Botón "X" para eliminar - solo visible si no es un avatar por defecto */}
-          {!isDefaultAvatar && (
-            <button
-              type="button"
-              onClick={handleDeleteAvatar}
-              style={{
-                position: 'absolute',
-                top: -6,
-                right: -6,
-                background: '#dc3545',
-                border: 'none',
-                color: 'white',
-                borderRadius: '50%',
-                width: 20,
-                height: 20,
-                lineHeight: '20px',
-                padding: 0,
-                cursor: 'pointer'
-              }}
-              title="Eliminar avatar"
-            >
-              ×
-            </button>
-          )}
-
-          {/* Botón personalizado para seleccionar archivo */}
+        <label
+          htmlFor="avatarInput"
+          className="btn btn-sm btn-outline-dark mt-2"
+          style={{ minWidth: 110, fontWeight: 500, borderRadius: '1.5rem', marginTop: 12 }}
+          title="Seleccionar avatar"
+        >
+          Seleccionar
           <input
             id="avatarInput"
             type="file"
@@ -153,14 +162,7 @@ export default function AvatarUploader({
             style={{ display: 'none' }}
             onChange={handleChange}
           />
-          <label
-            htmlFor="avatarInput"
-            className="btn btn-sm btn-outline-dark mt-1"
-            title="Seleccionar avatar"
-          >
-            Seleccionar
-          </label>
-        </>
+        </label>
       )}
     </div>
   );
