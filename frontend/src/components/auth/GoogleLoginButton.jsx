@@ -128,7 +128,13 @@ const GoogleButtonRenderer = memo(({ handleGoogleResponse, isDarkMode }) => {
     <div 
       ref={containerRef}
       className="d-flex justify-content-center"
-      style={{ minHeight: '42px' }}
+      style={{ 
+        minHeight: '42px',
+        paddingTop: '3px',
+        paddingBottom: '3px',
+        marginTop: '2px',
+        marginBottom: '2px'
+      }}
       aria-label="Iniciar sesión con Google"
     />
   );
@@ -302,8 +308,8 @@ const GoogleLoginButton = memo(({ onGoogleSignIn }) => {
   }, []);
 
   return (
-    <div className="mt-3 mb-3 d-flex justify-content-center">
-      <div className="w-100" style={{ maxWidth: '280px' }}>
+    <div className="mt-4 mb-4 d-flex justify-content-center">
+      <div className="w-100" style={{ maxWidth: '280px', paddingTop: '3px', paddingBottom: '3px' }}>
         {scriptLoaded && !showFallback && (
           <GoogleButtonRenderer 
             handleGoogleResponse={handleGoogleResponse}
