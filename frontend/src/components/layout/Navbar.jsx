@@ -54,7 +54,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
               style={{ textDecoration: 'none' }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/logo-color.svg`}
+                src={`${process.env.PUBLIC_URL}/logo-text.svg`}
                 alt="Taskly Logo"
                 style={{ 
                   height: '40px',

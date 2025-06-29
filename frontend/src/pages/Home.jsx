@@ -67,7 +67,7 @@ const Home = () => {
             }}
           >
             <img
-              src={`${process.env.PUBLIC_URL}/logo-color.svg`}
+              src={`${process.env.PUBLIC_URL}/logo-text.svg`}
               alt="Taskly"
               style={{ height: '80px' }}
             />

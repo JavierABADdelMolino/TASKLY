@@ -65,7 +65,7 @@ const Footer = () => {
             <div className="col-auto">
               <div className="d-flex align-items-center">
                 <img 
-                  src="/logo-color.svg"
+                  src="/logo-text.svg"
                   alt="Taskly Logo" 
                   height="28" 
                   style={{ cursor: 'pointer', transition: 'transform 0.3s ease' }} 
