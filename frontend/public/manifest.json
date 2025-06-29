@@ -1,7 +1,7 @@
 {
   "name": "Taskly",
   "short_name": "Taskly",
-  "description": "Organiza tus tareas de forma sencilla con Taskly. Gestiona proyectos, plazos y prioridades al instante.",
+  "description": "Organiza y prioriza tu trabajo con tableros, columnas y tareas inteligentes en Taskly.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
