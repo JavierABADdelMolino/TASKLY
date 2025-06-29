@@ -3,7 +3,7 @@ name: Mantener Render Activo
 on:
   schedule:
     # Cada 5 minutos (UTC)
-    - cron: '*/5 * * * *'
+    - cron: '*/1 * * * *'
   workflow_dispatch:  # Permite ejecutar el workflow manualmente desde GitHub
 
 jobs:
