@@ -1,5 +1,5 @@
 {
-  "name": "Taskly – Gestor de Tareas Inteligente",
+  "name": "Taskly",
   "short_name": "Taskly",
   "description": "Organiza tus tareas de forma sencilla con Taskly. Gestiona proyectos, plazos y prioridades al instante.",
   "start_url": "/",

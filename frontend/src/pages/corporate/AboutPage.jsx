@@ -27,10 +27,10 @@ const AboutPage = () => {
           </div>
           <div className="col-lg-6 text-center">
             <img 
-              src="/logo-360x120-color.png" 
+              src="/logo-text.svg" 
               alt="Logo Taskly" 
               className="img-fluid rounded" 
-              style={{maxWidth: "80%"}}
+              style={{maxWidth: "80%", width: "360px", height: "120px"}}
             />
           </div>
         </div>
