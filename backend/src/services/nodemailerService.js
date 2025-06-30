@@ -90,10 +90,9 @@ function getBaseUrl() {
  * @param {string} preheader Texto de previsualización (opcional)
  */
 function getEmailTemplate(content, preheader = '') {
-  const baseUrl = getBaseUrl();
-  const logoUrl = `${baseUrl}/logo-text.svg`;
+  // Usar PNG para máxima compatibilidad en emails
+  const logoUrl = `${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-240x92.png`;
   const year = new Date().getFullYear();
-  
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -255,8 +254,8 @@ function getEmailTemplate(content, preheader = '') {
 </head>
 <body>
   <div class="email-container">
-    <div class="email-header">
-      <img src="${logoUrl}" alt="Taskly" width="240" height="80" style="max-width: 100%;" />
+    <div class="email-header" style="text-align: center; margin-bottom: 25px;">
+      <img src="${logoUrl}" alt="Taskly" width="140" style="margin-bottom: 10px;" />
     </div>
     <div class="email-body">
       ${content}
