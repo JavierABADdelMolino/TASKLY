@@ -91,7 +91,7 @@ function getBaseUrl() {
  */
 function getEmailTemplate(content, preheader = '') {
   const baseUrl = getBaseUrl();
-  const logoUrl = `${baseUrl}/logo-240x92.png`;
+  const logoUrl = `${baseUrl}/logo-text.svg`;
   const year = new Date().getFullYear();
   
   return `<!DOCTYPE html>

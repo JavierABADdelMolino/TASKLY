@@ -77,7 +77,7 @@ Este mensaje fue enviado desde el formulario de contacto en taskly.es
           background-color: var(--bs-body-bg, #ffffff);
         ">
           <div style="text-align: center; margin-bottom: 25px;">
-            <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-color.svg" alt="Taskly" width="140" style="margin-bottom: 10px;" />
+            <img src="${process.env.FRONTEND_URL || process.env.CLIENT_URL}/logo-text.svg" alt="Taskly" width="140" style="margin-bottom: 10px;" />
             <h1 style="color: var(--bs-body-color, #212529); margin: 0; font-size: 24px; font-weight: 600;">Nuevo mensaje de contacto</h1>
           </div>
           
