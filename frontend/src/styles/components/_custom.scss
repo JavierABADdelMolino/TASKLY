@@ -241,8 +241,14 @@ html[data-theme="light"] {
   .carousel-control-next-icon {
     filter: brightness(0) !important;
   }
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%; // Reducir el área de click para mejor separación
+    z-index: 15; // Asegurar que estén por encima del contenido
+  }
   .carousel-indicators {
-    bottom: 15px;
+    bottom: 30px; // Aumentado de 15px a 30px para evitar solapamiento
+    z-index: 10; // Asegurar que estén por encima del contenido
   }
   .carousel-indicators button {
     width: 12px;
@@ -258,10 +264,16 @@ html[data-theme="light"] {
 }
 .carousel-light-controls,
 .carousel-dark-controls {
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%; // Reducir el área de click para mejor separación
+    z-index: 15; // Asegurar que estén por encima del contenido
+  }
   .carousel-indicators {
     display: flex;
-    bottom: 15px;
+    bottom: 30px; // Aumentado de 15px a 30px para evitar solapamiento
     gap: 8px;
+    z-index: 10; // Asegurar que estén por encima del contenido
   }
   .carousel-indicators button {
     width: 30px;

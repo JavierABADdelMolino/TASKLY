@@ -37,11 +37,42 @@ const Home = () => {
 
   return (
     <Layout>
-      {/* Añadir estilo para flechas del carrusel */}
+      {/* Añadir estilo para flechas del carrusel y indicadores */}
       <style jsx="true">{`
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
           filter: ${carouselStyles.iconFilter};
+        }
+        .home-hero .carousel-indicators {
+          margin-bottom: 20px;
+        }
+        .home-hero .carousel-caption {
+          padding-bottom: 80px;
+        }
+        .home-hero .carousel-control-prev {
+          left: -60px;
+        }
+        .home-hero .carousel-control-next {
+          right: -60px;
+        }
+        .home-hero .carousel-control-prev-icon,
+        .home-hero .carousel-control-next-icon {
+          width: 2.5rem;
+          height: 2.5rem;
+          background-size: 100%;
+        }
+        @media (max-width: 768px) {
+          .home-hero .carousel-control-prev {
+            left: 10px;
+          }
+          .home-hero .carousel-control-next {
+            right: 10px;
+          }
+          .home-hero .carousel-control-prev-icon,
+          .home-hero .carousel-control-next-icon {
+            width: 2rem;
+            height: 2rem;
+          }
         }
       `}</style>
 
@@ -53,7 +84,7 @@ const Home = () => {
       >
         <Carousel.Item
           className="text-center"
-          style={{ backgroundColor: 'var(--bs-body-bg)', padding: '8rem 0', minHeight: '60vh' }}
+          style={{ backgroundColor: 'var(--bs-body-bg)', padding: '8rem 0 5rem 0', minHeight: '60vh' }}
         >
           <Carousel.Caption
             className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}
@@ -77,7 +108,7 @@ const Home = () => {
         </Carousel.Item>
         <Carousel.Item
           className="text-center"
-          style={{ backgroundColor: 'var(--bs-body-bg)', padding: '6rem 0', minHeight: '60vh' }}
+          style={{ backgroundColor: 'var(--bs-body-bg)', padding: '6rem 0 5rem 0', minHeight: '60vh' }}
         >
           <Carousel.Caption
             className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}
