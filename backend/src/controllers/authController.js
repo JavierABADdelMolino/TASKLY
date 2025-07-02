@@ -80,7 +80,7 @@ exports.registerUser = async (req, res) => {
 
     // Enviar email de bienvenida moderno (sin compartir la contraseña por seguridad)
     try {
-      await sendWelcomeEmail(email, firstName, email);
+      await sendWelcomeEmail(email, firstName, email, false);
     } catch (mailErr) {
       console.error('Error enviando email de bienvenida:', mailErr);
     }
@@ -406,7 +406,7 @@ exports.completeGoogleRegister = async (req, res) => {
     
     // Enviar email de bienvenida (opcional)
     try {
-      await sendWelcomeEmail(email, firstName, email, "Has iniciado sesión con Google. Utiliza siempre ese método para acceder a tu cuenta.");
+      await sendWelcomeEmail(email, firstName, email, true);
     } catch (mailErr) {
       console.error('Error enviando email de bienvenida:', mailErr);
     }

@@ -271,36 +271,73 @@ function getEmailTemplate(content, preheader = '') {
 
 /**
  * Envía email de bienvenida con datos de acceso
+ * @param {string} to Destinatario
+ * @param {string} firstName Nombre del usuario
+ * @param {string} userEmail Email del usuario
+ * @param {boolean} isGoogleUser Si el usuario se registró con Google (opcional)
  */
-async function sendWelcomeEmail(to, firstName, userEmail) {
-  const content = `
-    <h1>¡Bienvenido a Taskly, ${firstName}!</h1>
-    <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros y ayudarte a ser más productivo.</p>
-    
-    <div class="info-card">
-      <p><span class="highlight">Datos de acceso:</span></p>
-      <p>Email: <span class="highlight">${userEmail}</span></p>
-      <p class="text-small">Para iniciar sesión, utiliza la contraseña que creaste durante el proceso de registro.</p>
-    </div>
-    
-    <div class="text-center">
-      <a href="${getBaseUrl()}/login" class="btn-primary">Comenzar a usar Taskly</a>
-    </div>
-    
-    <div class="divider"></div>
-    
-    <h2>Primeros pasos en Taskly</h2>
-    <ul>
-      <li><span class="highlight">Crea tu primer tablero</span> para organizar tus proyectos</li>
-      <li><span class="highlight">Personaliza tus columnas</span> según tu flujo de trabajo</li>
-      <li><span class="highlight">Añade tareas y priorízalas</span> para una mejor gestión</li>
-    </ul>
-    
-    <p>Nuestro objetivo es ayudarte a organizar tu trabajo de forma efectiva. Si tienes alguna pregunta o necesitas ayuda para comenzar, simplemente responde a este correo.</p>
-    
-    <p>¡Te deseamos una excelente experiencia con Taskly!</p>
-    <p>El equipo de Taskly</p>
-  `;
+async function sendWelcomeEmail(to, firstName, userEmail, isGoogleUser = false) {
+  let content;
+  
+  if (isGoogleUser) {
+    content = `
+      <h1>¡Bienvenido a Taskly, ${firstName}!</h1>
+      <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros y ayudarte a ser más productivo.</p>
+      
+      <div class="info-card">
+        <p><span class="highlight">Cuenta registrada con Google:</span></p>
+        <p>Email: <span class="highlight">${userEmail}</span></p>
+        <p class="text-small">Para iniciar sesión, utiliza siempre el botón <b>"Continuar con Google"</b> en la página de acceso.</p>
+      </div>
+      
+      <div class="text-center">
+        <a href="${getBaseUrl()}/login" class="btn-primary">Comenzar a usar Taskly</a>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <h2>Primeros pasos en Taskly</h2>
+      <ul>
+        <li><span class="highlight">Crea tu primer tablero</span> para organizar tus proyectos</li>
+        <li><span class="highlight">Personaliza tus columnas</span> según tu flujo de trabajo</li>
+        <li><span class="highlight">Añade tareas y priorízalas</span> para una mejor gestión</li>
+      </ul>
+      
+      <p>Nuestro objetivo es ayudarte a organizar tu trabajo de forma efectiva. Si tienes alguna pregunta o necesitas ayuda para comenzar, simplemente responde a este correo.</p>
+      
+      <p>¡Te deseamos una excelente experiencia con Taskly!</p>
+      <p>El equipo de Taskly</p>
+    `;
+  } else {
+    content = `
+      <h1>¡Bienvenido a Taskly, ${firstName}!</h1>
+      <p>Gracias por unirte a nuestra plataforma. Estamos encantados de tenerte con nosotros y ayudarte a ser más productivo.</p>
+      
+      <div class="info-card">
+        <p><span class="highlight">Datos de acceso:</span></p>
+        <p>Email: <span class="highlight">${userEmail}</span></p>
+        <p class="text-small">Para iniciar sesión, utiliza la contraseña que creaste durante el proceso de registro.</p>
+      </div>
+      
+      <div class="text-center">
+        <a href="${getBaseUrl()}/login" class="btn-primary">Comenzar a usar Taskly</a>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <h2>Primeros pasos en Taskly</h2>
+      <ul>
+        <li><span class="highlight">Crea tu primer tablero</span> para organizar tus proyectos</li>
+        <li><span class="highlight">Personaliza tus columnas</span> según tu flujo de trabajo</li>
+        <li><span class="highlight">Añade tareas y priorízalas</span> para una mejor gestión</li>
+      </ul>
+      
+      <p>Nuestro objetivo es ayudarte a organizar tu trabajo de forma efectiva. Si tienes alguna pregunta o necesitas ayuda para comenzar, simplemente responde a este correo.</p>
+      
+      <p>¡Te deseamos una excelente experiencia con Taskly!</p>
+      <p>El equipo de Taskly</p>
+    `;
+  }
   
   const html = getEmailTemplate(content, `¡Bienvenido a Taskly, ${firstName}! Tu cuenta ha sido creada correctamente.`);
   return await sendMail(to, `¡Bienvenido a Taskly, ${firstName}!`, html);
