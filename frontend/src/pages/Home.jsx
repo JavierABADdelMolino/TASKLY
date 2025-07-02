@@ -44,16 +44,16 @@ const Home = () => {
           filter: ${carouselStyles.iconFilter};
         }
         .home-hero .carousel-indicators {
-          margin-bottom: 20px;
+          margin-bottom: 0px;
         }
         .home-hero .carousel-caption {
-          padding-bottom: 80px;
+          padding-bottom: 60px;
         }
         .home-hero .carousel-control-prev {
-          left: -60px;
+          left: -30px;
         }
         .home-hero .carousel-control-next {
-          right: -60px;
+          right: -30px;
         }
         .home-hero .carousel-control-prev-icon,
         .home-hero .carousel-control-next-icon {

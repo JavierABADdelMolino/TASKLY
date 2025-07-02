@@ -243,11 +243,11 @@ html[data-theme="light"] {
   }
   .carousel-control-prev,
   .carousel-control-next {
-    width: 5%; // Reducir el área de click para mejor separación
+    width: 8%; // Aumentado de 5% a 8% para reducir separación
     z-index: 15; // Asegurar que estén por encima del contenido
   }
   .carousel-indicators {
-    bottom: 30px; // Aumentado de 15px a 30px para evitar solapamiento
+    bottom: 5px; // Bajado a 5px para que estén más cerca del borde
     z-index: 10; // Asegurar que estén por encima del contenido
   }
   .carousel-indicators button {
@@ -266,12 +266,12 @@ html[data-theme="light"] {
 .carousel-dark-controls {
   .carousel-control-prev,
   .carousel-control-next {
-    width: 5%; // Reducir el área de click para mejor separación
+    width: 8%; // Aumentado de 5% a 8% para reducir separación
     z-index: 15; // Asegurar que estén por encima del contenido
   }
   .carousel-indicators {
     display: flex;
-    bottom: 30px; // Aumentado de 15px a 30px para evitar solapamiento
+    bottom: 5px; // Bajado a 5px para que estén más cerca del borde
     gap: 8px;
     z-index: 10; // Asegurar que estén por encima del contenido
   }
