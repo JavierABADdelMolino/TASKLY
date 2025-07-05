@@ -1,5 +1,59 @@
 // Estilos personalizados de componentes
 
+// Navbar fijo
+.navbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 1030;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  
+  // Sombra sutil para separar del contenido
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  
+  // Asegurar que el contenido del navbar mantenga su opacidad
+  .navbar-brand,
+  .navbar-nav,
+  .navbar-text,
+  .btn,
+  .dropdown-menu {
+    opacity: 1;
+  }
+}
+
+// Estilos específicos para cada tema
+[data-theme='light'] {
+  .navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid rgba(225, 232, 240, 0.6);
+  }
+}
+
+[data-theme='dark'] {
+  .navbar {
+    background-color: rgba(31, 31, 31, 0.95) !important;
+    border-bottom: 1px solid rgba(44, 44, 44, 0.6);
+  }
+}
+
+// Ajuste del body para compensar el navbar fijo
+body {
+  padding-top: 0; // Lo mantenemos en 0 porque usamos sticky en lugar de fixed
+}
+
+// Ajustes para el contenido principal cuando hay navbar fijo
+.min-vh-100 {
+  main {
+    // Asegurar que el contenido principal tenga suficiente espacio
+    padding-top: 1rem;
+    
+    // En pantallas pequeñas, ajustar el padding
+    @media (max-width: 767.98px) {
+      padding-top: 0.5rem;
+    }
+  }
+}
+
 // Estilos para campos de fecha y hora en la misma línea
 .row.mb-3 {
   .col-md-6 {
