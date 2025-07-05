@@ -415,6 +415,14 @@ html[data-theme="light"] {
   color: var(--bs-danger) !important;
 }
 
+// Reset hover/focus/active styles for dropdown-item text-danger (Cerrar sesión button)
+.dropdown-item.text-danger:hover,
+.dropdown-item.text-danger:focus,
+.dropdown-item.text-danger:active {
+  background-color: var(--bs-hover-bg) !important;
+  color: var(--bs-body-color) !important;
+}
+
 // Separador para opciones de login/registro
 .separator {
   display: flex;
