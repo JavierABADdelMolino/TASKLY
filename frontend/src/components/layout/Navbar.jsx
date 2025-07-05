@@ -22,6 +22,20 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
     navigate('/');
   };
 
+  // Función para manejar el click en el logo
+  const handleLogoClick = () => {
+    // Si ya estamos en la página actual, hacer scroll hacia arriba
+    if (path === currentPagePath || (path === '/' && currentPagePath === '/')) {
+      window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' 
+      });
+    } else {
+      // Si estamos en otra página, navegar al inicio
+      navigate('/');
+    }
+  };
+
   /* Rutas para mostrar título dinámico */
   const pageTitles = {
     '/dashboard': 'Panel de tareas',
@@ -50,7 +64,7 @@ const Navbar = ({ currentPath, onBoardCreated = () => {} }) => {
           <div className="d-flex align-items-center gap-3">
             <button
               className="btn btn-sm btn-link p-0"
-              onClick={() => navigate('/')}
+              onClick={handleLogoClick}
               style={{ textDecoration: 'none' }}
             >
               <img
