@@ -29,8 +29,8 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         >
           <FaStar color={board.favorite ? 'gold' : 'gray'} size={20} />
         </button>
-        {/* Filtro de tareas al lado del favorito */}
-        <BoardTaskFilter value={taskFilter} onChange={setTaskFilter} />
+        {/* Filtro de tareas al lado del favorito - solo mostrar si hay columnas */}
+        {columnCount > 0 && <BoardTaskFilter value={taskFilter} onChange={setTaskFilter} />}
         {/* Botones añadir columna y eliminar pizarra alineados a la derecha */}
         <div className="ms-auto d-flex gap-2">
           <button className="btn btn-sm btn-outline-primary" onClick={() => setShowColumnModal(true)}>
