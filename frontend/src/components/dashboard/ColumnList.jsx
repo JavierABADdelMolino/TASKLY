@@ -6,7 +6,7 @@ import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSe
 import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { updateTask } from '../../services/taskService';
 
-const ColumnList = ({ boardId, refresh, onColumnCountChange, taskFilter = 'all' }) => {
+const ColumnList = ({ boardId, refresh, onColumnCountChange, taskFilter = 'all', onCreateFirstColumn }) => {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); // Nuevo estado global de refresco
@@ -112,7 +112,18 @@ const ColumnList = ({ boardId, refresh, onColumnCountChange, taskFilter = 'all' 
         <SortableContext items={columns.map(c => c._id)} strategy={horizontalListSortingStrategy}>
           <div className="d-flex gap-4" style={{ width: 'max-content', margin: '0 auto' }}>
             {columns.length === 0 ? (
-              <p className="text-muted">No hay columnas aún en esta pizarra.</p>
+              <div className="text-center py-5" style={{ minWidth: '400px' }}>
+                <h4 className="mb-3">¡Tu pizarra está vacía!</h4>
+                <p className="text-muted fs-5 mb-4">
+                  Organiza tus tareas creando columnas. ¡Crea tu primera para empezar!
+                </p>
+                <button 
+                  className="btn btn-lg btn-primary"
+                  onClick={onCreateFirstColumn}
+                >
+                  + Crear tu primera columna
+                </button>
+              </div>
             ) : (
               columns.map((col) => (
                 <div key={col._id} className="flex-shrink-0">

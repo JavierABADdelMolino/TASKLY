@@ -48,6 +48,7 @@ const Board = ({ board, onToggleFavorite, onBoardUpdated, onBoardDeleted }) => {
         refresh={refreshFlag}
         onColumnCountChange={setColumnCount}
         taskFilter={taskFilter}
+        onCreateFirstColumn={() => setShowColumnModal(true)}
       />
 
       {/* Modal crear columna */}
