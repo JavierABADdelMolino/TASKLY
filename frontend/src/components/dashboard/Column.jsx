@@ -62,6 +62,18 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
     return true;
   });
 
+  // Función para generar mensaje personalizado según el filtro
+  const getEmptyMessage = () => {
+    switch (taskFilter) {
+      case 'completed':
+        return 'No hay tareas completadas en esta columna todavía.';
+      case 'pending':
+        return '¡Genial! No hay tareas pendientes.';
+      default:
+        return 'Esta columna está vacía. ¡Añade tu primera tarea!';
+    }
+  };
+
   return (
     <div ref={setColNodeRef} className="card shadow-sm column-card" style={{ width: '280px', position: 'relative', ...colStyle }}>
       {/* Botón eliminar columna */}
@@ -140,7 +152,7 @@ const Column = ({ column, index, total, onMove, onColumnDeleted, onColumnUpdated
           ) : taskError ? (
             <div className="text-danger small">{taskError}</div>
           ) : filteredTasks.length === 0 ? (
-            <div className="text-muted small text-center">No hay tareas que coincidan con el filtro.</div>
+            <div className="text-muted small text-center">{getEmptyMessage()}</div>
           ) : (
             filteredTasks.slice()
               .sort((a, b) => {
